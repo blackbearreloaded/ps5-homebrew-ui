@@ -159,7 +159,7 @@ supplied by its owner; `background-source.png` and
 from. `sce_sys/snd0.at9`, the music the console plays while the title is
 selected, is the owner's own track, encoded with
 [ps5-at9-converter](https://github.com/blackbearreloaded/ps5-at9-converter)
-(49.6 s, 192 kb/s, -28 LUFS, whole-track loop).
+(57.6 s, 192 kb/s, -28 LUFS, whole-track loop).
 `HUI_ICON=<file> tools/host-snapshots.sh` still renders a plain icon
 with the project's own renderer, for forks that want one of their own. The
 cover art inside the app is rendered at start-up from invented titles; no real
