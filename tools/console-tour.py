@@ -62,16 +62,18 @@ def port_open(host, port):
 
 
 class Console:
-    """One FTP session. Signed files are read back as stored bytes (SELF)."""
+    """One FTP session.
+
+    Signed files are compared as the bytes that are stored. Some FTP servers
+    for the console have a "SELF" switch that makes them hand out the
+    decrypted ELF instead: it must stay off, or every executable reads back
+    larger than, and different from, what was uploaded.
+    """
 
     def __init__(self, host, port):
         self.ftp = FTP()
         self.ftp.connect(host, port, timeout=30)
         self.ftp.login("anonymous", "ps5-homebrew-ui")
-        try:
-            self.ftp.sendcmd("SELF")
-        except all_errors:
-            pass  # other FTP servers have no such switch
 
     def close(self):
         try:
