@@ -82,14 +82,68 @@ make lint                                             # format, static analysis,
 3. Run the tests.
 4. Build for the PS5.
 
-`tools/host-snapshots.sh` takes `all` or one design id (`components` renders
-every page of the Component Library, and each page again in the Brutal, Pixel
-and Sketch themes). `HUI_STRIP=<from>,<to>` writes the frames of switching
-between two designs. `tools/render-media.sh all` regenerates everything under
-`docs/media`; `HUI_MANIFEST=build/manifest.json tools/host-snapshots.sh
-build/snapshots aurora` then `python3 tools/gen-docs.py build/manifest.json`
-regenerates the galleries, the component catalogue, the component index and
-the counts.
+## Local preview: see the UI without a console
+
+The app's interface builds for a PC and renders off-screen through Mesa's
+software renderer. It is the same UI code and the same shaders as on the
+PS5; pictures taken on a console match these. There is no window and no
+sound: you get **PNG frames** (and optionally short clips), which is exactly
+what an agent needs. Use it after every visual change.
+
+Needs: Linux or WSL with `clang`, `ninja`, the Mesa EGL and GL development
+packages (`libegl-dev` and `libgl-dev` on Debian and Ubuntu), and Python 3. Clips also need `ffmpeg` with libwebp; `tools/render-media.sh` needs
+Pillow. No console, no GPU, no PS5 toolchain.
+
+```bash
+# Every picture of one design (its entrance, then one per named tour step)
+tools/host-snapshots.sh build/snapshots aurora
+
+# Every design: about 300 pictures in about a minute
+tools/host-snapshots.sh build/snapshots all
+
+# The Component Library: every page and variant picture, and every page
+# again in the Brutal, Pixel and Sketch themes
+tools/host-snapshots.sh build/snapshots components
+
+# Another size (the default is 1920 x 1080): 4K as on the console
+tools/host-snapshots.sh build/snapshots-4k aurora 3840 2160
+```
+
+- Usage: `tools/host-snapshots.sh [output dir] [design id|all] [width height]`.
+  Design ids are the file names in `src/concepts/` (`aurora`, `store`,
+  `themes`, `components`, ...).
+- Output: `<output dir>/NN-<design id>.png` after the entrance animation and
+  `NN-<design id>-<step name>.png` for each named step; `NN` is the design's
+  place in the switcher. The command prints one line per picture with its
+  shape and draw-call counts and the GL error (it must be `0x0`).
+- A compile error stops it and prints the errors; the full log is
+  `build/host-snapshots/build.log`.
+- **Then open the PNGs and look at them.** To check a detail, crop and enlarge
+  (Python with Pillow is enough). Compare states side by side with a contact
+  sheet.
+
+What a picture shows is decided by the screen's `tour()`: a list of
+`app::TourStep` (wait, input, optional picture name; see
+`docs/BUILDING_A_DESIGN.md`). To photograph a state that has no picture yet,
+add a step with a `capture` name, or temporarily change the tour while you
+work and restore it before you finish. Gallery pages
+(`src/concepts/components/*_page.cpp`) have a `tour()` of their own; to see a
+page in another theme, the gallery's tour already photographs every page in
+Brutal, Pixel and Sketch, and Options (`Action::menu`) cycles the theme.
+
+Other outputs of the same program:
+
+| Command | Result |
+| --- | --- |
+| `HUI_STRIP=aurora,paper tools/host-snapshots.sh out` | The frames of the L1/R1 switch between two designs |
+| `HUI_REEL=out/clips tools/host-snapshots.sh out/scratch aurora 640 360` | An animated WebP of the whole tour |
+| `tools/render-media.sh all` | Everything under `docs/media` (pictures and clips) |
+| `HUI_MANIFEST=build/manifest.json tools/host-snapshots.sh build/snapshots aurora` then `python3 tools/gen-docs.py build/manifest.json` | The galleries, the component catalogue, the component index and the counts |
+| `HUI_ICON=icon.png tools/host-snapshots.sh out` | A plain 512 x 512 icon drawn by the renderer |
+
+What the preview cannot tell you, and must be reported as not verified until
+checked on hardware: frame rate, how the sounds and the rumble feel, and
+navigation with a controller in hand.
 
 ## Rules
 
