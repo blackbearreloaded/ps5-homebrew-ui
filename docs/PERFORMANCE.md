@@ -86,6 +86,42 @@ As a guide for a 4K UI on this renderer:
 ## Measured
 
 <!-- BEGIN:measured -->
-Not measured yet on this build. Run `tools/console-tour.py` and paste the
-report here.
+Measured on a PS5 on 2026-10-02 with `tools/console-tour.py` (build `044d909`,
+every design's whole tour, 39,956 frames, about eleven minutes):
+
+- Output 3840 x 2160 at 60 Hz, `"4.6 (Core Profile) Mesa 26.2.0" renderer="PS5 AGC"`.
+- **Every design held 60 frames per second**: averages of 16.67 to 16.69 ms and
+  no frame over 21.0 ms, including frosted glass, the theme changes and the
+  Component Library's 74 draw calls.
+- 266 pictures taken on the console match the PC renders.
+- Audio: no output errors; six stream underruns, all during start-up.
+- Heap: about 34 MB live at the end, no failed allocation.
+- The app closed itself through the system; no crash report.
+
+| # | Design | Frames | Average | Worst frame | Most draw calls | Most shapes |
+| --- | --- | --- | --- | --- | --- | --- |
+| 01 | `aurora` | 552 | 16.69 ms | 19.55 ms | 40 | 746 |
+| 02 | `paper` | 697 | 16.68 ms | 20.15 ms | 46 | 1,108 |
+| 03 | `neon` | 798 | 16.68 ms | 20.25 ms | 10 | 433 |
+| 04 | `editorial` | 657 | 16.68 ms | 19.85 ms | 14 | 1,575 |
+| 05 | `carousel` | 776 | 16.68 ms | 20.34 ms | 37 | 377 |
+| 06 | `radial` | 656 | 16.69 ms | 20.49 ms | 24 | 434 |
+| 07 | `hud` | 1,140 | 16.68 ms | 19.94 ms | 17 | 715 |
+| 08 | `dashboard` | 756 | 16.68 ms | 19.92 ms | 30 | 1,816 |
+| 09 | `player` | 857 | 16.68 ms | 19.52 ms | 16 | 501 |
+| 10 | `keyboard` | 750 | 16.68 ms | 19.87 ms | 9 | 610 |
+| 11 | `constellation` | 792 | 16.69 ms | 20.00 ms | 9 | 762 |
+| 12 | `terminal` | 900 | 16.68 ms | 19.98 ms | 7 | 2,308 |
+| 13 | `store` | 922 | 16.68 ms | 20.20 ms | 61 | 842 |
+| 14 | `trophies` | 840 | 16.68 ms | 20.41 ms | 21 | 1,784 |
+| 15 | `files` | 1,420 | 16.68 ms | 20.31 ms | 17 | 1,484 |
+| 16 | `inventory` | 776 | 16.69 ms | 19.42 ms | 11 | 1,257 |
+| 17 | `boot` | 1,168 | 16.68 ms | 20.00 ms | 63 | 827 |
+| 18 | `settings` | 843 | 16.68 ms | 19.85 ms | 13 | 761 |
+| 19 | `themes` | 9,463 | 16.68 ms | 20.76 ms | 11 | 1,198 |
+| 20 | `components` | 14,895 | 16.68 ms | 21.02 ms | 74 | 2,438 |
+| 21 | `toolbox` | 298 | 16.67 ms | 20.20 ms | 10 | 942 |
+
+"Most draw calls" and "most shapes" are the peaks seen during that design's
+tour. A frame over 16.7 ms here is the frame in which a picture was saved.
 <!-- END:measured -->
