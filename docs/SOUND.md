@@ -111,8 +111,16 @@ reused unchanged apart from their file names. See
 
 `audio/music.hpp` streams OGG Vorbis from `assets/audio/music/` (48 kHz),
 decoded on the main thread about 0.7 seconds ahead of the audio thread. It
-plays the folder as a shuffled playlist and ducks by 6 dB under big cues. The
-music bus has its own volume in the settings.
+plays the folder as a playlist: the order is shuffled afresh every time the
+app starts, each song plays once with a short pause before the next, and after
+the last one the same order starts again. It ducks by 6 dB under big cues, and
+the music bus has its own volume in the settings.
+
+Adding a song is dropping a file into the folder. Keep to 48 kHz stereo, about
+-18 LUFS integrated with true peaks at or below -1 dBTP (so the interface
+sounds stay on top), and a plain file name; `tools/audio-check.py` checks all
+of it. The three songs shipped are "First Light", "Open Strings" and "Quiet
+Hours".
 
 ## Controller rumble
 

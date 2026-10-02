@@ -55,10 +55,11 @@ Both are host-only and are not linked into the PS5 application.
 `assets/audio/sfx/paper/*.wav` are the sound effects of ProsperoPuzzles and
 `assets/audio/sfx/glass/*.wav` those of ProsperoEden. They were generated for
 those projects with ElevenLabs Sound Effects v2 and prepared with
-`tools/process-sfx.py` (trimmed, faded and levelled). No sound was generated
-for this repository. `assets/audio/music/*.ogg` are two tracks of the
-ProsperoPuzzles soundtrack. All are Copyright (C) 2026 BlackBearReloaded and
-distributed under the project licence.
+`tools/process-sfx.py` (trimmed, faded and levelled). No sound effect was
+generated for this repository. `assets/audio/music/*.ogg` ("First Light",
+"Open Strings" and "Quiet Hours") are the project's own background music,
+supplied by its owner and encoded to 48 kHz OGG Vorbis at -18 LUFS. All are
+Copyright (C) 2026 BlackBearReloaded and distributed under the project licence.
 
 ## Music decoding
 
