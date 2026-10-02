@@ -199,12 +199,13 @@ fade, for content that wants to know.
 
 ## ToastStack
 
-For notifications the player can answer (action buttons, a close control, sticky ones, a
-history), use `ui::NotificationStack`: see [notifications.md](notifications.md).
-
 Timed notifications in a corner: "Saved", "Connection lost". They slide in,
 wait, slide out, and the ones behind close the gap with a spring. Toasts
 never take the focus, so there is no `handle()`.
+
+For notifications the player can answer (action buttons, a close control,
+sticky ones, a history), use `ui::NotificationStack`: see
+[notifications.md](notifications.md).
 
 ```cpp
 ui::ToastStack toasts;

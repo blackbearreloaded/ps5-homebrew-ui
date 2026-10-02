@@ -209,6 +209,53 @@ def components_catalogue():
     return "\n".join(out)
 
 
+def component_index():
+    """One row per component: where it is declared and what it is for. Written
+    for readers who search rather than browse (coding agents first of all)."""
+    headers = {}
+    for header in sorted((ROOT / "src/ui/components").glob("*.hpp")):
+        for match in re.finditer(r"^(?:class|struct) (\w+)\b(?!;)", header.read_text(encoding="utf-8"),
+                                 re.M):
+            headers.setdefault(match.group(1), header.name)
+    out = ["| Component | Header | Group | What it is for |", "| --- | --- | --- | --- |"]
+    for group, title in COMPONENT_GROUPS:
+        guide = ROOT / "docs/components" / f"{group}.md"
+        if not guide.exists():
+            continue
+        lines = guide.read_text(encoding="utf-8").splitlines()
+        for number, line in enumerate(lines):
+            if not line.startswith("## "):
+                continue
+            names = [n.strip() for n in re.split(r" and | / |, ", line[3:].strip())
+                     if re.fullmatch(r"[A-Z][A-Za-z]+", n.strip())]
+            if not names:
+                continue
+            # The first paragraph under the heading, cut to its first sentence.
+            paragraph = []
+            for text in lines[number + 1:]:
+                if text.startswith(("#", "|", "```", "<", "- ", "* ")) and paragraph:
+                    break
+                if not text.strip():
+                    if paragraph:
+                        break
+                    continue
+                if text.startswith(("#", "|", "```", "<")):
+                    continue
+                paragraph.append(text.strip())
+            summary = re.sub(r"\s+", " ", " ".join(paragraph))
+            summary = re.sub(r"[*`]", "", summary)
+            # Some guides open a section with the header's name ("tabs.hpp. A row...").
+            summary = re.sub(r"^[\w/]+\.hpp\.\s*", "", summary)
+            sentence = re.split(r"(?<=[.:;])\s", summary, maxsplit=1)[0].rstrip(".:;")
+            if len(sentence) > 150:
+                sentence = sentence[:147].rsplit(" ", 1)[0] + "..."
+            for name in names:
+                header = headers.get(name, "")
+                where = f"[`{header}`](../src/ui/components/{header})" if header else "-"
+                out.append(f"| `ui::{name}` | {where} | [{title}](components/{group}.md) | {sentence} |")
+    return "\n".join(out)
+
+
 def main():
     if len(sys.argv) != 2:
         raise SystemExit(__doc__)
@@ -223,6 +270,10 @@ def main():
     replace_section(ROOT / "docs/DESIGNS.md", "designs", designs_page(designs))
     replace_section(ROOT / "docs/THEMES.md", "themes", themes_page(themes))
     replace_section(ROOT / "docs/COMPONENTS.md", "components", components_catalogue())
+    replace_section(ROOT / "docs/COMPONENT_INDEX.md", "index", component_index())
+    replace_section(ROOT / "AGENTS.md", "counts",
+                    f"Right now: **{len(designs)} designs**, **{len(themes)} themes**, "
+                    f"**{components} components**.")
     print(f"gen-docs: {len(designs)} designs, {len(themes)} themes")
 
 

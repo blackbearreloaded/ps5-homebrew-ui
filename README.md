@@ -211,6 +211,7 @@ To see it on a console, copy `dist/<TITLE_ID>` to `/data/homebrew/` (or
 | [DESIGNS.md](docs/DESIGNS.md) | Every design: clip, pictures, techniques, source |
 | [THEMES.md](docs/THEMES.md) | The widget set, the theme tokens, all thirty themes, adding your own |
 | [COMPONENTS.md](docs/COMPONENTS.md) | The component library: the five rules, customising, every component with its knobs, slots, events and cues |
+| [COMPONENT_INDEX.md](docs/COMPONENT_INDEX.md) | One table of every component: class, header, what it is for |
 | [KIT.md](docs/KIT.md) | API reference: shapes, text, backdrops, glass, motion, input, feedback |
 | [BUILDING_A_DESIGN.md](docs/BUILDING_A_DESIGN.md) | Step by step, with a complete skeleton, the tour, tests and pitfalls |
 | [SOUND.md](docs/SOUND.md) | The cue vocabulary, the two sound sets, levels, adding recordings |
@@ -220,7 +221,7 @@ To see it on a console, copy `dist/<TITLE_ID>` to `/data/homebrew/` (or
 | [PERFORMANCE.md](docs/PERFORMANCE.md) | What keeps a UI at 60 frames per second on the console, and what was measured |
 | [CONSOLE_VALIDATION.md](docs/CONSOLE_VALIDATION.md) | The self-driving tour run and the rules for console work |
 | [docs/platform/](docs/platform/) | Building, packaging, deploying, the runtime shim, troubleshooting |
-| [AGENTS.md](AGENTS.md) | Orientation and rules for AI coding agents |
+| [AGENTS.md](AGENTS.md) | For AI coding agents: where to look for what, the rules, how to add things, console facts, pitfalls (`CLAUDE.md` points to it) |
 
 ## How it works, in one paragraph
 
