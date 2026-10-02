@@ -10,6 +10,7 @@ src/audio/mixer.cpp
 src/audio/music.cpp
 src/audio/wav.cpp
 src/concepts/*.cpp
+src/concepts/components/*.cpp
 src/core/frame_stats.cpp
 src/core/input.cpp
 src/core/save_file.cpp
@@ -20,6 +21,7 @@ src/gfx/draw_list.cpp
 src/gfx/font.cpp
 src/gfx/triangulate.cpp
 src/third_party/stb/vorbis.c
+src/ui/components/*.cpp
 src/ui/confetti.cpp
 src/ui/glyphs.cpp
 src/ui/pixel_font.cpp

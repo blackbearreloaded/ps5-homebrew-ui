@@ -67,6 +67,7 @@ class Painter
     // Running text: always the regular face, as written.
     float body(std::string_view text, float x, float baseline, float size, gfx::Color color,
                gfx::Align align = gfx::Align::left);
+    float body_width(std::string_view text, float size) const;
 
     // ---- building blocks ----
     // The corner size for a control of this rectangle ("pill" resolved).

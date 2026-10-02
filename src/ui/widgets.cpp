@@ -163,6 +163,21 @@ float Painter::body(std::string_view value, float x, float baseline, float size,
     return text(list_, fonts_.regular, value, x, baseline, size, color, align);
 }
 
+float Painter::body_width(std::string_view value, float size) const
+{
+    if (theme_.label == FontRole::pixel)
+    {
+        if (fonts_.pixel.font == nullptr)
+            return pixel_text_width(value, size * 0.58f);
+        return fonts_.pixel.measure(value, pixel_em(size * 0.62f));
+    }
+    if (theme_.label == FontRole::hand)
+        return font(theme_.label).measure(value, size * 1.14f);
+    if (theme_.label == FontRole::mono)
+        return fonts_.mono.measure(value, size * 0.92f);
+    return fonts_.regular.measure(value, size);
+}
+
 float Painter::control_radius(const gfx::Rect &r) const
 {
     return std::min(theme_.radius, std::min(r.w, r.h) * 0.5f);

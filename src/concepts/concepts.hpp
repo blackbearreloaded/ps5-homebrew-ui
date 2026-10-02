@@ -33,6 +33,7 @@ std::unique_ptr<app::Concept> make_inventory(app::Context &context);
 std::unique_ptr<app::Concept> make_boot(app::Context &context);
 std::unique_ptr<app::Concept> make_settings(app::Context &context);
 std::unique_ptr<app::Concept> make_themes(app::Context &context);
+std::unique_ptr<app::Concept> make_components(app::Context &context);
 std::unique_ptr<app::Concept> make_toolbox(app::Context &context);
 
 } // namespace hui::concepts

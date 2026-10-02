@@ -10,6 +10,7 @@
 #include "demo/catalog.hpp"
 #include "gfx/backdrop_spec.hpp"
 #include "gfx/draw_list.hpp"
+#include "ui/feedback.hpp"
 #include "ui/fonts.hpp"
 
 #include <array>
@@ -24,32 +25,8 @@ namespace hui::app
 
 // What a design asks the platform to do this frame besides drawing: sounds
 // and controller rumble. The shell plays the cues with the design's sound set.
-struct Feedback
-{
-    std::vector<audio::CueEvent> cues;
-    float rumble_strength = 0.0f;
-    float rumble_seconds = 0.0f;
-
-    void play(audio::Cue cue, float pitch = 1.0f, float pan = 0.0f, float gain = 1.0f)
-    {
-        cues.push_back({cue, pitch, pan, gain, audio::SoundSet::count});
-    }
-    // strength 0..1; keep UI rumbles short (0.04-0.15 s).
-    void rumble(float strength, float seconds)
-    {
-        if (strength >= rumble_strength)
-        {
-            rumble_strength = strength;
-            rumble_seconds = seconds;
-        }
-    }
-    void clear()
-    {
-        cues.clear();
-        rumble_strength = 0.0f;
-        rumble_seconds = 0.0f;
-    }
-};
+// It lives in the kit (ui/feedback.hpp) so components can ask for both too.
+using Feedback = ui::Feedback;
 
 // Live numbers about the app itself, for designs that show real data.
 struct Telemetry

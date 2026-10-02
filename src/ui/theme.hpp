@@ -79,6 +79,11 @@ struct Theme
     gfx::Color focus;        // the focus indicator (may be translucent)
     gfx::Color shadow;       // drop, offset and dark-edge colour
     gfx::Color light;        // highlight edge (bevel, neumorphic, gloss, glass)
+    // Status colours, for components that report an outcome (toasts, badges,
+    // destructive buttons). The defaults read on light and dark pages.
+    gfx::Color danger = gfx::Color::rgb(0xe5484d);
+    gfx::Color success = gfx::Color::rgb(0x30a46c);
+    gfx::Color warning = gfx::Color::rgb(0xf5a524);
 
     // ---- shape ----
     SurfaceStyle style = SurfaceStyle::soft;
