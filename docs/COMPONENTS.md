@@ -69,9 +69,24 @@ class Library final : public app::Concept
 ```
 
 Only one component should receive `handle()` in a frame: the one that has the
-focus. Moving the focus between components is the screen's job (see how
-[`lists_page.cpp`](../src/concepts/components/lists_page.cpp) does it with
-left and right, and `set_active()`).
+focus. Moving the focus between components is the screen's job, and there are
+three ways to do it, from simplest to most general:
+
+- **By hand**: a column index and `set_active()`, as
+  [`lists_page.cpp`](../src/concepts/components/lists_page.cpp) does with left
+  and right.
+- **Edge exits**: collections, groups and pickers have `style.exits`
+  (`ui::EdgeExits`). With an exit open, pushing past that edge returns
+  `Event::none` and `exit()` names the edge, so the screen hands the focus to
+  the neighbour on that side
+  ([`data_page.cpp`](../src/concepts/components/data_page.cpp)).
+- **`ui::FocusGroup`**: register any rectangles (your own drawings, buttons,
+  whole components) and it picks the neighbour in a direction, remembers
+  where you were in each region, and scopes the focus to a modal layer
+  ([`layout_page.cpp`](../src/concepts/components/layout_page.cpp)).
+
+Rectangles come from the layout helpers (`ui::Row`, `ui::Column`,
+`ui::GridLayout`, `ui::Wrap`, `ui::SplitView`), or from your own arithmetic.
 
 ## Customising, from broad to fine
 
