@@ -52,6 +52,7 @@ class Painter
         return theme_;
     }
     const FontRef &font(FontRole role) const;
+    static float pixel_em(float size);
 
     // ---- text ----
     // Heading in the theme's heading face, in the text colour (or another).

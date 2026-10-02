@@ -157,12 +157,16 @@ int main()
     gfx::Font semibold;
     gfx::Font display_font;
     gfx::Font mono;
+    gfx::Font pixel;
+    gfx::Font hand;
     ui::Fonts fonts;
     if (!renderer.init() ||
         !load_font(renderer, "inter-regular.huifont", &regular, &fonts.regular) ||
         !load_font(renderer, "inter-semibold.huifont", &semibold, &fonts.semibold) ||
         !load_font(renderer, "montserrat-medium.huifont", &display_font, &fonts.display) ||
-        !load_font(renderer, "dejavu-sans-mono.huifont", &mono, &fonts.mono))
+        !load_font(renderer, "dejavu-sans-mono.huifont", &mono, &fonts.mono) ||
+        !load_font(renderer, "press-start-2p.huifont", &pixel, &fonts.pixel) ||
+        !load_font(renderer, "patrick-hand.huifont", &hand, &fonts.hand))
     {
         sys::log("[HUI] fatal: renderer init failed");
         sys::park();

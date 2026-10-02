@@ -53,7 +53,8 @@ class Keyboard : public hui::testing::ConceptFixture
         hui::InputFrame held = idle();
         held.held = hui::action_bit(action);
         int count = 0;
-        for (float t = 0.0f; t < seconds; t += 1.0f / 60.0f)
+        for (int frame = 0, frames = static_cast<int>(seconds / (1.0f / 60.0f)); frame < frames;
+             ++frame)
         {
             send(*design_, held, 0.0f);
             if (played(Cue::error))

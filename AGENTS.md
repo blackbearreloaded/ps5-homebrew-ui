@@ -154,6 +154,15 @@ Read [docs/CONSOLE_VALIDATION.md](docs/CONSOLE_VALIDATION.md) first. In short:
   with no kerning pairs found that one).
 - A stale result file from an earlier console run can answer for a new one:
   the runner compares modification times for that reason.
+- A title uploaded for the first time is launchable only after the console
+  has registered it (about ten seconds after the last file lands). Launching
+  earlier shows "title not found". The runner waits for the registration.
+- The console's FTP server lists only the current directory and has no
+  `MDTM`: change into a folder before listing it.
+- A long string literal split across two lines inside an array looks like a
+  missing comma to the compiler (`-Wstring-concatenation`); keep each entry on
+  one line.
+- Float loop counters fail static analysis. Count steps with an `int`.
 - Killing a native title that is still rendering has been followed by lost
   consoles. The app ends itself with `sceSystemServiceLoadExec("exit", NULL)`;
   `exit()` and `_Exit()` end in the system's crash reporter.

@@ -32,7 +32,8 @@ class ControlRoom : public hui::testing::ConceptFixture
     int count_cue(Cue cue, float seconds)
     {
         int count = 0;
-        for (float t = 0.0f; t < seconds; t += 1.0f / 60.0f)
+        for (int frame = 0, frames = static_cast<int>(seconds / (1.0f / 60.0f)); frame < frames;
+             ++frame)
         {
             feedback_.clear();
             design_->update(idle(), 1.0f / 60.0f, feedback_);

@@ -32,7 +32,8 @@ tour 01 aurora       frames=412 avg_ms=16.67 worst_ms=16.92 draws=14 shapes=373
 ## Running it
 
 `tools/console-tour.py` does the whole cycle from a PC on the same network.
-It needs FTP (2121), the kernel log (3232) and an ELF loader (9021) on the
+It needs FTP (2121), the kernel log (3232), an ELF loader (9021) and
+[ShadowMount Plus](https://github.com/drakmor/ShadowMountPlus) on the
 console, and the launch helper from
 [ps5-homebrew-dev-protocol](https://github.com/blackbearreloaded/ps5-homebrew-dev-protocol).
 
@@ -41,10 +42,18 @@ make                                            # build dist/<TITLE_ID>
 PS5_HOST=<console address> tools/console-tour.py results/run-1
 ```
 
-It uploads the build (verifying every file by size and the executable by
-hash), writes the trigger, records the kernel log, launches the title, waits
-for the app's own exit, downloads the report, the pictures and `app.log`, and
-checks the log for errors. It never kills the app and never retries.
+It uploads the build (every file read back and compared by hash), writes the
+trigger, waits until the console has registered the title, records the kernel
+log, launches the title, waits for the app's own exit, downloads the report,
+the pictures and `app.log`, and checks the log for errors. It never kills the
+app and never retries.
+
+A title copied to `/data/homebrew` for the first time is not known to the
+console yet. ShadowMount Plus registers it once the folder has stopped
+changing (about ten seconds), which creates `/user/app/<TITLE_ID>/mount.lnk`;
+the tool waits for that file. Launching earlier only shows the system's
+"title not found" screen: nothing starts and nothing is harmed, but the run
+is wasted.
 
 What to look at afterwards, in `results/run-1/`:
 
@@ -54,6 +63,7 @@ What to look at afterwards, in `results/run-1/`:
 | `tour/*.bmp` | Compare with `build/snapshots/*.png` from the PC: same layout, colours and text |
 | `app.log` | `gl 4.6`, `sounds files=67 rejected=0`, no `fatal`, `shader ... failed` or `rejected` lines; `tour finished`; `quit requested` |
 | `klog.txt` | The title's start and its clean exit; no crash report |
+| `shadowmount.txt` | The title's lines from the console's lifecycle log: registered, started, released |
 
 ## Rules for console runs
 

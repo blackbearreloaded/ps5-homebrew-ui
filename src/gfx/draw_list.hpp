@@ -70,7 +70,7 @@ struct Rect
 // run of shapes: GlBatch::create_font_texture returns a handle made of this
 // base plus a slot number (1..kFontSlots) instead of a GL texture name.
 constexpr std::uint32_t kFontHandleBase = 0xf0000000u;
-constexpr std::uint32_t kFontSlots = 4;
+constexpr std::uint32_t kFontSlots = 6;
 constexpr bool is_font_handle(std::uint32_t texture)
 {
     return (texture & 0xfffffff0u) == kFontHandleBase;

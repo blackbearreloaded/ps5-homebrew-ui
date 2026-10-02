@@ -863,8 +863,12 @@ class Dashboard final : public app::Concept
 
     void dashed(gfx::DrawList &list, float x1, float x2, float y, Color color) const
     {
-        for (float x = x1; x < x2; x += 18.0f)
+        const int dashes = static_cast<int>(std::ceil((x2 - x1) / 18.0f));
+        for (int i = 0; i < dashes; ++i)
+        {
+            const float x = x1 + static_cast<float>(i) * 18.0f;
             list.line(x, y, std::min(x + 8.0f, x2), y, 1.5f, color);
+        }
     }
 
     void star_row(gfx::DrawList &list, float x, float cy, float radius, float pitch, float filled,
@@ -1522,8 +1526,10 @@ class Dashboard final : public app::Concept
                           kBarsArea.y + 2.0f, 340.0f, 88.0f};
         const float tip = bubble.y + bubble.h + 12.0f;
         list.push_opacity(rise(time, 7, 0.06f, 0.4f));
-        for (float y = tip + 10.0f; y < leader_y_.value; y += 12.0f)
-            list.circle(cx, y, 2.0f, kLime.with_alpha(0.55f));
+        const int dots = static_cast<int>(std::ceil((leader_y_.value - tip - 10.0f) / 12.0f));
+        for (int i = 0; i < dots; ++i)
+            list.circle(cx, tip + 10.0f + static_cast<float>(i) * 12.0f, 2.0f,
+                        kLime.with_alpha(0.55f));
         list.shadow({bubble.x, bubble.y + 10, bubble.w, bubble.h}, 20, 26, kBlack.with_alpha(0.5f));
         list.rotated_rect({cx - 10, tip - 22, 20, 20}, 4, kTau / 8.0f, Color::rgb(0x222c48));
         list.bordered_rect(bubble, 20, Color::rgb(0x222c48), 1.5f, kLime.with_alpha(0.45f));

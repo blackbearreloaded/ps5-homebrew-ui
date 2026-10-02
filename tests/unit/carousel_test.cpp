@@ -33,7 +33,7 @@ class CoverFlow : public hui::testing::ConceptFixture
     std::vector<CueEvent> hold(const hui::InputFrame &input, float seconds)
     {
         std::vector<CueEvent> cues;
-        for (float t = 0.0f; t < seconds; t += kFrame)
+        for (int frame = 0, frames = static_cast<int>(seconds / (kFrame)); frame < frames; ++frame)
         {
             feedback_.clear();
             design_->update(input, kFrame, feedback_);

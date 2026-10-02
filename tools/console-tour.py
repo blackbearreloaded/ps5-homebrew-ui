@@ -23,6 +23,7 @@ Environment:
   PS5_PAYLOAD_SDK   default .deps/native/ps5-payload-sdk
   TOUR_TIMEOUT      seconds to wait for the tour (default 900)
   SETTLE_SECONDS    pause before the installed files are verified again (default 120)
+  REGISTER_TIMEOUT  seconds to wait for the title to be registered (default 120)
 """
 
 import hashlib
@@ -78,10 +79,18 @@ class Console:
             pass
 
     def names(self, path):
+        # The console's FTP server lists only the current directory: an
+        # argument to MLSD is ignored, so change into the folder first.
         try:
-            return [name for name, _ in self.ftp.mlsd(path) if name not in (".", "..")]
+            self.ftp.cwd(path)
+            return [name for name, _ in self.ftp.mlsd() if name not in (".", "..")]
         except all_errors:
             return None
+        finally:
+            try:
+                self.ftp.cwd("/")
+            except all_errors:
+                pass
 
     def read(self, path):
         data = io.BytesIO()
@@ -92,10 +101,21 @@ class Console:
         return data.getvalue()
 
     def stamp(self, path):
+        """Modification time and size of a file, or None (the server has no MDTM)."""
+        directory, name = path.rsplit("/", 1)
         try:
-            return self.ftp.sendcmd(f"MDTM {path}")
+            self.ftp.cwd(directory)
+            for entry, facts in self.ftp.mlsd():
+                if entry == name:
+                    return (facts.get("modify"), facts.get("size"))
+            return None
         except all_errors:
             return None
+        finally:
+            try:
+                self.ftp.cwd("/")
+            except all_errors:
+                pass
 
     def make_dirs(self, path):
         current = ""
@@ -155,6 +175,7 @@ def main():
     elf_port = int(os.environ.get("ELF_PORT", "9021"))
     timeout = int(os.environ.get("TOUR_TIMEOUT", "900"))
     settle = int(os.environ.get("SETTLE_SECONDS", "120"))
+    register_wait = int(os.environ.get("REGISTER_TIMEOUT", "120"))
     protocol = Path(os.environ.get("PS5_PROTOCOL", ROOT.parent / "ps5-homebrew-dev-protocol"))
     sdk = os.environ.get("PS5_PAYLOAD_SDK", str(ROOT / ".deps/native/ps5-payload-sdk"))
     sender = protocol / "scripts/send-controller.sh"
@@ -202,9 +223,25 @@ def main():
     before = console.stamp(report_path)
     console.write(f"{DEV_ROOT}/tour.txt", (only + "\n").encode())
     console.close()
-    if first_install:
-        say("First install: giving the console 30 s to register the title")
-        time.sleep(30)
+
+    # ShadowMount Plus registers a new title only once its folder has stopped
+    # changing. Launching before that shows "title not found" on the console.
+    waited = 0
+    while True:
+        console = Console(host, ftp_port)
+        registered = "mount.lnk" in (console.names(f"/user/app/{title}") or [])
+        console.close()
+        if registered:
+            break
+        if waited >= register_wait:
+            stop(f"{title} was not registered after {register_wait} s "
+                 "(is ShadowMount Plus running?); nothing was launched")
+        if waited == 0:
+            say("Waiting for the console to register the title")
+        time.sleep(5)
+        waited += 5
+    if first_install or uploaded:
+        time.sleep(15)  # let the registration settle before the launch
 
     done = threading.Event()
     klog = None
@@ -233,7 +270,8 @@ def main():
             done.set()
             stop("the console stopped answering during the run; do not retry, look at klog.txt")
         active = running_titles(console)
-        changed = console.stamp(report_path) not in (None, before)
+        now = console.stamp(report_path)
+        changed = now is not None and now != before
         console.close()
         seen_running = seen_running or title in active
         if not seen_running and time.time() - started > 60:
@@ -259,6 +297,9 @@ def main():
         (results / name).write_bytes(data)
     log = console.read(f"{DEV_ROOT}/app.log") or b""
     (results / "app.log").write_bytes(log)
+    lifecycle = console.read("/data/shadowmount/debug.log") or b""
+    (results / "shadowmount.txt").write_text("".join(
+        line + "\n" for line in lifecycle.decode("utf-8", "replace").splitlines() if title in line))
     pictures = [n for n in (console.names(f"{DEV_ROOT}/tour") or []) if n.endswith(".bmp")]
     for name in sorted(pictures):
         data = console.read(f"{DEV_ROOT}/tour/{name}")

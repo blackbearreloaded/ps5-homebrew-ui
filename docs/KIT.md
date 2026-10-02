@@ -97,7 +97,7 @@ fonts.regular.font->wrap(text, 24, width);    // lines
 ui::upper("Continue playing");                // ASCII capitals for tracked labels
 ```
 
-`context.fonts` holds four faces:
+`context.fonts` holds six faces:
 
 | Member | Face | Use |
 | --- | --- | --- |
@@ -105,13 +105,16 @@ ui::upper("Continue playing");                // ASCII capitals for tracked labe
 | `semibold` | Inter SemiBold | Titles, labels, buttons |
 | `display` | Montserrat Medium | Hero titles, wordmarks |
 | `mono` | DejaVu Sans Mono | Changing numbers, code, terminals |
+| `pixel` | Press Start 2P | An 8 x 8 bitmap face; use sizes that are multiples of 8 (or 4) so its pixels stay square |
+| `hand` | Patrick Hand | Handwriting, for sketched or playful screens |
 
 Text is positioned by its **baseline**. Fonts are baked signed-distance
 fields: any size is sharp, and one atlas per face is all the memory they use.
-The four atlases sit on texture units of their own, so text never interrupts
+The atlases sit on texture units of their own (up to `gfx::kFontSlots`, six), so text never interrupts
 a run of shapes: a screen full of mixed text and shapes is one draw call.
 The glyph set is printable ASCII plus `· × © ° – — • … ← ↑ → ↓ ✓` (and, in
-DejaVu Sans Mono, `█ ● ▲ ▶ ▼ ◀`). Check `font->has_glyph(codepoint)` before
+DejaVu Sans Mono, `█ ● ▲ ▶ ▼ ◀`); a face that lacks a symbol simply skips it,
+and curly quotes are not baked at all. Check `font->has_glyph(codepoint)` before
 relying on a symbol; draw icons from shapes instead of hunting for glyphs.
 
 ## Backdrops

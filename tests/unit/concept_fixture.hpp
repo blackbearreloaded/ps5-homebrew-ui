@@ -30,6 +30,8 @@ class ConceptFixture : public ::testing::Test
         load("inter-semibold", &semibold_, &fonts_.semibold);
         load("montserrat-medium", &display_, &fonts_.display);
         load("dejavu-sans-mono", &mono_, &fonts_.mono);
+        load("press-start-2p", &pixel_, &fonts_.pixel);
+        load("patrick-hand", &hand_, &fonts_.hand);
     }
 
     static InputFrame idle()
@@ -58,7 +60,8 @@ class ConceptFixture : public ::testing::Test
         feedback_.clear();
         design.update(input, 1.0f / 60.0f, feedback_);
         last_cues_ = feedback_.cues;
-        for (float t = 0.0f; t < seconds; t += 1.0f / 60.0f)
+        for (int frame = 0, frames = static_cast<int>(seconds / (1.0f / 60.0f)); frame < frames;
+             ++frame)
         {
             feedback_.clear();
             design.update(idle(), 1.0f / 60.0f, feedback_);
@@ -96,7 +99,7 @@ class ConceptFixture : public ::testing::Test
         EXPECT_FALSE(frame_.scene.empty() && frame_.overlay.empty()) << design.info().id;
     }
 
-    gfx::Font regular_, semibold_, display_, mono_;
+    gfx::Font regular_, semibold_, display_, mono_, pixel_, hand_;
     ui::Fonts fonts_;
     demo::Catalog catalog_;
     app::Telemetry telemetry_;

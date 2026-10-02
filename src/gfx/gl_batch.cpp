@@ -77,7 +77,7 @@ void main()
 constexpr const char *kFragment = R"(
 layout(location = 0) uniform vec4 u_viewport;
 layout(location = 2) uniform sampler2D u_texture;
-layout(location = 3) uniform sampler2D u_fonts[4];
+layout(location = 3) uniform sampler2D u_fonts[6];
 in vec2 v_local;
 in vec2 v_virtual;
 in vec2 v_uv;
@@ -155,6 +155,10 @@ void main()
             sdf = texture(u_fonts[2], v_uv).r;
         else if (slot == 4)
             sdf = texture(u_fonts[3], v_uv).r;
+        else if (slot == 5)
+            sdf = texture(u_fonts[4], v_uv).r;
+        else if (slot == 6)
+            sdf = texture(u_fonts[5], v_uv).r;
         else
             sdf = texture(u_texture, v_uv).r;
         float distance = (sdf - 0.5) * 2.0 * v_params.x;
@@ -411,7 +415,7 @@ void GlBatch::draw(const DrawList &list, const Viewport &viewport, int surface_w
     glUseProgram(program_);
     glUniform1i(2, 0);
     // Font atlases on units 1..4 for the whole frame; unit 0 changes per run.
-    const GLint font_units[kFontSlots] = {1, 2, 3, 4};
+    const GLint font_units[kFontSlots] = {1, 2, 3, 4, 5, 6};
     glUniform1iv(3, static_cast<GLsizei>(kFontSlots), font_units);
     for (std::uint32_t slot = 0; slot < font_count_; ++slot)
     {

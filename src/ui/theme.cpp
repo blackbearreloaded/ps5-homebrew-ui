@@ -842,8 +842,8 @@ Theme papercss()
     t.border = 3.0f;
     t.shadow_offset = 12.0f;
     t.shadow_blur = 16.0f;
-    t.heading = FontRole::display;
-    t.label = FontRole::regular;
+    t.heading = FontRole::hand;
+    t.label = FontRole::hand;
     t.omega = 14.0f;
     t.damping = 0.55f;
     t.sounds = audio::SoundSet::paper;

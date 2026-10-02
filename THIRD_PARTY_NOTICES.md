@@ -10,8 +10,11 @@ ps5-homebrew-ui exists thanks to the maintainers and contributors of:
   and the [PS5 Payload SDK](https://github.com/ps5-payload-dev/sdk) for the
   reproducible native foundation;
 - [Inter](https://github.com/rsms/inter),
-  [Montserrat](https://github.com/JulietaUla/Montserrat) and
-  [DejaVu](https://dejavu-fonts.github.io/) for the interface typefaces, and
+  [Montserrat](https://github.com/JulietaUla/Montserrat),
+  [DejaVu](https://dejavu-fonts.github.io/),
+  [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) and
+  [Patrick Hand](https://fonts.google.com/specimen/Patrick+Hand) for the
+  interface typefaces, and
   [stb](https://github.com/nothings/stb) for music decoding, font baking and
   PNG writing;
 - [MkPFS](https://github.com/PSBrew/MkPFS),
@@ -36,6 +39,8 @@ project adds.
 | Inter Regular, SemiBold | `third_party/fonts/Inter-*.ttf` | (c) 2016 The Inter Project Authors | SIL Open Font License 1.1 (`Inter-LICENSE.txt`) |
 | Montserrat Medium | `third_party/fonts/Montserrat-Medium.ttf` | (c) 2011 The Montserrat Project Authors | SIL Open Font License 1.1 (`Montserrat-LICENSE.txt`) |
 | DejaVu Sans Mono | `third_party/fonts/DejaVuSansMono.ttf` | (c) 2003 Bitstream, Inc.; DejaVu changes are public domain | Bitstream Vera licence (`DejaVu-LICENSE.txt`) |
+| Press Start 2P | `third_party/fonts/PressStart2P-Regular.ttf` | (c) 2012 The Press Start 2P Project Authors | SIL Open Font License 1.1 (`PressStart2P-LICENSE.txt`) |
+| Patrick Hand | `third_party/fonts/PatrickHand-Regular.ttf` | (c) 2010-2012 Patrick Wagesreiter | SIL Open Font License 1.1 (`PatrickHand-LICENSE.txt`) |
 
 `assets/fonts/*.huifont` are distance-field renderings of these typefaces
 produced by `tools/bake-fonts.sh`; the licence texts ship beside them.

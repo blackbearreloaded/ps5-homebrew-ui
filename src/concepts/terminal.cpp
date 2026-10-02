@@ -504,7 +504,7 @@ class Terminal final : public app::Concept
   public:
     explicit Terminal(app::Context &context)
         : context_(context), mono_fonts_{context.fonts.mono, context.fonts.mono, context.fonts.mono,
-                                         context.fonts.mono}
+                                         context.fonts.mono, context.fonts.mono, context.fonts.mono}
     {
         // The grid is derived from the font: one cell is the advance of a
         // glyph, and the 100 columns are centred on the canvas.

@@ -168,6 +168,8 @@ int main(int argc, char **argv)
     hui::gfx::Font semibold;
     hui::gfx::Font display;
     hui::gfx::Font mono;
+    hui::gfx::Font pixel;
+    hui::gfx::Font hand;
     hui::ui::Fonts fonts;
     if (!renderer.init() ||
         !load_font(renderer, assets + "/fonts/inter-regular.huifont", &regular, &fonts.regular) ||
@@ -175,7 +177,9 @@ int main(int argc, char **argv)
                    &fonts.semibold) ||
         !load_font(renderer, assets + "/fonts/montserrat-medium.huifont", &display,
                    &fonts.display) ||
-        !load_font(renderer, assets + "/fonts/dejavu-sans-mono.huifont", &mono, &fonts.mono))
+        !load_font(renderer, assets + "/fonts/dejavu-sans-mono.huifont", &mono, &fonts.mono) ||
+        !load_font(renderer, assets + "/fonts/press-start-2p.huifont", &pixel, &fonts.pixel) ||
+        !load_font(renderer, assets + "/fonts/patrick-hand.huifont", &hand, &fonts.hand))
         return 1;
     hui::demo::Catalog catalog;
     if (!catalog.build_covers(renderer, fonts))

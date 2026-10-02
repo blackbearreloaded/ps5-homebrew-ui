@@ -44,7 +44,8 @@ enum class FontRole : std::uint8_t
     semibold,
     display,
     mono,
-    pixel, // the built-in 5x7 bitmap face (ui/pixel_font.hpp), capitals only
+    pixel, // Press Start 2P on the pixel grid (ui/pixel_font.hpp draws a 5x7 face without it)
+    hand,  // Patrick Hand: handwriting
 };
 
 // Everything a widget needs to know to draw itself. A theme is data: adding

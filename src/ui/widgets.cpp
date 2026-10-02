@@ -65,6 +65,14 @@ gfx::Color Painter::on(gfx::Color background)
     return luminance > 0.58f ? Color::rgb(0x000000) : Color::rgb(0xffffff);
 }
 
+// A bitmap face looks right when each of its 8 rows covers a whole number
+// of pixels. Sizes snap to steps of 4 (half a pixel per row at 1080p, a whole
+// one at 2160p) and never go below 12, the smallest that reads from a sofa.
+float Painter::pixel_em(float size)
+{
+    return std::max(12.0f, std::round(size / 4.0f) * 4.0f);
+}
+
 const FontRef &Painter::font(FontRole role) const
 {
     switch (role)
@@ -74,8 +82,11 @@ const FontRef &Painter::font(FontRole role) const
     case FontRole::display:
         return fonts_.display;
     case FontRole::mono:
-    case FontRole::pixel:
         return fonts_.mono;
+    case FontRole::pixel:
+        return fonts_.pixel.font != nullptr ? fonts_.pixel : fonts_.mono;
+    case FontRole::hand:
+        return fonts_.hand.font != nullptr ? fonts_.hand : fonts_.regular;
     default:
         return fonts_.regular;
     }
@@ -91,7 +102,13 @@ float Painter::heading(std::string_view value, float x, float baseline, float si
                        gfx::Color color, gfx::Align align)
 {
     if (theme_.heading == FontRole::pixel)
-        return pixel_text(list_, value, x, baseline, size * 0.66f, color, align);
+    {
+        if (fonts_.pixel.font == nullptr)
+            return pixel_text(list_, value, x, baseline, size * 0.66f, color, align);
+        return text(list_, fonts_.pixel, value, x, baseline, pixel_em(size * 0.7f), color, align);
+    }
+    if (theme_.heading == FontRole::hand)
+        return text(list_, font(theme_.heading), value, x, baseline, size * 1.16f, color, align);
     return text(list_, font(theme_.heading), value, x, baseline, size, color, align);
 }
 
@@ -99,7 +116,14 @@ float Painter::label(std::string_view value, float x, float baseline, float size
                      gfx::Align align)
 {
     if (theme_.label == FontRole::pixel)
-        return pixel_text(list_, value, x, baseline - size * 0.04f, size * 0.62f, color, align);
+    {
+        if (fonts_.pixel.font == nullptr)
+            return pixel_text(list_, value, x, baseline - size * 0.04f, size * 0.62f, color, align);
+        return text(list_, fonts_.pixel, value, x, baseline - size * 0.04f, pixel_em(size * 0.62f),
+                    color, align);
+    }
+    if (theme_.label == FontRole::hand)
+        return text(list_, font(theme_.label), value, x, baseline, size * 1.18f, color, align);
     // Capitals read larger than mixed case: shrink them a little.
     if (theme_.caps)
         return text(list_, font(theme_.label), upper(value), x, baseline, size * 0.86f, color,
@@ -110,7 +134,13 @@ float Painter::label(std::string_view value, float x, float baseline, float size
 float Painter::label_width(std::string_view value, float size) const
 {
     if (theme_.label == FontRole::pixel)
-        return pixel_text_width(value, size * 0.62f);
+    {
+        if (fonts_.pixel.font == nullptr)
+            return pixel_text_width(value, size * 0.62f);
+        return fonts_.pixel.measure(value, pixel_em(size * 0.62f));
+    }
+    if (theme_.label == FontRole::hand)
+        return font(theme_.label).measure(value, size * 1.18f);
     if (theme_.caps)
         return font(theme_.label).measure(upper(value), size * 0.86f, theme_.tracking);
     return font(theme_.label).measure(value, size, theme_.tracking);
@@ -120,7 +150,14 @@ float Painter::body(std::string_view value, float x, float baseline, float size,
                     gfx::Align align)
 {
     if (theme_.label == FontRole::pixel)
-        return pixel_text(list_, value, x, baseline - size * 0.04f, size * 0.58f, color, align);
+    {
+        if (fonts_.pixel.font == nullptr)
+            return pixel_text(list_, value, x, baseline - size * 0.04f, size * 0.58f, color, align);
+        return text(list_, fonts_.pixel, value, x, baseline - size * 0.04f, pixel_em(size * 0.62f),
+                    color, align);
+    }
+    if (theme_.label == FontRole::hand)
+        return text(list_, font(theme_.label), value, x, baseline, size * 1.14f, color, align);
     if (theme_.label == FontRole::mono)
         return text(list_, fonts_.mono, value, x, baseline, size * 0.92f, color, align);
     return text(list_, fonts_.regular, value, x, baseline, size, color, align);
@@ -383,13 +420,17 @@ void Painter::focus_ring(const gfx::Rect &r, float radius, float amount)
     {
         // The dotted rectangle inside the control.
         const Rect in = r.inset(7.0f);
-        for (float x = in.x; x < in.x + in.w - 3.0f; x += 6.0f)
+        const int across = static_cast<int>(std::ceil((in.w - 3.0f) / 6.0f));
+        for (int i = 0; i < across; ++i)
         {
+            const float x = in.x + static_cast<float>(i) * 6.0f;
             list_.rounded_rect({x, in.y, 3, 1.5f}, 0, theme_.focus);
             list_.rounded_rect({x, in.y + in.h - 1.5f, 3, 1.5f}, 0, theme_.focus);
         }
-        for (float y = in.y; y < in.y + in.h - 3.0f; y += 6.0f)
+        const int down = static_cast<int>(std::ceil((in.h - 3.0f) / 6.0f));
+        for (int i = 0; i < down; ++i)
         {
+            const float y = in.y + static_cast<float>(i) * 6.0f;
             list_.rounded_rect({in.x, y, 1.5f, 3}, 0, theme_.focus);
             list_.rounded_rect({in.x + in.w - 1.5f, y, 1.5f, 3}, 0, theme_.focus);
         }

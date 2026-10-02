@@ -22,5 +22,7 @@ Inter-Regular.ttf inter-regular 56 8
 Inter-SemiBold.ttf inter-semibold 56 8
 Montserrat-Medium.ttf montserrat-medium 56 8
 DejaVuSansMono.ttf dejavu-sans-mono 52 8
+PressStart2P-Regular.ttf press-start-2p 32 4
+PatrickHand-Regular.ttf patrick-hand 56 8
 FONTS
 cp "$root"/third_party/fonts/*-LICENSE.txt "$root/assets/fonts/"

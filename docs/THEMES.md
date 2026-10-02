@@ -113,6 +113,428 @@ They are homages rebuilt with this kit's shapes. No framework code, font or
 asset is used, and the names of those projects belong to their owners.
 
 <!-- BEGIN:themes -->
+| # | Theme | Design language | Recipe |
+| --- | --- | --- | --- |
+| 01 | [Acrylic](#acrylic) | Frosted glass | Blurred translucent panels, hairline light edges, small radii |
+| 02 | [Brutal](#brutal) | Neo-brutalism | Square corners, thick black outlines, hard offset shadows, loud flats |
+| 03 | [Clay](#clay) | Neumorphism | Everything is the page colour, raised and pressed by two shadows |
+| 04 | [Tiles](#tiles) | Flat | No depth at all: square colour blocks, big type, capitals |
+| 05 | [Gloss](#gloss) | Skeuomorphic | Gradients, glassy highlights and dark edges: buttons that look pressable |
+| 06 | [Classic](#classic) | Bevelled desktop | Grey panels with a light and a dark edge; nothing eases, everything clicks |
+| 07 | [Blueprint](#blueprint) | Wireframe | Strokes only, one colour, monospaced capitals on a drafting grid |
+| 08 | [Hazard](#hazard) | Sci-fi console | Cut corners, lit strokes and glow on near-black |
+| 09 | [Candy](#candy) | Playful pastel | Fully round, pastel, coloured shadows, everything bounces |
+| 10 | [Contrast](#contrast) | High contrast | Black, white and one signal colour; thick strokes; nothing subtle |
+| 11 | [Pixel](#pixel) | 8-bit pixel art · after NES.css | Notched black outlines, a darker band inside each button, a bitmap font |
+| 12 | [Soft](#soft) | Modern soft · after Mantine | Blue on white, 8 px corners, tinted "light" buttons, no shadows |
+| 13 | [Daisy](#daisy) | Clean and customisable · after daisyUI | Indigo, pink and teal on white; small radii; a hint of depth under buttons |
+| 14 | [Pico](#pico) | Minimal and classless · after Pico.css | Large calm type, azure actions, soft layered card shadows |
+| 15 | [Enterprise](#ant) | Structured enterprise · after Ant Design | Dense, orderly, hairline borders, 6 px corners, one confident blue |
+| 16 | [Chakra](#chakra) | Modern and accessible · after Chakra UI | Teal on white, grey ghost buttons, soft cards, a blue focus halo |
+| 17 | [Fresh](#fresh) | Modern flat · after Nuxt UI | Slate night, one vivid green, hairline rings, pill badges |
+| 18 | [Neutral](#neutral) | Neutral modern · after Shoelace | Zinc greys, sky blue, 4 px corners, a wide translucent focus ring |
+| 19 | [Material](#paper) | Material Design · after Propeller | Raised sheets with real shadows, capitals, underlined fields, a pink accent |
+| 20 | [Humane](#humane) | Clean and readable · after Semantic UI | Soft grey buttons with bold labels, white segments, 4 px corners |
+| 21 | [Standard](#standard) | General purpose · after Bootstrap 5 | The familiar default: medium corners, blue and grey buttons, a wide focus halo |
+| 22 | [Pill](#pill) | High-contrast dashboard · after Preline UI | Near-black, white and blue; every control is a smooth pill |
+| 23 | [Admin](#admin) | Dark admin · after Flowbite | Blue-grey night panels, rounded 8 px controls, a four pixel focus ring |
+| 24 | [Friendly](#friendly) | Friendly and soft · after Bulma | Turquoise, generous round boxes floating on a long soft shadow |
+| 25 | [Crisp](#crisp) | Minimal and square · after UIkit | Square edges, small capitals, grey text, one bright blue |
+| 26 | [Layers](#layers) | Material Design · after Materialize | Teal and coral, flat layers stacked by elevation, capitals, underlined fields |
+| 27 | [Utility](#utility) | Utilitarian · after Foundation | Sharp square blocks, plain borders, no decoration at all |
+| 28 | [Sketch](#sketch) | Hand-drawn paper · after PaperCSS | Crooked pen lines, tinted fills and soft shadows: a UI on a notepad |
+| 29 | [Featherweight](#light) | Ultra-light · after Milligram | Almost nothing: thin grey rules and small purple capitals with wide tracking |
+| 30 | [Code](#code) | Developer tools · after Primer | Ink-blue night, hairline borders, a green call to action, blue focus |
+
+<a id="acrylic"></a>
+
+### 01 &middot; Acrylic
+
+*Frosted glass.* Blurred translucent panels, hairline light edges, small radii. Theme id `acrylic`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/acrylic.jpg" alt="Acrylic"></td>
+<td width="50%" valign="top"><img src="media/themes/acrylic.webp" alt="Acrylic in motion"></td>
+</tr>
+</table>
+
+<a id="brutal"></a>
+
+### 02 &middot; Brutal
+
+*Neo-brutalism.* Square corners, thick black outlines, hard offset shadows, loud flats. Theme id `brutal`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/brutal.jpg" alt="Brutal"></td>
+<td width="50%" valign="top"><img src="media/themes/brutal.webp" alt="Brutal in motion"></td>
+</tr>
+</table>
+
+<a id="clay"></a>
+
+### 03 &middot; Clay
+
+*Neumorphism.* Everything is the page colour, raised and pressed by two shadows. Theme id `clay`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/clay.jpg" alt="Clay"></td>
+<td width="50%" valign="top"><img src="media/themes/clay.webp" alt="Clay in motion"></td>
+</tr>
+</table>
+
+<a id="tiles"></a>
+
+### 04 &middot; Tiles
+
+*Flat.* No depth at all: square colour blocks, big type, capitals. Theme id `tiles`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/tiles.jpg" alt="Tiles"></td>
+<td width="50%" valign="top"><img src="media/themes/tiles.webp" alt="Tiles in motion"></td>
+</tr>
+</table>
+
+<a id="gloss"></a>
+
+### 05 &middot; Gloss
+
+*Skeuomorphic.* Gradients, glassy highlights and dark edges: buttons that look pressable. Theme id `gloss`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/gloss.jpg" alt="Gloss"></td>
+<td width="50%" valign="top"><img src="media/themes/gloss.webp" alt="Gloss in motion"></td>
+</tr>
+</table>
+
+<a id="classic"></a>
+
+### 06 &middot; Classic
+
+*Bevelled desktop.* Grey panels with a light and a dark edge; nothing eases, everything clicks. Theme id `classic`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/classic.jpg" alt="Classic"></td>
+<td width="50%" valign="top"><img src="media/themes/classic.webp" alt="Classic in motion"></td>
+</tr>
+</table>
+
+<a id="blueprint"></a>
+
+### 07 &middot; Blueprint
+
+*Wireframe.* Strokes only, one colour, monospaced capitals on a drafting grid. Theme id `blueprint`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/blueprint.jpg" alt="Blueprint"></td>
+<td width="50%" valign="top"><img src="media/themes/blueprint.webp" alt="Blueprint in motion"></td>
+</tr>
+</table>
+
+<a id="hazard"></a>
+
+### 08 &middot; Hazard
+
+*Sci-fi console.* Cut corners, lit strokes and glow on near-black. Theme id `hazard`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/hazard.jpg" alt="Hazard"></td>
+<td width="50%" valign="top"><img src="media/themes/hazard.webp" alt="Hazard in motion"></td>
+</tr>
+</table>
+
+<a id="candy"></a>
+
+### 09 &middot; Candy
+
+*Playful pastel.* Fully round, pastel, coloured shadows, everything bounces. Theme id `candy`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/candy.jpg" alt="Candy"></td>
+<td width="50%" valign="top"><img src="media/themes/candy.webp" alt="Candy in motion"></td>
+</tr>
+</table>
+
+<a id="contrast"></a>
+
+### 10 &middot; Contrast
+
+*High contrast.* Black, white and one signal colour; thick strokes; nothing subtle. Theme id `contrast`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/contrast.jpg" alt="Contrast"></td>
+<td width="50%" valign="top"><img src="media/themes/contrast.webp" alt="Contrast in motion"></td>
+</tr>
+</table>
+
+<a id="pixel"></a>
+
+### 11 &middot; Pixel
+
+*8-bit pixel art · after NES.css.* Notched black outlines, a darker band inside each button, a bitmap font. Theme id `pixel`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/pixel.jpg" alt="Pixel"></td>
+<td width="50%" valign="top"><img src="media/themes/pixel.webp" alt="Pixel in motion"></td>
+</tr>
+</table>
+
+<a id="soft"></a>
+
+### 12 &middot; Soft
+
+*Modern soft · after Mantine.* Blue on white, 8 px corners, tinted "light" buttons, no shadows. Theme id `soft`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/soft.jpg" alt="Soft"></td>
+<td width="50%" valign="top"><img src="media/themes/soft.webp" alt="Soft in motion"></td>
+</tr>
+</table>
+
+<a id="daisy"></a>
+
+### 13 &middot; Daisy
+
+*Clean and customisable · after daisyUI.* Indigo, pink and teal on white; small radii; a hint of depth under buttons. Theme id `daisy`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/daisy.jpg" alt="Daisy"></td>
+<td width="50%" valign="top"><img src="media/themes/daisy.webp" alt="Daisy in motion"></td>
+</tr>
+</table>
+
+<a id="pico"></a>
+
+### 14 &middot; Pico
+
+*Minimal and classless · after Pico.css.* Large calm type, azure actions, soft layered card shadows. Theme id `pico`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/pico.jpg" alt="Pico"></td>
+<td width="50%" valign="top"><img src="media/themes/pico.webp" alt="Pico in motion"></td>
+</tr>
+</table>
+
+<a id="ant"></a>
+
+### 15 &middot; Enterprise
+
+*Structured enterprise · after Ant Design.* Dense, orderly, hairline borders, 6 px corners, one confident blue. Theme id `ant`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/ant.jpg" alt="Enterprise"></td>
+<td width="50%" valign="top"><img src="media/themes/ant.webp" alt="Enterprise in motion"></td>
+</tr>
+</table>
+
+<a id="chakra"></a>
+
+### 16 &middot; Chakra
+
+*Modern and accessible · after Chakra UI.* Teal on white, grey ghost buttons, soft cards, a blue focus halo. Theme id `chakra`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/chakra.jpg" alt="Chakra"></td>
+<td width="50%" valign="top"><img src="media/themes/chakra.webp" alt="Chakra in motion"></td>
+</tr>
+</table>
+
+<a id="fresh"></a>
+
+### 17 &middot; Fresh
+
+*Modern flat · after Nuxt UI.* Slate night, one vivid green, hairline rings, pill badges. Theme id `fresh`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/fresh.jpg" alt="Fresh"></td>
+<td width="50%" valign="top"><img src="media/themes/fresh.webp" alt="Fresh in motion"></td>
+</tr>
+</table>
+
+<a id="neutral"></a>
+
+### 18 &middot; Neutral
+
+*Neutral modern · after Shoelace.* Zinc greys, sky blue, 4 px corners, a wide translucent focus ring. Theme id `neutral`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/neutral.jpg" alt="Neutral"></td>
+<td width="50%" valign="top"><img src="media/themes/neutral.webp" alt="Neutral in motion"></td>
+</tr>
+</table>
+
+<a id="paper"></a>
+
+### 19 &middot; Material
+
+*Material Design · after Propeller.* Raised sheets with real shadows, capitals, underlined fields, a pink accent. Theme id `paper`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/paper.jpg" alt="Material"></td>
+<td width="50%" valign="top"><img src="media/themes/paper.webp" alt="Material in motion"></td>
+</tr>
+</table>
+
+<a id="humane"></a>
+
+### 20 &middot; Humane
+
+*Clean and readable · after Semantic UI.* Soft grey buttons with bold labels, white segments, 4 px corners. Theme id `humane`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/humane.jpg" alt="Humane"></td>
+<td width="50%" valign="top"><img src="media/themes/humane.webp" alt="Humane in motion"></td>
+</tr>
+</table>
+
+<a id="standard"></a>
+
+### 21 &middot; Standard
+
+*General purpose · after Bootstrap 5.* The familiar default: medium corners, blue and grey buttons, a wide focus halo. Theme id `standard`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/standard.jpg" alt="Standard"></td>
+<td width="50%" valign="top"><img src="media/themes/standard.webp" alt="Standard in motion"></td>
+</tr>
+</table>
+
+<a id="pill"></a>
+
+### 22 &middot; Pill
+
+*High-contrast dashboard · after Preline UI.* Near-black, white and blue; every control is a smooth pill. Theme id `pill`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/pill.jpg" alt="Pill"></td>
+<td width="50%" valign="top"><img src="media/themes/pill.webp" alt="Pill in motion"></td>
+</tr>
+</table>
+
+<a id="admin"></a>
+
+### 23 &middot; Admin
+
+*Dark admin · after Flowbite.* Blue-grey night panels, rounded 8 px controls, a four pixel focus ring. Theme id `admin`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/admin.jpg" alt="Admin"></td>
+<td width="50%" valign="top"><img src="media/themes/admin.webp" alt="Admin in motion"></td>
+</tr>
+</table>
+
+<a id="friendly"></a>
+
+### 24 &middot; Friendly
+
+*Friendly and soft · after Bulma.* Turquoise, generous round boxes floating on a long soft shadow. Theme id `friendly`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/friendly.jpg" alt="Friendly"></td>
+<td width="50%" valign="top"><img src="media/themes/friendly.webp" alt="Friendly in motion"></td>
+</tr>
+</table>
+
+<a id="crisp"></a>
+
+### 25 &middot; Crisp
+
+*Minimal and square · after UIkit.* Square edges, small capitals, grey text, one bright blue. Theme id `crisp`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/crisp.jpg" alt="Crisp"></td>
+<td width="50%" valign="top"><img src="media/themes/crisp.webp" alt="Crisp in motion"></td>
+</tr>
+</table>
+
+<a id="layers"></a>
+
+### 26 &middot; Layers
+
+*Material Design · after Materialize.* Teal and coral, flat layers stacked by elevation, capitals, underlined fields. Theme id `layers`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/layers.jpg" alt="Layers"></td>
+<td width="50%" valign="top"><img src="media/themes/layers.webp" alt="Layers in motion"></td>
+</tr>
+</table>
+
+<a id="utility"></a>
+
+### 27 &middot; Utility
+
+*Utilitarian · after Foundation.* Sharp square blocks, plain borders, no decoration at all. Theme id `utility`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/utility.jpg" alt="Utility"></td>
+<td width="50%" valign="top"><img src="media/themes/utility.webp" alt="Utility in motion"></td>
+</tr>
+</table>
+
+<a id="sketch"></a>
+
+### 28 &middot; Sketch
+
+*Hand-drawn paper · after PaperCSS.* Crooked pen lines, tinted fills and soft shadows: a UI on a notepad. Theme id `sketch`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/sketch.jpg" alt="Sketch"></td>
+<td width="50%" valign="top"><img src="media/themes/sketch.webp" alt="Sketch in motion"></td>
+</tr>
+</table>
+
+<a id="light"></a>
+
+### 29 &middot; Featherweight
+
+*Ultra-light · after Milligram.* Almost nothing: thin grey rules and small purple capitals with wide tracking. Theme id `light`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/light.jpg" alt="Featherweight"></td>
+<td width="50%" valign="top"><img src="media/themes/light.webp" alt="Featherweight in motion"></td>
+</tr>
+</table>
+
+<a id="code"></a>
+
+### 30 &middot; Code
+
+*Developer tools · after Primer.* Ink-blue night, hairline borders, a green call to action, blue focus. Theme id `code`.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/themes/code.jpg" alt="Code"></td>
+<td width="50%" valign="top"><img src="media/themes/code.webp" alt="Code in motion"></td>
+</tr>
+</table>
 <!-- END:themes -->
 
 ## Adding a theme
@@ -131,8 +553,11 @@ If the look needs a construction the existing styles cannot give, add a
 
 ## Honest limits
 
-- **Fonts.** The kit ships four faces. A theme picks among them (plus the
-  built-in 5x7 pixel face), so a framework's own typeface is approximated.
+- **Fonts.** The kit ships six faces. A theme picks among them, so a
+  framework's own typeface is approximated, except where the typeface *is*
+  the look: Pixel uses Press Start 2P, the face NES.css itself uses, and
+  Sketch uses Patrick Hand, as PaperCSS does. (`ui/pixel_font.hpp` also
+  draws a 5 x 7 face from plain rectangles, for apps that ship no pixel font.)
 - **Scale.** Web controls are about 36 px tall and read at arm's length. Here
   they are 58 to 64 px and read from a sofa; proportions were kept, sizes were
   not.
