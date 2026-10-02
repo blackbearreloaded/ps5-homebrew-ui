@@ -70,5 +70,13 @@ std::unique_ptr<Page> make_navigation_page(app::Context &context);
 std::unique_ptr<Page> make_overlays_page(app::Context &context);
 std::unique_ptr<Page> make_forms_page(app::Context &context);
 std::unique_ptr<Page> make_indicators_page(app::Context &context);
+std::unique_ptr<Page> make_structure_page(app::Context &context);
+std::unique_ptr<Page> make_actions_page(app::Context &context);
+std::unique_ptr<Page> make_pickers_page(app::Context &context);
+std::unique_ptr<Page> make_entry_page(app::Context &context);
+std::unique_ptr<Page> make_data_page(app::Context &context);
+std::unique_ptr<Page> make_media_page(app::Context &context);
+std::unique_ptr<Page> make_game_page(app::Context &context);
+std::unique_ptr<Page> make_layout_page(app::Context &context);
 
 } // namespace hui::concepts::gallery

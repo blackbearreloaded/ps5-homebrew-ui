@@ -60,6 +60,7 @@ class Painter
                   gfx::Align align = gfx::Align::left);
     float heading(std::string_view text, float x, float baseline, float size, gfx::Color color,
                   gfx::Align align = gfx::Align::left);
+    float heading_width(std::string_view text, float size) const;
     // Control label: the theme's label face, capitals and tracking.
     float label(std::string_view text, float x, float baseline, float size, gfx::Color color,
                 gfx::Align align = gfx::Align::left);

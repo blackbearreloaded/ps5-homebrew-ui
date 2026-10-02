@@ -137,9 +137,17 @@ COMPONENT_GROUPS = [
     ("lists", "Lists"),
     ("collections", "Collections"),
     ("navigation", "Navigation"),
+    ("structure", "Structure"),
     ("overlays", "Overlays"),
+    ("actions", "Actions"),
     ("forms", "Forms"),
+    ("pickers", "Pickers"),
+    ("entry", "Entry"),
     ("indicators", "Indicators"),
+    ("data", "Data"),
+    ("media", "Media"),
+    ("game", "Game"),
+    ("layout", "Layout"),
 ]
 
 

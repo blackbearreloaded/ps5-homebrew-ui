@@ -112,6 +112,19 @@ float Painter::heading(std::string_view value, float x, float baseline, float si
     return text(list_, font(theme_.heading), value, x, baseline, size, color, align);
 }
 
+float Painter::heading_width(std::string_view value, float size) const
+{
+    if (theme_.heading == FontRole::pixel)
+    {
+        if (fonts_.pixel.font == nullptr)
+            return pixel_text_width(value, size * 0.66f);
+        return fonts_.pixel.measure(value, pixel_em(size * 0.7f));
+    }
+    if (theme_.heading == FontRole::hand)
+        return font(theme_.heading).measure(value, size * 1.16f);
+    return font(theme_.heading).measure(value, size);
+}
+
 float Painter::label(std::string_view value, float x, float baseline, float size, gfx::Color color,
                      gfx::Align align)
 {

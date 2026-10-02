@@ -29,6 +29,7 @@
 #include <cmath>
 #include <cstdio>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 namespace hui::concepts
@@ -41,8 +42,11 @@ using gfx::Color;
 using gfx::Rect;
 
 constexpr gallery::PageFactory kPages[] = {
-    gallery::make_lists_page,    gallery::make_collections_page, gallery::make_navigation_page,
-    gallery::make_overlays_page, gallery::make_forms_page,       gallery::make_indicators_page,
+    gallery::make_lists_page,      gallery::make_collections_page, gallery::make_navigation_page,
+    gallery::make_structure_page,  gallery::make_overlays_page,    gallery::make_actions_page,
+    gallery::make_forms_page,      gallery::make_pickers_page,     gallery::make_entry_page,
+    gallery::make_indicators_page, gallery::make_data_page,        gallery::make_media_page,
+    gallery::make_game_page,       gallery::make_layout_page,
 };
 
 constexpr float kMargin = 96.0f;
@@ -226,26 +230,26 @@ class Components final : public app::Concept
         paint.heading(now.title(), kMargin - 2.0f, 172.0f, 58.0f, ink);
         paint.body(now.summary(), kMargin, 214.0f, 23.0f, quiet);
 
-        // The pages as a row of names, with a marker that glides under them.
-        float x = kRight;
-        float marker_x = 0.0f;
-        float marker_w = 0.0f;
+        // Where we are among the pages: the neighbours' names either side of
+        // the current one, and a row of ticks whose marker glides.
         const int count = static_cast<int>(pages_.size());
-        for (int i = count - 1; i >= 0; --i)
-        {
-            const char *name = pages_[static_cast<std::size_t>(i)]->title();
-            const float width = paint.label_width(name, 21.0f);
-            const float weight =
-                tween::clamp01(1.0f - std::fabs(marker_.value - static_cast<float>(i)));
-            paint.label(name, x, 108.0f, 21.0f, gfx::mix(quiet, ink, weight), gfx::Align::right);
-            marker_x += (x - width) * weight;
-            marker_w += width * weight;
-            x -= width + 34.0f;
-        }
-        // Between two names the weights sum to one, so the marker travels.
-        paint.fill({marker_x, 120.0f, marker_w, 4.0f},
+        const char *next = pages_[static_cast<std::size_t>((page_ + 1) % count)]->title();
+        const char *previous =
+            pages_[static_cast<std::size_t>((page_ + count - 1) % count)]->title();
+        float x = kRight;
+        x -= paint.label(next, x, 108.0f, 21.0f, quiet, gfx::Align::right) + 30.0f;
+        const float current = paint.label(now.title(), x, 108.0f, 21.0f, ink, gfx::Align::right);
+        paint.fill({x - current, 120.0f, current, 4.0f},
                    theme.corner == ui::Corner::round ? 2.0f : 0.0f,
                    theme.focus.a > 0.6f ? theme.focus : theme.primary);
+        x -= current + 30.0f;
+        x -= paint.label(previous, x, 108.0f, 21.0f, quiet, gfx::Align::right) + 36.0f;
+        constexpr float kTick = 14.0f;
+        const float ticks = x - kTick * static_cast<float>(count);
+        for (int i = 0; i < count; ++i)
+            paint.fill({ticks + kTick * static_cast<float>(i), 97.0f, 8.0f, 4.0f}, 0.0f,
+                       quiet.with_alpha(0.45f));
+        paint.fill({ticks + kTick * marker_.value - 1.0f, 95.0f, 10.0f, 8.0f}, 0.0f, ink);
 
         char text[48];
         std::snprintf(text, sizeof(text), "%02d / %02d", theme_ + 1,
@@ -284,8 +288,13 @@ class Components final : public app::Concept
         }
         // The theme walk runs on the Forms page: switches, sliders, steppers,
         // fields and panels show the most of a theme at once.
-        constexpr int kWalkPage = 4;
-        for (int i = 0; i < kWalkPage; ++i)
+        int walk_page = 0;
+        for (std::size_t i = 0; i < pages_.size(); ++i)
+        {
+            if (std::string_view(pages_[i]->title()) == "Forms")
+                walk_page = static_cast<int>(i);
+        }
+        for (int i = 0; i < walk_page; ++i)
             tour_.push_back({0.35f, next_page});
         const auto themes = ui::themes();
         for (std::size_t i = 0; i < themes.size(); ++i)
@@ -296,7 +305,7 @@ class Components final : public app::Concept
             tour_.push_back({pictured ? 0.75f : 0.5f, next_theme, Direction::none,
                              pictured ? themes[i].id : nullptr});
         }
-        for (int i = kWalkPage; i < static_cast<int>(pages_.size()); ++i)
+        for (int i = walk_page; i < static_cast<int>(pages_.size()); ++i)
             tour_.push_back({0.35f, next_page});
     }
 
