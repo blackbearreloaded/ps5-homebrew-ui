@@ -128,6 +128,59 @@ def themes_page(themes):
     return "\n".join(out)
 
 
+COMPONENT_GROUPS = [
+    ("lists", "Lists"),
+    ("collections", "Collections"),
+    ("navigation", "Navigation"),
+    ("overlays", "Overlays"),
+    ("forms", "Forms"),
+    ("indicators", "Indicators"),
+]
+
+
+def components_catalogue():
+    """One block per group: its components (the level-two headings of its
+    guide), a link to the guide, and the pictures of its gallery page."""
+    out = []
+    out.append("| Group | Components | Guide |")
+    out.append("| --- | --- | --- |")
+    names = {}
+    for group, title in COMPONENT_GROUPS:
+        guide = ROOT / "docs/components" / f"{group}.md"
+        found = []
+        if guide.exists():
+            for line in guide.read_text(encoding="utf-8").splitlines():
+                if line.startswith("## "):
+                    found.append(line[3:].strip())
+        names[group] = found
+        listed = ", ".join(f"`{name}`" for name in found) or "(in progress)"
+        out.append(f"| [{title}](#{group}) | {listed} | [components/{group}.md](components/{group}.md) |")
+    for group, title in COMPONENT_GROUPS:
+        folder = MEDIA / "designs"
+        shots = [p for p in sorted(folder.glob(f"components-{group}*.jpg"))]
+        out.append("")
+        out.append(f'<a id="{group}"></a>')
+        out.append("")
+        out.append(f"### {title}")
+        out.append("")
+        if names[group]:
+            out.append(", ".join(f"`ui::{name}`" for name in names[group]) +
+                       f" &middot; [knobs, slots, events and cues](components/{group}.md)")
+            out.append("")
+        if shots:
+            cells = [f'<img src="media/designs/{p.name}" alt="{title}: {p.stem}">' for p in shots]
+            out.append(grid(cells, 2))
+    themed = [p for p in sorted((MEDIA / "designs").glob("components-*.jpg"))
+              if not any(p.stem.startswith(f"components-{g}") for g, _ in COMPONENT_GROUPS)]
+    if themed:
+        out.append("")
+        out.append("### The same components in other themes")
+        out.append("")
+        cells = [f'<img src="media/designs/{p.name}" alt="{p.stem}">' for p in themed]
+        out.append(grid(cells, 2))
+    return "\n".join(out)
+
+
 def main():
     if len(sys.argv) != 2:
         raise SystemExit(__doc__)
@@ -139,6 +192,7 @@ def main():
                     f"**{len(designs)} designs** &middot; **{len(themes)} themes**")
     replace_section(ROOT / "docs/DESIGNS.md", "designs", designs_page(designs))
     replace_section(ROOT / "docs/THEMES.md", "themes", themes_page(themes))
+    replace_section(ROOT / "docs/COMPONENTS.md", "components", components_catalogue())
     print(f"gen-docs: {len(designs)} designs, {len(themes)} themes")
 
 

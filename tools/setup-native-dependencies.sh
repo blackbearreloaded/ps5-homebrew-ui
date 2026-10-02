@@ -18,7 +18,10 @@ zlib_archive="$zlib_directory/zlib-$zlib_version.tar.gz"
 zlib_stamp="$zlib_root/.source-version"
 sdk_url="https://github.com/ps5-payload-dev/sdk/releases/download/v0.42/ps5-payload-sdk.zip"
 sdk_hash="8cfbc7cd5811e719eb4f0c47eea668d3dc7b40bc8ab11c4a5031d40c23ec02da"
-zlib_url="https://zlib.net/fossils/zlib-$zlib_version.tar.gz"
+zlib_urls=(
+    "https://github.com/madler/zlib/releases/download/v$zlib_version/zlib-$zlib_version.tar.gz"
+    "https://zlib.net/fossils/zlib-$zlib_version.tar.gz"
+)
 zlib_hash="bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16"
 skip_sdk=false
 
@@ -67,10 +70,23 @@ if [[ -z $zlib_library || ! -f $zlib_root/usr/include/zlib.h ||
             sha256sum --check --strict >/dev/null 2>&1; then
         rm -f -- "$zlib_archive"
     fi
-    if [[ ! -f $zlib_archive ]]; then
-        wget -q "$zlib_url" -O "$zlib_archive.download"
-        mv "$zlib_archive.download" "$zlib_archive"
-    fi
+    # Two official sources of the same archive: a mirror that answers with
+    # something else (a block page, a truncated file) is skipped, not trusted.
+    for url in "${zlib_urls[@]}"; do
+        [[ ! -f $zlib_archive ]] || break
+        if wget -q "$url" -O "$zlib_archive.download" &&
+            printf '%s  %s\n' "$zlib_hash" "$zlib_archive.download" |
+            sha256sum --check --strict >/dev/null 2>&1; then
+            mv "$zlib_archive.download" "$zlib_archive"
+        else
+            echo "==> [deps] $url did not deliver the pinned archive" >&2
+            rm -f -- "$zlib_archive.download"
+        fi
+    done
+    [[ -f $zlib_archive ]] || {
+        echo "zlib $zlib_version could not be downloaded" >&2
+        exit 2
+    }
     printf '%s  %s\n' "$zlib_hash" "$zlib_archive" | sha256sum --check --strict >/dev/null
     rm -rf -- "$zlib_source" "$zlib_root"
     tar -xzf "$zlib_archive" -C "$zlib_directory"
