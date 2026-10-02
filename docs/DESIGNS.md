@@ -845,6 +845,18 @@ Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot;
 <td width="50%" valign="top"><img src="media/designs/components-navigation.jpg" alt="Component Library: components-navigation"></td>
 </tr>
 <tr>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-accent.jpg" alt="Component Library: components-notifications-accent"></td>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-center.jpg" alt="Component Library: components-notifications-center"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-compact.jpg" alt="Component Library: components-notifications-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-progress.jpg" alt="Component Library: components-notifications-progress"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-queue.jpg" alt="Component Library: components-notifications-queue"></td>
+<td width="50%" valign="top"><img src="media/designs/components-notifications.jpg" alt="Component Library: components-notifications"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-overlays-bottom.jpg" alt="Component Library: components-overlays-bottom"></td>
 <td width="50%" valign="top"><img src="media/designs/components-overlays-compact.jpg" alt="Component Library: components-overlays-compact"></td>
 </tr>

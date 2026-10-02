@@ -186,9 +186,13 @@ class Components final : public app::Concept
 
         // Dialogs, sheets and toasts cover the header and the page; the hint
         // row stays readable above their scrim, since it describes them.
+        // The frame's blur holds the backdrop only (the page is drawn after
+        // it), so a frosted panel up here would show the page sharp through
+        // it. Given no glass texture, the overlays draw solid instead.
+        ui::Canvas above{list, context_.fonts, 0, clock_};
         const std::size_t before = list.instances().size();
         if (!page_switch_.running)
-            pages_[static_cast<std::size_t>(page_)]->draw_modal(canvas);
+            pages_[static_cast<std::size_t>(page_)]->draw_modal(above);
         // Something modal may have put a scrim under the hints: give them a
         // plate of the page colour so they read in light and dark themes.
         draw_hints(list, paint, theme, list.instances().size() != before);

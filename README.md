@@ -11,7 +11,7 @@ Press **L1** / **R1** to switch between them.
 <img src="docs/media/switcher.webp" width="860" alt="L1 and R1 cycling through every design in the app">
 
 <!-- BEGIN:counts -->
-**21 designs** &middot; **30 themes** &middot; **96 reusable components**
+**21 designs** &middot; **30 themes** &middot; **99 reusable components**
 <!-- END:counts -->
 &middot; **30 reusable components** &middot; **67 sound effects** in two sets &middot; **one OpenGL 4.6 shader** behind all of it
 

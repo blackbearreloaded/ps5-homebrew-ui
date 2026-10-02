@@ -120,7 +120,7 @@ Rectangles come from the layout helpers (`ui::Row`, `ui::Column`,
 | [Navigation](#navigation) | `TabBar`, `SideNav`, `Breadcrumb`, `PageDots`, `Menu` | [components/navigation.md](components/navigation.md) |
 | [Structure](#structure) | `RadialMenu`, `Wizard`, `Accordion`, `TreeView`, `JumpBar` | [components/structure.md](components/structure.md) |
 | [Overlays](#overlays) | `Dialog`, `Sheet`, `ToastStack`, `Tooltip` | [components/overlays.md](components/overlays.md) |
-| [Notifications](#notifications) | (in progress) | [components/notifications.md](components/notifications.md) |
+| [Notifications](#notifications) | `NotificationStack`, `NotificationCenter`, `NotificationBell` | [components/notifications.md](components/notifications.md) |
 | [Actions](#actions) | `PushButton`, `IconButton`, `ButtonGroup`, `SplitButton`, `HoldButton`, `QuickAction`, `QuickActionBar`, `Banner`, `CoachMark` | [components/actions.md](components/actions.md) |
 | [Forms](#forms) | `Form`, `Stepper`, `ChoicePicker`, `TextField` | [components/forms.md](components/forms.md) |
 | [Pickers](#pickers) | `Select`, `CheckGroup`, `RadioGroup`, `TagSelect`, `ColorPicker`, `WheelPicker`, `DatePicker`, `TimePicker`, `Slider`, `RangeSlider` | [components/pickers.md](components/pickers.md) |
@@ -242,6 +242,24 @@ Rectangles come from the layout helpers (`ui::Row`, `ui::Column`,
 
 ### Notifications
 
+`ui::NotificationStack`, `ui::NotificationCenter`, `ui::NotificationBell` &middot; [knobs, slots, events and cues](components/notifications.md)
+
+<img src="media/designs/components-notifications.webp" width="640" alt="Notifications in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-accent.jpg" alt="Notifications: components-notifications-accent"></td>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-center.jpg" alt="Notifications: components-notifications-center"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-compact.jpg" alt="Notifications: components-notifications-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-progress.jpg" alt="Notifications: components-notifications-progress"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-notifications-queue.jpg" alt="Notifications: components-notifications-queue"></td>
+<td width="50%" valign="top"><img src="media/designs/components-notifications.jpg" alt="Notifications: components-notifications"></td>
+</tr>
+</table>
 
 <a id="actions"></a>
 
