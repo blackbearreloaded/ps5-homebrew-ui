@@ -27,8 +27,11 @@ void face(gfx::DrawList &list, const GlyphStyle &style, Button button, float cx,
 {
     const float half = size * 0.5f;
     const float stroke = size * 0.11f;
-    // A disc behind the symbol, like the physical button.
+    // A disc behind the symbol, like the physical button. Single-colour
+    // styles add a rim, or the disc would vanish on a page of its own colour.
     list.circle(cx, cy, half, style.body);
+    if (!style.tinted_faces)
+        list.ring(cx, cy, half, 1.5f, style.edge);
     const float inner = half * 0.52f;
     const auto colour = [&](gfx::Color tint) { return style.tinted_faces ? tint : style.ink; };
     switch (button)
@@ -201,22 +204,34 @@ void draw_button(gfx::DrawList &list, const Fonts &fonts, const GlyphStyle &styl
     }
 }
 
+namespace
+{
+constexpr float kIconGap = 12.0f;
+constexpr float kPairGap = 6.0f;
+} // namespace
+
+float measure_hints(const Fonts &fonts, const Hint *hints, int count, const HintLayout &layout)
+{
+    const FontRef &face = layout.font != nullptr ? *layout.font : fonts.regular;
+    float total = 0.0f;
+    for (int i = 0; i < count; ++i)
+    {
+        const Hint &h = hints[i];
+        total += button_width(h.button, layout.size) + kIconGap +
+                 face.measure(h.label, layout.text_size);
+        if (h.second != Button::none)
+            total += kPairGap + button_width(h.second, layout.size);
+        if (i + 1 < count)
+            total += layout.item_gap;
+    }
+    return total;
+}
+
 float draw_hints(gfx::DrawList &list, const Fonts &fonts, const GlyphStyle &style,
                  const Hint *hints, int count, float x, bool right_align, const HintLayout &layout)
 {
-    constexpr float kIconGap = 12.0f;
-    constexpr float kPairGap = 6.0f;
-    const auto item_width = [&](const Hint &h)
-    {
-        float w = button_width(h.button, layout.size) + kIconGap +
-                  fonts.regular.measure(h.label, layout.text_size);
-        if (h.second != Button::none)
-            w += kPairGap + button_width(h.second, layout.size);
-        return w;
-    };
-    float total = 0.0f;
-    for (int i = 0; i < count; ++i)
-        total += item_width(hints[i]) + (i + 1 < count ? layout.item_gap : 0.0f);
+    const FontRef &face = layout.font != nullptr ? *layout.font : fonts.regular;
+    const float total = measure_hints(fonts, hints, count, layout);
     float cursor = right_align ? x - total : x;
     for (int i = 0; i < count; ++i)
     {
@@ -230,9 +245,9 @@ float draw_hints(gfx::DrawList &list, const Fonts &fonts, const GlyphStyle &styl
             cursor += button_width(h.second, layout.size);
         }
         cursor += kIconGap;
-        text(list, fonts.regular, h.label, cursor, layout.cy + layout.text_size * 0.35f,
-             layout.text_size, style.label);
-        cursor += fonts.regular.measure(h.label, layout.text_size) + layout.item_gap;
+        text(list, face, h.label, cursor, layout.cy + layout.text_size * 0.35f, layout.text_size,
+             style.label);
+        cursor += face.measure(h.label, layout.text_size) + layout.item_gap;
     }
     return total;
 }

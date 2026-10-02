@@ -61,7 +61,7 @@ inline std::string upper(std::string_view value)
 // baseline after the last line drawn.
 inline float paragraph(gfx::DrawList &list, const FontRef &font, std::string_view value, float x,
                        float y, float size, float width, float line_height, gfx::Color color,
-                       int max_lines = 99)
+                       int max_lines = 99, gfx::Align align = gfx::Align::left)
 {
     const std::vector<std::string> lines = font.font->wrap(value, size, width);
     int drawn = 0;
@@ -71,9 +71,9 @@ inline float paragraph(gfx::DrawList &list, const FontRef &font, std::string_vie
             drawn + 1 == max_lines && lines.size() > static_cast<std::size_t>(max_lines);
         if (last)
             text(list, font, font.font->fit(line + " \xE2\x80\xA6", size, width), x, y, size,
-                 color);
+                 color, align);
         else
-            text(list, font, line, x, y, size, color);
+            text(list, font, line, x, y, size, color, align);
         y += line_height;
         if (++drawn >= max_lines)
             break;

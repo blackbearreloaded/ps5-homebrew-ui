@@ -47,9 +47,9 @@ void main()
     vec2 local = mix(vec2(-pad), size + vec2(pad), corner);
     vec2 centred = local - 0.5 * size;
     vec2 virt = a_rect.xy + local;
-    // Rounded rectangles and shadows may turn about their centre: the quad
+    // Rounded rectangles, shadows and triangles may turn about their centre: the quad
     // rotates, the distance field keeps working in the unrotated frame.
-    bool box = shape == 0 || shape == 2;
+    bool box = shape == 0 || shape == 2 || shape == 5;
     if (box && a_extra.x != 0.0)
     {
         float c = cos(a_extra.x);
@@ -169,6 +169,22 @@ void main()
         float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
         float d = length(pa - ba * h) - 0.5 * v_params.y;
         color = vec4(fill.rgb, fill.a * clamp(0.5 - d / px, 0.0, 1.0));
+    }
+    else if (shape == 8)
+    {
+        // Box with 45 degree corner cuts: the box distance, limited by the
+        // diagonal plane through each corner.
+        float cut = min(v_params.x, min(v_half.x, v_half.y));
+        vec2 q = abs(v_local) - v_half;
+        float box = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+        float d = max(box, (q.x + q.y + cut) * 0.70710678);
+        color = fill;
+        if (v_params.y > 0.0)
+        {
+            float inner = clamp(0.5 - (d + v_params.y) / px, 0.0, 1.0);
+            color = mix(v_border, fill, inner);
+        }
+        color.a *= clamp(0.5 - d / px, 0.0, 1.0);
     }
     else if (shape == 7)
     {

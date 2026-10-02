@@ -51,9 +51,12 @@ TEST_F(EveryConcept, SurvivesItsTourAndAlwaysDraws)
             hui::InputFrame input = idle();
             input.stick_x = step.stick_x;
             input.stick_y = step.stick_y;
+            input.held = step.hold;
+            input.trigger_l = step.trigger_l;
+            input.trigger_r = step.trigger_r;
             send(*design, input, step.wait);
             input.pressed = step.press;
-            input.held = step.press;
+            input.held = step.press | step.hold;
             input.nav = step.nav;
             send(*design, input, 0.05f);
             expect_drawable(*design);

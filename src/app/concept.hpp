@@ -122,6 +122,9 @@ struct TourStep
     const char *capture = nullptr; // picture name suffix, taken after the wait
     float stick_x = 0.0f;          // left stick held during the wait
     float stick_y = 0.0f;
+    std::uint32_t hold = 0;        // action bits held during the wait
+    float trigger_l = 0.0f;        // analog triggers held during the wait
+    float trigger_r = 0.0f;
 };
 
 struct ConceptInfo

@@ -140,8 +140,12 @@ InputFrame InputTracker::update(std::span<const PadSample> samples, std::uint64_
     // Navigation: a new direction fires at once; holding it repeats. A tap
     // shorter than a frame still fires through the accumulated press edge.
     Direction current = direction_from_actions(held_);
+    bool from_stick = false;
     if (current == Direction::none && connected_ && have_state_)
+    {
         current = stick_direction(last_);
+        from_stick = current != Direction::none;
+    }
     const Direction tapped = direction_from_actions(frame.pressed);
     if (tapped != Direction::none && tapped != current)
     {
@@ -159,6 +163,7 @@ InputFrame InputTracker::update(std::span<const PadSample> samples, std::uint64_
         nav_next_us_ = now_us + settings_.repeat_interval_us;
     }
     nav_held_ = current;
+    frame.nav_from_stick = from_stick && frame.nav == current && tapped == Direction::none;
     return frame;
 }
 

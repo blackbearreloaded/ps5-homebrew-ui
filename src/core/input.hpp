@@ -90,6 +90,9 @@ struct InputFrame
     // Navigation from the D-pad or left stick: fires on press, then repeats.
     Direction nav = Direction::none;
     bool nav_repeat = false;
+    // The step came from the left stick, not the D-pad. Screens that also use
+    // the stick as an analog control ignore those steps.
+    bool nav_from_stick = false;
     // Left stick after a radial deadzone, -1..1 (right and down positive).
     float stick_x = 0.0f;
     float stick_y = 0.0f;

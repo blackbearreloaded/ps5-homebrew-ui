@@ -131,6 +131,18 @@ void DrawList::gradient_rect_h(const Rect &r, float radius, Color left, Color ri
     instances_.back().extra[1] = 1.0f; // the shader blends along x instead of y
 }
 
+void DrawList::chamfer_rect(const Rect &r, float cut, Color fill, float border, Color border_color)
+{
+    Instance &i = append(0);
+    const Rect t = apply(r);
+    set4(i.rect, t.x, t.y, t.w, t.h);
+    set_color(i.color_top, fill);
+    set_color(i.color_bottom, fill);
+    set_color(i.border_color, border_color);
+    set4(i.params, cut * transform_.scale, border * transform_.scale, 0.0f,
+         static_cast<float>(Shape::chamfer));
+}
+
 void DrawList::rotated_rect(const Rect &r, float radius, float angle, Color fill)
 {
     gradient_rect(r, radius, fill, fill);
@@ -219,7 +231,7 @@ void DrawList::line(float x1, float y1, float x2, float y2, float thickness, Col
     set4(i.extra, apply_x(x1), apply_y(y1), apply_x(x2), apply_y(y2));
 }
 
-void DrawList::triangle(const Rect &r, Color fill, float outline)
+void DrawList::triangle(const Rect &r, Color fill, float outline, float angle)
 {
     Instance &i = append(0);
     const Rect t = apply(r);
@@ -227,6 +239,14 @@ void DrawList::triangle(const Rect &r, Color fill, float outline)
     set_color(i.color_top, fill);
     set_color(i.color_bottom, fill);
     set4(i.params, 0.0f, outline * transform_.scale, 0.0f, static_cast<float>(Shape::triangle));
+    i.extra[0] = angle;
+}
+
+void DrawList::image_gradient(std::uint32_t texture, const Rect &r, const Rect &uv, Color top,
+                              Color bottom, float radius)
+{
+    image(texture, r, uv, top, radius);
+    set_color(instances_.back().color_bottom, bottom);
 }
 
 void DrawList::star(float cx, float cy, float radius, Color fill, float outline)

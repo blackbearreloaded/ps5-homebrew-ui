@@ -240,6 +240,16 @@ int main(int argc, char **argv)
     while (!tour.finished() && frames < 60 * 60 * 10)
     {
         const hui::InputFrame input = tour.step(kDt);
+        // Nothing is presented here, so the numbers a console would measure
+        // are stood in for: 60 Hz with a little jitter and a rare long frame.
+        hui::app::Telemetry &telemetry = shell.telemetry();
+        const float jitter = static_cast<float>((frames * 7919) % 97) / 97.0f;
+        telemetry.push(16.3f + jitter * 0.8f + (frames % 211 == 0 ? 5.5f : 0.0f));
+        telemetry.fps = 59.9f;
+        telemetry.average_ms = 16.7f;
+        telemetry.voices = static_cast<int>(frames / 40 % 4);
+        telemetry.draw_calls = renderer.last_draw_calls();
+        telemetry.instances = renderer.last_instances();
         shell.update(input, kDt);
         ++frames;
         if (!tour.capture().empty())

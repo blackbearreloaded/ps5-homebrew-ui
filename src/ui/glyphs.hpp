@@ -67,7 +67,12 @@ struct HintLayout
     float text_size = 26.0f;
     float cy = 1010.0f;
     float item_gap = 44.0f;
+    const FontRef *font = nullptr; // label face; the regular one when null
 };
+
+// The width draw_hints would draw, for placing a plate behind the row.
+float measure_hints(const Fonts &fonts, const Hint *hints, int count,
+                    const HintLayout &layout = {});
 
 // Draws a row of [glyph label] hints. With right_align the row ends at x;
 // otherwise it starts there. Returns its width.

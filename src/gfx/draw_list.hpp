@@ -77,6 +77,7 @@ enum class Shape : std::uint8_t
     triangle = 5,     // isosceles triangle pointing up inside the rect
     star = 6,         // five-pointed star inscribed in the rect
     arc = 7,          // ring sector: gauges, spinners, radial menus
+    chamfer = 8,      // rectangle with cut (45 degree) corners, optional border
 };
 
 // One instanced quad; field order matches the vertex attributes.
@@ -126,6 +127,10 @@ class DrawList
     // Horizontal gradient (left to right).
     void gradient_rect_h(const Rect &r, float radius, Color left, Color right);
     void bordered_rect(const Rect &r, float radius, Color fill, float border, Color border_color);
+    // Rectangle whose corners are cut at 45 degrees by `cut` pixels (sci-fi
+    // panels, tags). border > 0 adds an inner border like bordered_rect.
+    void chamfer_rect(const Rect &r, float cut, Color fill, float border = 0.0f,
+                      Color border_color = {});
     // Rounded rectangle turned about its centre.
     void rotated_rect(const Rect &r, float radius, float angle, Color fill);
     void shadow(const Rect &r, float radius, float softness, Color color);
@@ -138,13 +143,18 @@ class DrawList
     void arc(float cx, float cy, float radius, float thickness, float start, float sweep,
              Color color, bool round_caps = true);
     void line(float x1, float y1, float x2, float y2, float thickness, Color color);
-    // Upward triangle filling r; outline > 0 draws only a stroke of that width.
-    void triangle(const Rect &r, Color fill, float outline = 0.0f);
+    // Triangle filling r, pointing up; angle turns it about its centre
+    // (1.5708 points right). outline > 0 draws only a stroke of that width.
+    void triangle(const Rect &r, Color fill, float outline = 0.0f, float angle = 0.0f);
     // Five-pointed star centred at (cx, cy); outline > 0 draws only a stroke.
     void star(float cx, float cy, float radius, Color fill, float outline = 0.0f);
     // uv is the texture rectangle (0..1); see gfx::kFullUv and gfx::kCanvasUv.
     void image(std::uint32_t texture, const Rect &r, const Rect &uv, Color tint,
                float radius = 0.0f);
+    // The same with a tint that blends from top to bottom: reflections and
+    // images that fade out need no cover-up rectangle.
+    void image_gradient(std::uint32_t texture, const Rect &r, const Rect &uv, Color top,
+                        Color bottom, float radius = 0.0f);
     // The blurred copy of what is behind r (see gfx::Renderer), for frosted
     // panels. texture is the frame's glass texture.
     void glass(std::uint32_t texture, const Rect &r, float radius, Color tint);

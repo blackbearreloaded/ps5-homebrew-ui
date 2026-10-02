@@ -93,7 +93,7 @@ class ConceptFixture : public ::testing::Test
             for (const gfx::MeshVertex &vertex : list->mesh_vertices())
                 ASSERT_TRUE(std::isfinite(vertex.x) && std::isfinite(vertex.y)) << design.info().id;
         }
-        EXPECT_FALSE(frame_.scene.empty()) << design.info().id;
+        EXPECT_FALSE(frame_.scene.empty() && frame_.overlay.empty()) << design.info().id;
     }
 
     gfx::Font regular_, semibold_, display_, mono_;

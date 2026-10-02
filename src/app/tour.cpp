@@ -121,6 +121,9 @@ InputFrame Tour::step(float dt)
         const TourStep &now = script[step_];
         input.stick_x = now.stick_x;
         input.stick_y = now.stick_y;
+        input.held = now.hold;
+        input.trigger_l = now.trigger_l;
+        input.trigger_r = now.trigger_r;
         if (clock_ < now.wait)
             return input;
         if (now.capture != nullptr && !pictured_)
@@ -132,7 +135,7 @@ InputFrame Tour::step(float dt)
         }
         pictured_ = false;
         input.pressed = now.press;
-        input.held = now.press;
+        input.held = now.press | now.hold;
         input.nav = now.nav;
         ++step_;
         clock_ = 0.0f;

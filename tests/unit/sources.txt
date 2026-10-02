@@ -22,3 +22,6 @@ src/gfx/triangulate.cpp
 src/third_party/stb/vorbis.c
 src/ui/confetti.cpp
 src/ui/glyphs.cpp
+src/ui/pixel_font.cpp
+src/ui/theme.cpp
+src/ui/widgets.cpp
