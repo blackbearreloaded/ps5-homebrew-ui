@@ -242,8 +242,8 @@ and no second renderer: everything you see is OpenGL.
 Validated on a PS5 on 2026-10-02 (build `044d909`): the app's self-driving
 tour ran all 21 designs, the 30 themes and every Component Library page at
 3840 x 2160. **Every design held 60 frames per second** (16.68 ms average, no
-frame over 21.0 ms), the pictures taken on the console match the PC renders,
-and the app closed itself cleanly. Numbers per design are in
+frame over 21.0 ms), a sample of the 266 pictures taken on the console matches
+the PC renders, and the app closed itself cleanly. Numbers per design are in
 [docs/PERFORMANCE.md](docs/PERFORMANCE.md#measured).
 
 Not verified by a person yet: how the sounds and the rumble feel, and

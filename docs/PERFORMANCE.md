@@ -93,7 +93,8 @@ every design's whole tour, 39,956 frames, about eleven minutes):
 - **Every design held 60 frames per second**: averages of 16.67 to 16.69 ms and
   no frame over 21.0 ms, including frosted glass, the theme changes and the
   Component Library's 74 draw calls.
-- 266 pictures taken on the console match the PC renders.
+- 266 pictures were taken on the console; the twelve compared by eye with the PC
+  renders (designs, themes and component pages) match them.
 - Audio: no output errors; six stream underruns, all during start-up.
 - Heap: about 34 MB live at the end, no failed allocation.
 - The app closed itself through the system; no crash report.
