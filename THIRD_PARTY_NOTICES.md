@@ -156,7 +156,11 @@ carry matching SPDX identifiers.
 `sce_sys/pic1.dds` (shown while it starts) are the project's own artwork,
 supplied by its owner; `background-source.png` and
 `launch-background-source.png` are the pictures the two backgrounds were made
-from. `HUI_ICON=<file> tools/host-snapshots.sh` still renders a plain icon
+from. `sce_sys/snd0.at9`, the music the console plays while the title is
+selected, is the owner's own track, encoded with
+[ps5-at9-converter](https://github.com/blackbearreloaded/ps5-at9-converter)
+(49.6 s, 192 kb/s, -28 LUFS, whole-track loop).
+`HUI_ICON=<file> tools/host-snapshots.sh` still renders a plain icon
 with the project's own renderer, for forks that want one of their own. The
 cover art inside the app is rendered at start-up from invented titles; no real
 product's name, artwork or trademark is used.
