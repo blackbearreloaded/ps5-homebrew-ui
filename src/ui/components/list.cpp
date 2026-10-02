@@ -186,8 +186,10 @@ void ListView::draw(Canvas &canvas) const
     {
         if (!overflow || style.edge_fade <= 0.0f)
             return 1.0f;
+        // A row is invisible until a fifth of it shows, so a sliver of its
+        // second line never peeks over the edge.
         const float shown = std::min(row.y + row.h - in.y, in.y + in.h - row.y);
-        return tween::clamp01(shown / (row.h * style.edge_fade));
+        return tween::clamp01((shown - row.h * 0.2f) / (row.h * style.edge_fade));
     };
     const auto entrance = [&](int index)
     {

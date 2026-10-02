@@ -38,6 +38,10 @@ class Shell
     void update(const InputFrame &input, float dt);
     // Queues this frame's layers; the caller presents them.
     void compose(gfx::Renderer &renderer);
+    // Records the active design's frame without rendering it. A console draws
+    // every frame; a tour on a PC only renders its pictures, so it calls this
+    // on the other frames to keep draw-time work (lazy text layout) honest.
+    void rehearse();
 
     // Sounds and rumble requested during the last update.
     const Feedback &feedback() const

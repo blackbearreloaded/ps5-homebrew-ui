@@ -50,37 +50,13 @@ class StubPage final : public Page
 } // namespace
 
 // Each factory below disappears when its real page lands.
-std::unique_ptr<Page> make_structure_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Structure");
-}
 std::unique_ptr<Page> make_actions_page(app::Context &)
 {
     return std::make_unique<StubPage>("Actions");
 }
-std::unique_ptr<Page> make_pickers_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Pickers");
-}
-std::unique_ptr<Page> make_entry_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Entry");
-}
-std::unique_ptr<Page> make_data_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Data");
-}
-std::unique_ptr<Page> make_media_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Media");
-}
 std::unique_ptr<Page> make_game_page(app::Context &)
 {
     return std::make_unique<StubPage>("Game");
-}
-std::unique_ptr<Page> make_layout_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Layout");
 }
 
 } // namespace hui::concepts::gallery

@@ -184,9 +184,12 @@ class Components final : public app::Concept
 
         // Dialogs, sheets and toasts cover the header and the page; the hint
         // row stays readable above their scrim, since it describes them.
+        const std::size_t before = list.instances().size();
         if (!page_switch_.running)
             pages_[static_cast<std::size_t>(page_)]->draw_modal(canvas);
-        draw_hints(list, paint, theme);
+        // Something modal may have put a scrim under the hints: give them a
+        // plate of the page colour so they read in light and dark themes.
+        draw_hints(list, paint, theme, list.instances().size() != before);
         list.pop_opacity();
     }
 
@@ -259,7 +262,8 @@ class Components final : public app::Concept
         paint.body(now.variant(), kRight, 214.0f, 23.0f, quiet, gfx::Align::right);
     }
 
-    void draw_hints(gfx::DrawList &list, const ui::Painter &paint, const ui::Theme &theme) const
+    void draw_hints(gfx::DrawList &list, const ui::Painter &paint, const ui::Theme &theme,
+                    bool plate) const
     {
         ui::Hint hints[10];
         int count = 0;
@@ -272,6 +276,13 @@ class Components final : public app::Concept
         hints[count++] = {ui::Button::options, "Theme"};
         ui::GlyphStyle glyphs = theme.dark ? ui::GlyphStyle::dark() : ui::GlyphStyle::light();
         glyphs.label = paint.page_text();
+        if (plate)
+        {
+            const float width = ui::measure_hints(context_.fonts, hints, count);
+            list.rounded_rect({kRight - width - 26.0f, 978.0f, width + 52.0f, 64.0f},
+                              theme.corner == ui::Corner::round ? 32.0f : 0.0f,
+                              theme.page.with_alpha(0.9f));
+        }
         ui::draw_hints(list, context_.fonts, glyphs, hints, count, kRight, true);
     }
 

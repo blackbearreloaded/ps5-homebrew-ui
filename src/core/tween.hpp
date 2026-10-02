@@ -116,7 +116,10 @@ struct Spring
         const float next_x = (x + (velocity + omega * x) * dt) * e;
         velocity = (velocity - omega * (velocity + omega * x) * dt) * e;
         value = target + next_x;
-        if (std::fabs(value - target) < 1e-4f && std::fabs(velocity) < 1e-3f)
+        // The rest test scales with the value: float noise on a position of
+        // several hundred pixels is larger than any fixed threshold.
+        const float rest = 1e-4f * std::max(1.0f, std::fabs(target));
+        if (std::fabs(value - target) < rest && std::fabs(velocity) < rest * 10.0f)
             snap(target);
     }
     bool settled() const
@@ -154,7 +157,10 @@ struct Bounce
             velocity += acceleration * h;
             value += velocity * h;
         }
-        if (std::fabs(value - target) < 1e-4f && std::fabs(velocity) < 1e-3f)
+        // The rest test scales with the value: float noise on a position of
+        // several hundred pixels is larger than any fixed threshold.
+        const float rest = 1e-4f * std::max(1.0f, std::fabs(target));
+        if (std::fabs(value - target) < rest && std::fabs(velocity) < rest * 10.0f)
             snap(target);
     }
 };

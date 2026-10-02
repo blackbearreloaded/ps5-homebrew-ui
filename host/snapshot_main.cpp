@@ -397,6 +397,10 @@ int main(int argc, char **argv)
             render(tour.capture());
             tour.capture_done();
         }
+        else
+        {
+            shell.rehearse(); // as on the console, every frame is drawn
+        }
     }
     std::fprintf(stderr, "tour: %ld frames simulated\n", frames);
     return ok ? 0 : 1;

@@ -192,6 +192,12 @@ void Shell::record(Frame &frame, const Concept &design, float opacity, float dx,
     design.draw(frame);
 }
 
+void Shell::rehearse()
+{
+    if (!concepts_.empty())
+        record(frames_[0], *concepts_[current_], 1.0f, 0.0f, 1.0f);
+}
+
 void Shell::draw_chrome()
 {
     const ConceptInfo &info = concepts_[current_]->info();
