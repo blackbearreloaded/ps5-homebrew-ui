@@ -21,7 +21,7 @@ Environment:
   ELF_PORT          default 9021 (ELF loader, for the launch helper)
   PS5_PROTOCOL      path of ps5-homebrew-dev-protocol (default: beside this repository)
   PS5_PAYLOAD_SDK   default .deps/native/ps5-payload-sdk
-  TOUR_TIMEOUT      seconds to wait for the tour (default 900)
+  TOUR_TIMEOUT      seconds to wait for the tour (default 2400)
   SETTLE_SECONDS    pause before the installed files are verified again (default 120)
   REGISTER_TIMEOUT  seconds to wait for the title to be registered (default 120)
 """
@@ -173,7 +173,7 @@ def main():
     ftp_port = int(os.environ.get("FTP_PORT", "2121"))
     klog_port = int(os.environ.get("KLOG_PORT", "3232"))
     elf_port = int(os.environ.get("ELF_PORT", "9021"))
-    timeout = int(os.environ.get("TOUR_TIMEOUT", "900"))
+    timeout = int(os.environ.get("TOUR_TIMEOUT", "2400"))
     settle = int(os.environ.get("SETTLE_SECONDS", "120"))
     register_wait = int(os.environ.get("REGISTER_TIMEOUT", "120"))
     protocol = Path(os.environ.get("PS5_PROTOCOL", ROOT.parent / "ps5-homebrew-dev-protocol"))

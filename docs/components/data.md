@@ -2,6 +2,10 @@
 
 [Back to the component guide](../COMPONENTS.md)
 
+<img src="../media/designs/components-data.jpg" alt="The data page of the Component Library">
+
+[Back to the component guide](../COMPONENTS.md)
+
 Components that present structured information: a sortable table, labelled
 values, an activity feed, three charts, a calendar and the small status
 widgets a console screen keeps in a corner. Each has a public `style` (a

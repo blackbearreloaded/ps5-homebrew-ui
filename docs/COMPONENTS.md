@@ -103,15 +103,26 @@ left and right, and `set_active()`).
 | [Lists](#lists) | `ListView` | [components/lists.md](components/lists.md) |
 | [Collections](#collections) | `Card`, `GridView`, `Carousel` | [components/collections.md](components/collections.md) |
 | [Navigation](#navigation) | `TabBar`, `SideNav`, `Breadcrumb`, `PageDots`, `Menu` | [components/navigation.md](components/navigation.md) |
+| [Structure](#structure) | `RadialMenu`, `Wizard`, `Accordion`, `TreeView`, `JumpBar` | [components/structure.md](components/structure.md) |
 | [Overlays](#overlays) | `Dialog`, `Sheet`, `ToastStack`, `Tooltip` | [components/overlays.md](components/overlays.md) |
+| [Notifications](#notifications) | (in progress) | [components/notifications.md](components/notifications.md) |
+| [Actions](#actions) | `PushButton`, `IconButton`, `ButtonGroup`, `SplitButton`, `HoldButton`, `QuickAction`, `QuickActionBar`, `Banner`, `CoachMark` | [components/actions.md](components/actions.md) |
 | [Forms](#forms) | `Form`, `Stepper`, `ChoicePicker`, `TextField` | [components/forms.md](components/forms.md) |
+| [Pickers](#pickers) | `Select`, `CheckGroup`, `RadioGroup`, `TagSelect`, `ColorPicker`, `WheelPicker`, `DatePicker`, `TimePicker`, `Slider`, `RangeSlider` | [components/pickers.md](components/pickers.md) |
+| [Entry](#entry) | `Keyboard`, `PinEntry`, `SearchField`, `KeyBinder`, `InputPrompt` | [components/entry.md](components/entry.md) |
 | [Indicators](#indicators) | `ProgressBar`, `ProgressRing`, `Spinner`, `Meter`, `Badge`, `Chip`, `Avatar`, `AvatarStack`, `Rating`, `Counter`, `Skeleton`, `StatTile`, `EmptyState` | [components/indicators.md](components/indicators.md) |
+| [Data](#data) | `Table`, `DetailList`, `Timeline`, `BarChart`, `LineChart`, `DonutChart`, `Legend`, `Calendar`, `Countdown`, `StorageBar`, `StatusBar` | [components/data.md](components/data.md) |
+| [Media](#media) | `TextView`, `ImageViewer`, `MediaControls`, `LoadingScreen` | [components/media.md](components/media.md) |
+| [Game](#game) | `PauseMenu`, `UnlockPopup`, `ProfilePicker`, `InventoryGrid`, `HealthBar`, `AmmoCounter`, `ObjectiveTracker`, `MinimapFrame`, `NodeMap` | [components/game.md](components/game.md) |
+| [Layout](#layout) | `FocusGroup`, `Row`, `Column`, `GridLayout`, `Wrap`, `SpringLayout`, `SplitView`, `ScrollArea`, `Panel`, `Divider`, `SectionHeader`, `Spacer`, `Transition` | [components/layout.md](components/layout.md) |
 
 <a id="lists"></a>
 
 ### Lists
 
 `ui::ListView` &middot; [knobs, slots, events and cues](components/lists.md)
+
+<img src="media/designs/components-lists.webp" width="640" alt="Lists in motion">
 
 <table>
 <tr>
@@ -129,6 +140,8 @@ left and right, and `set_active()`).
 ### Collections
 
 `ui::Card`, `ui::GridView`, `ui::Carousel` &middot; [knobs, slots, events and cues](components/collections.md)
+
+<img src="media/designs/components-collections.webp" width="640" alt="Collections in motion">
 
 <table>
 <tr>
@@ -150,6 +163,8 @@ left and right, and `set_active()`).
 
 `ui::TabBar`, `ui::SideNav`, `ui::Breadcrumb`, `ui::PageDots`, `ui::Menu` &middot; [knobs, slots, events and cues](components/navigation.md)
 
+<img src="media/designs/components-navigation.webp" width="640" alt="Navigation in motion">
+
 <table>
 <tr>
 <td width="50%" valign="top"><img src="media/designs/components-navigation-boxed.jpg" alt="Navigation: components-navigation-boxed"></td>
@@ -164,11 +179,35 @@ left and right, and `set_active()`).
 </tr>
 </table>
 
+<a id="structure"></a>
+
+### Structure
+
+`ui::RadialMenu`, `ui::Wizard`, `ui::Accordion`, `ui::TreeView`, `ui::JumpBar` &middot; [knobs, slots, events and cues](components/structure.md)
+
+<img src="media/designs/components-structure.webp" width="640" alt="Structure in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-structure-compact.jpg" alt="Structure: components-structure-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-structure-quick.jpg" alt="Structure: components-structure-quick"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-structure-radial.jpg" alt="Structure: components-structure-radial"></td>
+<td width="50%" valign="top"><img src="media/designs/components-structure-vertical.jpg" alt="Structure: components-structure-vertical"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-structure.jpg" alt="Structure: components-structure"></td>
+</tr>
+</table>
+
 <a id="overlays"></a>
 
 ### Overlays
 
 `ui::Dialog`, `ui::Sheet`, `ui::ToastStack`, `ui::Tooltip` &middot; [knobs, slots, events and cues](components/overlays.md)
+
+<img src="media/designs/components-overlays.webp" width="640" alt="Overlays in motion">
 
 <table>
 <tr>
@@ -184,11 +223,40 @@ left and right, and `set_active()`).
 </tr>
 </table>
 
+<a id="notifications"></a>
+
+### Notifications
+
+
+<a id="actions"></a>
+
+### Actions
+
+`ui::PushButton`, `ui::IconButton`, `ui::ButtonGroup`, `ui::SplitButton`, `ui::HoldButton`, `ui::QuickAction`, `ui::QuickActionBar`, `ui::Banner`, `ui::CoachMark` &middot; [knobs, slots, events and cues](components/actions.md)
+
+<img src="media/designs/components-actions.webp" width="640" alt="Actions in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-actions-accent.jpg" alt="Actions: components-actions-accent"></td>
+<td width="50%" valign="top"><img src="media/designs/components-actions-compact.jpg" alt="Actions: components-actions-compact"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-actions-menu.jpg" alt="Actions: components-actions-menu"></td>
+<td width="50%" valign="top"><img src="media/designs/components-actions-tour.jpg" alt="Actions: components-actions-tour"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-actions.jpg" alt="Actions: components-actions"></td>
+</tr>
+</table>
+
 <a id="forms"></a>
 
 ### Forms
 
 `ui::Form`, `ui::Stepper`, `ui::ChoicePicker`, `ui::TextField` &middot; [knobs, slots, events and cues](components/forms.md)
+
+<img src="media/designs/components-forms.webp" width="640" alt="Forms in motion">
 
 <table>
 <tr>
@@ -204,11 +272,54 @@ left and right, and `set_active()`).
 </tr>
 </table>
 
+<a id="pickers"></a>
+
+### Pickers
+
+`ui::Select`, `ui::CheckGroup`, `ui::RadioGroup`, `ui::TagSelect`, `ui::ColorPicker`, `ui::WheelPicker`, `ui::DatePicker`, `ui::TimePicker`, `ui::Slider`, `ui::RangeSlider` &middot; [knobs, slots, events and cues](components/pickers.md)
+
+<img src="media/designs/components-pickers.webp" width="640" alt="Pickers in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pickers-compact.jpg" alt="Pickers: components-pickers-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pickers-hsv.jpg" alt="Pickers: components-pickers-hsv"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pickers-select.jpg" alt="Pickers: components-pickers-select"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pickers.jpg" alt="Pickers: components-pickers"></td>
+</tr>
+</table>
+
+<a id="entry"></a>
+
+### Entry
+
+`ui::Keyboard`, `ui::PinEntry`, `ui::SearchField`, `ui::KeyBinder`, `ui::InputPrompt` &middot; [knobs, slots, events and cues](components/entry.md)
+
+<img src="media/designs/components-entry.webp" width="640" alt="Entry in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-entry-flat.jpg" alt="Entry: components-entry-flat"></td>
+<td width="50%" valign="top"><img src="media/designs/components-entry-numeric.jpg" alt="Entry: components-entry-numeric"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-entry-pin.jpg" alt="Entry: components-entry-pin"></td>
+<td width="50%" valign="top"><img src="media/designs/components-entry-prompt.jpg" alt="Entry: components-entry-prompt"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-entry.jpg" alt="Entry: components-entry"></td>
+</tr>
+</table>
+
 <a id="indicators"></a>
 
 ### Indicators
 
 `ui::ProgressBar`, `ui::ProgressRing`, `ui::Spinner`, `ui::Meter`, `ui::Badge`, `ui::Chip`, `ui::Avatar`, `ui::AvatarStack`, `ui::Rating`, `ui::Counter`, `ui::Skeleton`, `ui::StatTile`, `ui::EmptyState` &middot; [knobs, slots, events and cues](components/indicators.md)
+
+<img src="media/designs/components-indicators.webp" width="640" alt="Indicators in motion">
 
 <table>
 <tr>
@@ -224,11 +335,124 @@ left and right, and `set_active()`).
 </tr>
 </table>
 
+<a id="data"></a>
+
+### Data
+
+`ui::Table`, `ui::DetailList`, `ui::Timeline`, `ui::BarChart`, `ui::LineChart`, `ui::DonutChart`, `ui::Legend`, `ui::Calendar`, `ui::Countdown`, `ui::StorageBar`, `ui::StatusBar` &middot; [knobs, slots, events and cues](components/data.md)
+
+<img src="media/designs/components-data.webp" width="640" alt="Data in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-data-charts.jpg" alt="Data: components-data-charts"></td>
+<td width="50%" valign="top"><img src="media/designs/components-data-plain.jpg" alt="Data: components-data-plain"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-data-range.jpg" alt="Data: components-data-range"></td>
+<td width="50%" valign="top"><img src="media/designs/components-data.jpg" alt="Data: components-data"></td>
+</tr>
+</table>
+
+<a id="media"></a>
+
+### Media
+
+`ui::TextView`, `ui::ImageViewer`, `ui::MediaControls`, `ui::LoadingScreen` &middot; [knobs, slots, events and cues](components/media.md)
+
+<img src="media/designs/components-media.webp" width="640" alt="Media in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-media-compact.jpg" alt="Media: components-media-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-media-loading.jpg" alt="Media: components-media-loading"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-media-reader.jpg" alt="Media: components-media-reader"></td>
+<td width="50%" valign="top"><img src="media/designs/components-media-zoom.jpg" alt="Media: components-media-zoom"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-media.jpg" alt="Media: components-media"></td>
+</tr>
+</table>
+
+<a id="game"></a>
+
+### Game
+
+`ui::PauseMenu`, `ui::UnlockPopup`, `ui::ProfilePicker`, `ui::InventoryGrid`, `ui::HealthBar`, `ui::AmmoCounter`, `ui::ObjectiveTracker`, `ui::MinimapFrame`, `ui::NodeMap` &middot; [knobs, slots, events and cues](components/game.md)
+
+<img src="media/designs/components-game.webp" width="640" alt="Game in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-game-inventory.jpg" alt="Game: components-game-inventory"></td>
+<td width="50%" valign="top"><img src="media/designs/components-game-nodes.jpg" alt="Game: components-game-nodes"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-game-pause.jpg" alt="Game: components-game-pause"></td>
+<td width="50%" valign="top"><img src="media/designs/components-game-profiles.jpg" alt="Game: components-game-profiles"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-game.jpg" alt="Game: components-game"></td>
+</tr>
+</table>
+
+<a id="layout"></a>
+
+### Layout
+
+`ui::FocusGroup`, `ui::Row`, `ui::Column`, `ui::GridLayout`, `ui::Wrap`, `ui::SpringLayout`, `ui::SplitView`, `ui::ScrollArea`, `ui::Panel`, `ui::Divider`, `ui::SectionHeader`, `ui::Spacer`, `ui::Transition` &middot; [knobs, slots, events and cues](components/layout.md)
+
+<img src="media/designs/components-layout.webp" width="640" alt="Layout in motion">
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-layout-guides.jpg" alt="Layout: components-layout-guides"></td>
+<td width="50%" valign="top"><img src="media/designs/components-layout-modal.jpg" alt="Layout: components-layout-modal"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-layout-panes.jpg" alt="Layout: components-layout-panes"></td>
+<td width="50%" valign="top"><img src="media/designs/components-layout-stacked.jpg" alt="Layout: components-layout-stacked"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-layout.jpg" alt="Layout: components-layout"></td>
+</tr>
+</table>
+
 ### The same components in other themes
 
 <table>
 <tr>
-<td width="50%" valign="top"><img src="media/designs/components-brutal.jpg" alt="components-brutal"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-actions.jpg" alt="components-brutal-actions"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-collections.jpg" alt="components-brutal-collections"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-data.jpg" alt="components-brutal-data"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-entry.jpg" alt="components-brutal-entry"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-forms.jpg" alt="components-brutal-forms"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-game.jpg" alt="components-brutal-game"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-indicators.jpg" alt="components-brutal-indicators"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-layout.jpg" alt="components-brutal-layout"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-lists.jpg" alt="components-brutal-lists"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-media.jpg" alt="components-brutal-media"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-navigation.jpg" alt="components-brutal-navigation"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-notifications.jpg" alt="components-brutal-notifications"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-overlays.jpg" alt="components-brutal-overlays"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-pickers.jpg" alt="components-brutal-pickers"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-structure.jpg" alt="components-brutal-structure"></td>
 <td width="50%" valign="top"><img src="media/designs/components-classic.jpg" alt="components-classic"></td>
 </tr>
 <tr>
@@ -240,8 +464,64 @@ left and right, and `set_active()`).
 <td width="50%" valign="top"><img src="media/designs/components-pico.jpg" alt="components-pico"></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><img src="media/designs/components-pixel.jpg" alt="components-pixel"></td>
-<td width="50%" valign="top"><img src="media/designs/components-sketch.jpg" alt="components-sketch"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-actions.jpg" alt="components-pixel-actions"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-collections.jpg" alt="components-pixel-collections"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-data.jpg" alt="components-pixel-data"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-entry.jpg" alt="components-pixel-entry"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-forms.jpg" alt="components-pixel-forms"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-game.jpg" alt="components-pixel-game"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-indicators.jpg" alt="components-pixel-indicators"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-layout.jpg" alt="components-pixel-layout"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-lists.jpg" alt="components-pixel-lists"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-media.jpg" alt="components-pixel-media"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-navigation.jpg" alt="components-pixel-navigation"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-notifications.jpg" alt="components-pixel-notifications"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-overlays.jpg" alt="components-pixel-overlays"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-pickers.jpg" alt="components-pixel-pickers"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-structure.jpg" alt="components-pixel-structure"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-actions.jpg" alt="components-sketch-actions"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-collections.jpg" alt="components-sketch-collections"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-data.jpg" alt="components-sketch-data"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-entry.jpg" alt="components-sketch-entry"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-forms.jpg" alt="components-sketch-forms"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-game.jpg" alt="components-sketch-game"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-indicators.jpg" alt="components-sketch-indicators"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-layout.jpg" alt="components-sketch-layout"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-lists.jpg" alt="components-sketch-lists"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-media.jpg" alt="components-sketch-media"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-navigation.jpg" alt="components-sketch-navigation"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-notifications.jpg" alt="components-sketch-notifications"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-overlays.jpg" alt="components-sketch-overlays"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-pickers.jpg" alt="components-sketch-pickers"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-structure.jpg" alt="components-sketch-structure"></td>
 </tr>
 </table>
 <!-- END:components -->

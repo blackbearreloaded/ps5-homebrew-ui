@@ -38,9 +38,9 @@ void ChoiceGroup::set_items(std::vector<ChoiceItem> items)
 int ChoiceGroup::columns() const
 {
     const int count = static_cast<int>(items_.size());
-    if (count == 0 || style.layout == GroupLayout::vertical)
+    if (count == 0 || style.layout == ChoiceLayout::vertical)
         return 1;
-    if (style.layout == GroupLayout::horizontal)
+    if (style.layout == ChoiceLayout::horizontal)
         return count;
     return std::clamp(style.columns, 1, count);
 }
@@ -145,7 +145,7 @@ bool ChoiceGroup::navigate(const InputFrame &input, Feedback &feedback, bool qui
 
     if (next == kEdge && style.wrap && !input.nav_repeat)
     {
-        if (style.layout == GroupLayout::horizontal)
+        if (style.layout == ChoiceLayout::horizontal)
         {
             if (d == Direction::right)
                 next = 0;

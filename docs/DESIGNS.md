@@ -702,22 +702,78 @@ Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot;
 <table>
 <tr>
 <td width="50%" valign="top"><img src="media/designs/components.jpg" alt="Component Library: components"></td>
-<td width="50%" valign="top"><img src="media/designs/components-brutal.jpg" alt="Component Library: components-brutal"></td>
+<td width="50%" valign="top"><img src="media/designs/components-actions-accent.jpg" alt="Component Library: components-actions-accent"></td>
 </tr>
 <tr>
+<td width="50%" valign="top"><img src="media/designs/components-actions-compact.jpg" alt="Component Library: components-actions-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-actions-menu.jpg" alt="Component Library: components-actions-menu"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-actions-tour.jpg" alt="Component Library: components-actions-tour"></td>
+<td width="50%" valign="top"><img src="media/designs/components-actions.jpg" alt="Component Library: components-actions"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-actions.jpg" alt="Component Library: components-brutal-actions"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-collections.jpg" alt="Component Library: components-brutal-collections"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-data.jpg" alt="Component Library: components-brutal-data"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-entry.jpg" alt="Component Library: components-brutal-entry"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-forms.jpg" alt="Component Library: components-brutal-forms"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-game.jpg" alt="Component Library: components-brutal-game"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-indicators.jpg" alt="Component Library: components-brutal-indicators"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-layout.jpg" alt="Component Library: components-brutal-layout"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-lists.jpg" alt="Component Library: components-brutal-lists"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-media.jpg" alt="Component Library: components-brutal-media"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-navigation.jpg" alt="Component Library: components-brutal-navigation"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-notifications.jpg" alt="Component Library: components-brutal-notifications"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-overlays.jpg" alt="Component Library: components-brutal-overlays"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-pickers.jpg" alt="Component Library: components-brutal-pickers"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal-structure.jpg" alt="Component Library: components-brutal-structure"></td>
 <td width="50%" valign="top"><img src="media/designs/components-classic.jpg" alt="Component Library: components-classic"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-clay.jpg" alt="Component Library: components-clay"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-collections-hero.jpg" alt="Component Library: components-collections-hero"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-collections-paged.jpg" alt="Component Library: components-collections-paged"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-collections-posters.jpg" alt="Component Library: components-collections-posters"></td>
-<td width="50%" valign="top"><img src="media/designs/components-collections-wheel.jpg" alt="Component Library: components-collections-wheel"></td>
 </tr>
 <tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections-wheel.jpg" alt="Component Library: components-collections-wheel"></td>
 <td width="50%" valign="top"><img src="media/designs/components-collections.jpg" alt="Component Library: components-collections"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-data-charts.jpg" alt="Component Library: components-data-charts"></td>
+<td width="50%" valign="top"><img src="media/designs/components-data-plain.jpg" alt="Component Library: components-data-plain"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-data-range.jpg" alt="Component Library: components-data-range"></td>
+<td width="50%" valign="top"><img src="media/designs/components-data.jpg" alt="Component Library: components-data"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-entry-flat.jpg" alt="Component Library: components-entry-flat"></td>
+<td width="50%" valign="top"><img src="media/designs/components-entry-numeric.jpg" alt="Component Library: components-entry-numeric"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-entry-pin.jpg" alt="Component Library: components-entry-pin"></td>
+<td width="50%" valign="top"><img src="media/designs/components-entry-prompt.jpg" alt="Component Library: components-entry-prompt"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-entry.jpg" alt="Component Library: components-entry"></td>
 <td width="50%" valign="top"><img src="media/designs/components-forms-compact.jpg" alt="Component Library: components-forms-compact"></td>
 </tr>
 <tr>
@@ -729,16 +785,36 @@ Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot;
 <td width="50%" valign="top"><img src="media/designs/components-forms.jpg" alt="Component Library: components-forms"></td>
 </tr>
 <tr>
+<td width="50%" valign="top"><img src="media/designs/components-game-inventory.jpg" alt="Component Library: components-game-inventory"></td>
+<td width="50%" valign="top"><img src="media/designs/components-game-nodes.jpg" alt="Component Library: components-game-nodes"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-game-pause.jpg" alt="Component Library: components-game-pause"></td>
+<td width="50%" valign="top"><img src="media/designs/components-game-profiles.jpg" alt="Component Library: components-game-profiles"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-game.jpg" alt="Component Library: components-game"></td>
 <td width="50%" valign="top"><img src="media/designs/components-hazard.jpg" alt="Component Library: components-hazard"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-indicators-chunky.jpg" alt="Component Library: components-indicators-chunky"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-indicators-loaded.jpg" alt="Component Library: components-indicators-loaded"></td>
-<td width="50%" valign="top"><img src="media/designs/components-indicators-slim.jpg" alt="Component Library: components-indicators-slim"></td>
 </tr>
 <tr>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-slim.jpg" alt="Component Library: components-indicators-slim"></td>
 <td width="50%" valign="top"><img src="media/designs/components-indicators-status.jpg" alt="Component Library: components-indicators-status"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-indicators.jpg" alt="Component Library: components-indicators"></td>
+<td width="50%" valign="top"><img src="media/designs/components-layout-guides.jpg" alt="Component Library: components-layout-guides"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-layout-modal.jpg" alt="Component Library: components-layout-modal"></td>
+<td width="50%" valign="top"><img src="media/designs/components-layout-panes.jpg" alt="Component Library: components-layout-panes"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-layout-stacked.jpg" alt="Component Library: components-layout-stacked"></td>
+<td width="50%" valign="top"><img src="media/designs/components-layout.jpg" alt="Component Library: components-layout"></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><img src="media/designs/components-lists-bar.jpg" alt="Component Library: components-lists-bar"></td>
@@ -749,32 +825,116 @@ Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot;
 <td width="50%" valign="top"><img src="media/designs/components-lists.jpg" alt="Component Library: components-lists"></td>
 </tr>
 <tr>
+<td width="50%" valign="top"><img src="media/designs/components-media-compact.jpg" alt="Component Library: components-media-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-media-loading.jpg" alt="Component Library: components-media-loading"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-media-reader.jpg" alt="Component Library: components-media-reader"></td>
+<td width="50%" valign="top"><img src="media/designs/components-media-zoom.jpg" alt="Component Library: components-media-zoom"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-media.jpg" alt="Component Library: components-media"></td>
 <td width="50%" valign="top"><img src="media/designs/components-navigation-boxed.jpg" alt="Component Library: components-navigation-boxed"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-navigation-menu.jpg" alt="Component Library: components-navigation-menu"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-navigation-segmented.jpg" alt="Component Library: components-navigation-segmented"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-navigation-underline.jpg" alt="Component Library: components-navigation-underline"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-navigation.jpg" alt="Component Library: components-navigation"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-overlays-bottom.jpg" alt="Component Library: components-overlays-bottom"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-overlays-compact.jpg" alt="Component Library: components-overlays-compact"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-overlays-sheet.jpg" alt="Component Library: components-overlays-sheet"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-overlays-toasts.jpg" alt="Component Library: components-overlays-toasts"></td>
+</tr>
+<tr>
 <td width="50%" valign="top"><img src="media/designs/components-overlays.jpg" alt="Component Library: components-overlays"></td>
-</tr>
-<tr>
 <td width="50%" valign="top"><img src="media/designs/components-paper.jpg" alt="Component Library: components-paper"></td>
-<td width="50%" valign="top"><img src="media/designs/components-pico.jpg" alt="Component Library: components-pico"></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><img src="media/designs/components-pixel.jpg" alt="Component Library: components-pixel"></td>
-<td width="50%" valign="top"><img src="media/designs/components-sketch.jpg" alt="Component Library: components-sketch"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pickers-compact.jpg" alt="Component Library: components-pickers-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pickers-hsv.jpg" alt="Component Library: components-pickers-hsv"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pickers-select.jpg" alt="Component Library: components-pickers-select"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pickers.jpg" alt="Component Library: components-pickers"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pico.jpg" alt="Component Library: components-pico"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-actions.jpg" alt="Component Library: components-pixel-actions"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-collections.jpg" alt="Component Library: components-pixel-collections"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-data.jpg" alt="Component Library: components-pixel-data"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-entry.jpg" alt="Component Library: components-pixel-entry"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-forms.jpg" alt="Component Library: components-pixel-forms"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-game.jpg" alt="Component Library: components-pixel-game"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-indicators.jpg" alt="Component Library: components-pixel-indicators"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-layout.jpg" alt="Component Library: components-pixel-layout"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-lists.jpg" alt="Component Library: components-pixel-lists"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-media.jpg" alt="Component Library: components-pixel-media"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-navigation.jpg" alt="Component Library: components-pixel-navigation"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-notifications.jpg" alt="Component Library: components-pixel-notifications"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-overlays.jpg" alt="Component Library: components-pixel-overlays"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-pickers.jpg" alt="Component Library: components-pixel-pickers"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pixel-structure.jpg" alt="Component Library: components-pixel-structure"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-actions.jpg" alt="Component Library: components-sketch-actions"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-collections.jpg" alt="Component Library: components-sketch-collections"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-data.jpg" alt="Component Library: components-sketch-data"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-entry.jpg" alt="Component Library: components-sketch-entry"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-forms.jpg" alt="Component Library: components-sketch-forms"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-game.jpg" alt="Component Library: components-sketch-game"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-indicators.jpg" alt="Component Library: components-sketch-indicators"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-layout.jpg" alt="Component Library: components-sketch-layout"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-lists.jpg" alt="Component Library: components-sketch-lists"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-media.jpg" alt="Component Library: components-sketch-media"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-navigation.jpg" alt="Component Library: components-sketch-navigation"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-notifications.jpg" alt="Component Library: components-sketch-notifications"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-overlays.jpg" alt="Component Library: components-sketch-overlays"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-pickers.jpg" alt="Component Library: components-sketch-pickers"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-sketch-structure.jpg" alt="Component Library: components-sketch-structure"></td>
+<td width="50%" valign="top"><img src="media/designs/components-structure-compact.jpg" alt="Component Library: components-structure-compact"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-structure-quick.jpg" alt="Component Library: components-structure-quick"></td>
+<td width="50%" valign="top"><img src="media/designs/components-structure-radial.jpg" alt="Component Library: components-structure-radial"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-structure-vertical.jpg" alt="Component Library: components-structure-vertical"></td>
+<td width="50%" valign="top"><img src="media/designs/components-structure.jpg" alt="Component Library: components-structure"></td>
 </tr>
 </table>
 

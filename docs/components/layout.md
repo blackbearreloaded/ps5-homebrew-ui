@@ -1,5 +1,9 @@
 # Layout
 
+[Back to the component guide](../COMPONENTS.md)
+
+<img src="../media/designs/components-layout.jpg" alt="The layout page of the Component Library">
+
 Headers: [`focus_group.hpp`](../../src/ui/components/focus_group.hpp),
 [`layout.hpp`](../../src/ui/components/layout.hpp),
 [`split_view.hpp`](../../src/ui/components/split_view.hpp),

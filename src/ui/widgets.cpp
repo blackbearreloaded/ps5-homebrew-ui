@@ -471,6 +471,10 @@ void Painter::focus_ring(const gfx::Rect &r, float radius, float amount)
             const float x = in.x + static_cast<float>(i) * 6.0f;
             list_.rounded_rect({x, in.y, 3, 1.5f}, 0, theme_.focus);
             list_.rounded_rect({x, in.y + in.h - 1.5f, 3, 1.5f}, 0, theme_.focus);
+            // A light dot in every gap: the pair reads on any fill.
+            list_.rounded_rect({x + 3.0f, in.y, 3, 1.5f}, 0, theme_.light.with_alpha(0.7f));
+            list_.rounded_rect({x + 3.0f, in.y + in.h - 1.5f, 3, 1.5f}, 0,
+                               theme_.light.with_alpha(0.7f));
         }
         const int down = static_cast<int>(std::ceil((in.h - 3.0f) / 6.0f));
         for (int i = 0; i < down; ++i)
@@ -478,6 +482,9 @@ void Painter::focus_ring(const gfx::Rect &r, float radius, float amount)
             const float y = in.y + static_cast<float>(i) * 6.0f;
             list_.rounded_rect({in.x, y, 1.5f, 3}, 0, theme_.focus);
             list_.rounded_rect({in.x + in.w - 1.5f, y, 1.5f, 3}, 0, theme_.focus);
+            list_.rounded_rect({in.x, y + 3.0f, 1.5f, 3}, 0, theme_.light.with_alpha(0.7f));
+            list_.rounded_rect({in.x + in.w - 1.5f, y + 3.0f, 1.5f, 3}, 0,
+                               theme_.light.with_alpha(0.7f));
         }
         break;
     }

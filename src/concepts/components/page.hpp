@@ -78,5 +78,6 @@ std::unique_ptr<Page> make_data_page(app::Context &context);
 std::unique_ptr<Page> make_media_page(app::Context &context);
 std::unique_ptr<Page> make_game_page(app::Context &context);
 std::unique_ptr<Page> make_layout_page(app::Context &context);
+std::unique_ptr<Page> make_notifications_page(app::Context &context);
 
 } // namespace hui::concepts::gallery

@@ -328,7 +328,7 @@ void Menu::draw_pointer(Canvas &canvas, const Placement &at) const
     const float cx = at.tip_x + dx * height * 0.5f;
     const float cy = at.tip_y + dy * height * 0.5f;
     const Rect box{cx - half, cy - height * 0.5f, 2.0f * half, height};
-    if (theme.style == SurfaceStyle::glass && style.backing > 0.0f)
+    if (theme.surface.a < 0.99f && style.backing > 0.0f)
         list.triangle(box, theme.page.with_alpha(tween::clamp01(style.backing)), 0.0f, angle);
     list.triangle(box, fill, 0.0f, angle);
     if (line > 0.0f)
@@ -367,7 +367,7 @@ void Menu::draw(Canvas &canvas) const
     if (style.elevation > 0.0f && !own_depth(theme.style))
         list.shadow({panel.x, panel.y + 12.0f * style.elevation, panel.w, panel.h}, radius,
                     34.0f * style.elevation, Color::rgb(0x000000, theme.dark ? 0.45f : 0.22f));
-    if (theme.style == SurfaceStyle::glass && style.backing > 0.0f)
+    if (theme.surface.a < 0.99f && style.backing > 0.0f)
         list.rounded_rect(panel, radius, theme.page.with_alpha(tween::clamp01(style.backing)));
     paint.panel(panel);
     draw_pointer(canvas, at);

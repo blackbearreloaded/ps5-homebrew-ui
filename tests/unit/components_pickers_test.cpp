@@ -194,7 +194,7 @@ TEST_F(ComponentsPickers, CheckGroupTogglesAndSelectsAll)
     EXPECT_EQ(group.focus(), 3);
 
     // A grid moves in two directions.
-    group.style.layout = hui::ui::GroupLayout::grid;
+    group.style.layout = hui::ui::ChoiceLayout::grid;
     group.style.columns = 2;
     group.set_focus(0);
     EXPECT_EQ(send(group, nav(Direction::right)), Event::moved);
@@ -227,7 +227,7 @@ TEST_F(ComponentsPickers, RadioGroupKeepsOneSelected)
     EXPECT_FALSE(asked(Cue::focus));
 
     // In a row, left and right move and up is an edge.
-    group.style.layout = hui::ui::GroupLayout::horizontal;
+    group.style.layout = hui::ui::ChoiceLayout::horizontal;
     EXPECT_EQ(send(group, nav(Direction::left)), Event::changed);
     EXPECT_EQ(group.selected(), 1);
     EXPECT_EQ(send(group, nav(Direction::up)), Event::refused);
@@ -678,12 +678,12 @@ TEST_F(ComponentsPickers, DrawsInEveryThemeAndVariant)
             checks.style.highlight.kind = kind;
             checks.style.select_all = variant != 1;
             checks.style.layout =
-                variant == 2 ? hui::ui::GroupLayout::grid : hui::ui::GroupLayout::vertical;
+                variant == 2 ? hui::ui::ChoiceLayout::grid : hui::ui::ChoiceLayout::vertical;
             checks.style.on_page = variant == 2;
             radios.style.theme = theme;
             radios.style.highlight.kind = kind;
             radios.style.layout =
-                variant == 1 ? hui::ui::GroupLayout::horizontal : hui::ui::GroupLayout::vertical;
+                variant == 1 ? hui::ui::ChoiceLayout::horizontal : hui::ui::ChoiceLayout::vertical;
             tags.style.theme = theme;
             tags.style.shape = variant == 0   ? hui::ui::TagShape::theme
                                : variant == 1 ? hui::ui::TagShape::pill

@@ -2,6 +2,10 @@
 
 [Back to the component guide](../COMPONENTS.md)
 
+<img src="../media/designs/components-pickers.jpg" alt="The pickers page of the Component Library">
+
+[Back to the component guide](../COMPONENTS.md)
+
 Components that choose a value from a set: an option from a long list, some
 of a few, a handful of tags, a colour, a date, a time, a number or a range.
 
@@ -151,7 +155,7 @@ some are on it shows a dash.
 ```cpp
 ui::CheckGroup notify;
 notify.style.theme = theme;
-notify.style.layout = ui::GroupLayout::grid;
+notify.style.layout = ui::ChoiceLayout::grid;
 notify.style.select_all = true;
 notify.set_title("Notify me about");
 notify.set_items({{"Friends"}, {"Invites"}, {"Updates", "About once a month"}});
@@ -180,7 +184,7 @@ API: `set_title`, `set_items`, `items()`, `item(i)`, `set_checked(i, on)`
 
 | Knob | Default | Effect |
 | --- | --- | --- |
-| `layout` | vertical | `GroupLayout::vertical`, `horizontal` (one row of equal cells) or `grid` |
+| `layout` | vertical | `ChoiceLayout::vertical`, `horizontal` (one row of equal cells) or `grid` |
 | `columns` | 2 | Cells per row of a grid |
 | `row_height` | 48 | An item without a description |
 | `described_height` | 70 | Items when any of them has a description |
@@ -221,7 +225,7 @@ buttons do, and with `allow_none` confirm on the selected item clears it.
 ```cpp
 ui::RadioGroup mode;
 mode.style.theme = theme;
-mode.style.layout = ui::GroupLayout::horizontal;
+mode.style.layout = ui::ChoiceLayout::horizontal;
 mode.set_title("Play style");
 mode.set_items({{"Solo"}, {"Co-op"}, {"Versus"}});
 mode.set_selected(1);
@@ -683,7 +687,7 @@ Square cycles three variants:
 | Variant | Knobs |
 | --- | --- |
 | Lists, swatches, 24 h | `SelectLabel::inside`, a scrim behind the list; vertical radio buttons; a check grid with `select_all`; theme chips, `max_selected` 5; swatches; day / month / year; 24 hour, `minute_step` 5; bubbles always |
-| Rows, pills, HSV, 12 h, wrap | `SelectLabel::above`, `max_rows` 8; `GroupLayout::horizontal` radio buttons and a vertical check group, both with `HighlightKind::bar`; `TagShape::pill`, centred rows, no limit; `ColorPickerKind::hsv`; wheels that `wrap`, month / day / year, `twelve_hour`; `BubbleMode::focused` and `ticks` |
+| Rows, pills, HSV, 12 h, wrap | `SelectLabel::above`, `max_rows` 8; `ChoiceLayout::horizontal` radio buttons and a vertical check group, both with `HighlightKind::bar`; `TagShape::pill`, centred rows, no limit; `ColorPickerKind::hsv`; wheels that `wrap`, month / day / year, `twelve_hour`; `BubbleMode::focused` and `ticks` |
 | Compact, fill, square chips | `step_closed`, options with descriptions, `max_rows` 5, `HighlightKind::fill` in the list; `select_on_move` with `HighlightKind::fill`; a check group with `HighlightKind::ring`; `TagShape::square` without checks, `flow`, `max_selected` 4; round swatches in nine columns; three-row wheels with `HighlightKind::fill`, year-month-day in numbers, `minute_step` 1; `BubbleMode::never` with `end_labels` |
 
 Tour pictures: `pickers-select`, `pickers`, `pickers-hsv`, `pickers-compact`.

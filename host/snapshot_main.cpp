@@ -345,7 +345,7 @@ int main(int argc, char **argv)
         hui::app::Tour tour(shell, only);
         std::size_t design = shell.current();
         char name[96];
-        while (!tour.finished() && count < 60 * 60 * 12)
+        while (!tour.finished() && count < 60 * 60 * 60)
         {
             const hui::InputFrame input = tour.step(kDt);
             if (!split && shell.current() != design)
@@ -377,7 +377,7 @@ int main(int argc, char **argv)
         return 2;
     }
     long frames = 0;
-    while (!tour.finished() && frames < 60 * 60 * 10)
+    while (!tour.finished() && frames < 60 * 60 * 60)
     {
         const hui::InputFrame input = tour.step(kDt);
         // Nothing is presented here, so the numbers a console would measure

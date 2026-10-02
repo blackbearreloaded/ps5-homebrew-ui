@@ -9,6 +9,7 @@
 # on the PC (see tools/host-snapshots.sh):
 #   docs/media/designs/<id>.jpg, <id>-<state>.jpg   one picture per tour state
 #   docs/media/designs/<id>.webp                    a clip of the whole tour
+#   docs/media/designs/components-<page>.webp       one clip per Component Library page
 #   docs/media/themes/<theme>.jpg, <theme>.webp     every theme of the Theme Lab
 #   docs/media/switcher.webp                        L1/R1 through every design
 # Needs ffmpeg (clips, with libwebp) and Python with Pillow (pictures).
@@ -57,10 +58,26 @@ if [[ $what == clips || $what == all ]]; then
     # L1/R1 through everything.
     HUI_REEL="$work/switch" HUI_REEL_SWITCH=1 \
         bash "$root/tools/host-snapshots.sh" "$work/scratch" all 960 540 >/dev/null
+    # The Component Library's tour is minutes long: it is cut at its
+    # pictures, and each page keeps the clip that leads up to its first one.
+    rm -rf "$work/component-clips"
+    mkdir -p "$work/component-clips"
+    HUI_REEL="$work/component-clips" HUI_REEL_SPLIT=1 \
+        bash "$root/tools/host-snapshots.sh" "$work/scratch" components 640 360 >/dev/null
     rm -f "$media"/designs/*.webp "$media"/themes/*.webp
     for clip in "$work"/clips/*.webp; do
-        [[ $(basename "$clip") == themes.webp ]] || cp "$clip" "$media/designs/"
+        case $(basename "$clip") in
+        themes.webp | components.webp) ;;
+        *) cp "$clip" "$media/designs/" ;;
+        esac
     done
+    for clip in "$work"/component-clips/*-components-*.webp; do
+        name=$(basename "$clip" .webp)
+        name=${name#*-components-}
+        # Page clips are named after the page alone ("forms", not "forms-wide").
+        [[ $name == *-* ]] || cp "$clip" "$media/designs/components-$name.webp"
+    done
+    cp "$media/designs/components-collections.webp" "$media/designs/components.webp"
     for clip in "$work"/theme-clips/*-themes-*.webp; do
         name=$(basename "$clip" .webp)
         name=${name#*-themes-}

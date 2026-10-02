@@ -1,5 +1,9 @@
 # Entry
 
+[Back to the component guide](../COMPONENTS.md)
+
+<img src="../media/designs/components-entry.jpg" alt="The entry page of the Component Library">
+
 Components for typing and capturing input with a controller: an on-screen
 keyboard, a code entry, a search box with suggestions, a list that remaps
 buttons, and the overlay that asks for a line of text. They build on

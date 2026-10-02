@@ -2,6 +2,10 @@
 
 [Back to the component guide](../COMPONENTS.md)
 
+<img src="../media/designs/components-media.jpg" alt="The media page of the Component Library">
+
+[Back to the component guide](../COMPONENTS.md)
+
 Components that show content, and its playback or loading. Headers are in
 `src/ui/components/`: `text_view.hpp`, `image_viewer.hpp`,
 `media_controls.hpp`, `loading_screen.hpp`. The gallery page is

@@ -480,7 +480,7 @@ class PickersPage final : public Page
         radio.row_height = 44.0f;
         check.exits = all;
         check.row_height = 44.0f;
-        check.layout = ui::GroupLayout::grid;
+        check.layout = ui::ChoiceLayout::grid;
         check.select_all = true;
         tags.exits = all;
         tags.max_selected = 5;
@@ -500,12 +500,12 @@ class PickersPage final : public Page
             select.label = ui::SelectLabel::above;
             select.max_rows = 8;
             select.row_height = 48.0f;
-            radio.layout = ui::GroupLayout::horizontal;
+            radio.layout = ui::ChoiceLayout::horizontal;
             radio.padding = 8.0f;
             radio.box_gap = 10.0f;
             radio.column_gap = 4.0f;
             radio.label_size = 22.0f;
-            check.layout = ui::GroupLayout::vertical;
+            check.layout = ui::ChoiceLayout::vertical;
             check.select_all = false;
             check.highlight.kind = ui::HighlightKind::bar;
             radio.highlight.kind = ui::HighlightKind::bar;

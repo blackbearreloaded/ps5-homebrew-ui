@@ -28,7 +28,9 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <deque>
 #include <memory>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -42,11 +44,11 @@ using gfx::Color;
 using gfx::Rect;
 
 constexpr gallery::PageFactory kPages[] = {
-    gallery::make_lists_page,      gallery::make_collections_page, gallery::make_navigation_page,
-    gallery::make_structure_page,  gallery::make_overlays_page,    gallery::make_actions_page,
-    gallery::make_forms_page,      gallery::make_pickers_page,     gallery::make_entry_page,
-    gallery::make_indicators_page, gallery::make_data_page,        gallery::make_media_page,
-    gallery::make_game_page,       gallery::make_layout_page,
+    gallery::make_lists_page,     gallery::make_collections_page, gallery::make_navigation_page,
+    gallery::make_structure_page, gallery::make_overlays_page,    gallery::make_notifications_page,
+    gallery::make_actions_page,   gallery::make_forms_page,       gallery::make_pickers_page,
+    gallery::make_entry_page,     gallery::make_indicators_page,  gallery::make_data_page,
+    gallery::make_media_page,     gallery::make_game_page,        gallery::make_layout_page,
 };
 
 constexpr float kMargin = 96.0f;
@@ -310,9 +312,26 @@ class Components final : public app::Concept
         const auto themes = ui::themes();
         for (std::size_t i = 0; i < themes.size(); ++i)
         {
+            // Three very different themes get every page photographed: the
+            // proof that each component holds up outside the default look.
+            const bool every_page = i == 1 || i == 10 || i == 27;
+            if (every_page)
+            {
+                const int count = static_cast<int>(pages_.size());
+                for (int p = 0; p < count; ++p)
+                {
+                    std::string name = std::string(themes[i].id) + "-";
+                    for (const char *c =
+                             pages_[static_cast<std::size_t>((walk_page + p) % count)]->title();
+                         *c != '\0'; ++c)
+                        name += static_cast<char>(*c >= 'A' && *c <= 'Z' ? *c - 'A' + 'a' : *c);
+                    capture_names_.push_back(std::move(name));
+                    tour_.push_back(
+                        {0.8f, next_page, Direction::none, capture_names_.back().c_str()});
+                }
+            }
             // A step's picture is taken before its press: it shows theme i.
-            const bool pictured =
-                i == 1 || i == 2 || i == 5 || i == 7 || i == 10 || i == 13 || i == 18 || i == 27;
+            const bool pictured = i == 2 || i == 5 || i == 7 || i == 13 || i == 18;
             tour_.push_back({pictured ? 0.75f : 0.5f, next_theme, Direction::none,
                              pictured ? themes[i].id : nullptr});
         }
@@ -323,6 +342,7 @@ class Components final : public app::Concept
     app::Context &context_;
     std::vector<std::unique_ptr<gallery::Page>> pages_;
     std::vector<app::TourStep> tour_;
+    std::deque<std::string> capture_names_; // a deque never moves its strings
     int page_ = 0;
     int previous_page_ = 0;
     int direction_ = 1;

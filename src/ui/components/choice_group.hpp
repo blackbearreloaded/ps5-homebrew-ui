@@ -35,7 +35,7 @@ struct ChoiceItem
     }
 };
 
-enum class GroupLayout : std::uint8_t
+enum class ChoiceLayout : std::uint8_t
 {
     vertical,   // one item per row
     horizontal, // all items in one row, in equal cells
@@ -45,8 +45,8 @@ enum class GroupLayout : std::uint8_t
 struct ChoiceGroupStyle : ComponentStyle
 {
     // ---- geometry ----
-    GroupLayout layout = GroupLayout::vertical;
-    int columns = 2;                // GroupLayout::grid
+    ChoiceLayout layout = ChoiceLayout::vertical;
+    int columns = 2;                // ChoiceLayout::grid
     float row_height = 48.0f;       // an item without a description
     float described_height = 70.0f; // items when any of them has a description
     float gap = 4.0f;               // between rows
@@ -206,7 +206,7 @@ class CheckGroup : public ChoiceGroup
 // Radio buttons: one item on.
 //
 //   ui::RadioGroup mode;
-//   mode.style.layout = ui::GroupLayout::horizontal;
+//   mode.style.layout = ui::ChoiceLayout::horizontal;
 //   mode.set_items({{"Solo"}, {"Co-op"}, {"Versus"}});
 //   mode.set_selected(1);
 class RadioGroup : public ChoiceGroup

@@ -139,6 +139,7 @@ COMPONENT_GROUPS = [
     ("navigation", "Navigation"),
     ("structure", "Structure"),
     ("overlays", "Overlays"),
+    ("notifications", "Notifications"),
     ("actions", "Actions"),
     ("forms", "Forms"),
     ("pickers", "Pickers"),
@@ -151,6 +152,21 @@ COMPONENT_GROUPS = [
 ]
 
 
+def component_names(group):
+    """The components a group's guide documents: its level-two headings."""
+    guide = ROOT / "docs/components" / f"{group}.md"
+    found = []
+    if guide.exists():
+        for line in guide.read_text(encoding="utf-8").splitlines():
+            if line.startswith("## "):
+                # "## Avatar and AvatarStack" names two; "## CheckGroup / RadioGroup"
+                # too; prose headings ("## The gallery page") name none.
+                for name in re.split(r" and | / |, ", line[3:].strip()):
+                    if re.fullmatch(r"[A-Z][A-Za-z]+", name.strip()):
+                        found.append(name.strip())
+    return found
+
+
 def components_catalogue():
     """One block per group: its components (the level-two headings of its
     guide), a link to the guide, and the pictures of its gallery page."""
@@ -159,16 +175,7 @@ def components_catalogue():
     out.append("| --- | --- | --- |")
     names = {}
     for group, title in COMPONENT_GROUPS:
-        guide = ROOT / "docs/components" / f"{group}.md"
-        found = []
-        if guide.exists():
-            for line in guide.read_text(encoding="utf-8").splitlines():
-                if line.startswith("## "):
-                    # "## Avatar and AvatarStack" names two; prose headings
-                    # ("## The gallery page") name none.
-                    for name in line[3:].strip().split(" and "):
-                        if re.fullmatch(r"[A-Z][A-Za-z]+", name):
-                            found.append(name)
+        found = component_names(group)
         names[group] = found
         listed = ", ".join(f"`{name}`" for name in found) or "(in progress)"
         out.append(f"| [{title}](#{group}) | {listed} | [components/{group}.md](components/{group}.md) |")
@@ -183,6 +190,10 @@ def components_catalogue():
         if names[group]:
             out.append(", ".join(f"`ui::{name}`" for name in names[group]) +
                        f" &middot; [knobs, slots, events and cues](components/{group}.md)")
+            out.append("")
+        clip = folder / f"components-{group}.webp"
+        if clip.exists():
+            out.append(f'<img src="media/designs/{clip.name}" width="640" alt="{title} in motion">')
             out.append("")
         if shots:
             cells = [f'<img src="media/designs/{p.name}" alt="{title}: {p.stem}">' for p in shots]
@@ -205,8 +216,10 @@ def main():
     designs, themes = manifest["designs"], manifest["themes"]
     replace_section(ROOT / "README.md", "designs", readme_designs(designs, ""))
     replace_section(ROOT / "README.md", "themes", readme_themes(themes, ""))
+    components = sum(len(component_names(group)) for group, _ in COMPONENT_GROUPS)
     replace_section(ROOT / "README.md", "counts",
-                    f"**{len(designs)} designs** &middot; **{len(themes)} themes**")
+                    f"**{len(designs)} designs** &middot; **{len(themes)} themes** &middot; "
+                    f"**{components} reusable components**")
     replace_section(ROOT / "docs/DESIGNS.md", "designs", designs_page(designs))
     replace_section(ROOT / "docs/THEMES.md", "themes", themes_page(themes))
     replace_section(ROOT / "docs/COMPONENTS.md", "components", components_catalogue())

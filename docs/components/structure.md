@@ -2,6 +2,10 @@
 
 [Back to the component guide](../COMPONENTS.md)
 
+<img src="../media/designs/components-structure.jpg" alt="The structure page of the Component Library">
+
+[Back to the component guide](../COMPONENTS.md)
+
 Five components that organise content and get the player to it: a wheel of
 choices, the steps of a flow, sections that fold, a hierarchy, and a letter
 index for a long list. Headers are in `src/ui/components/`: `radial.hpp`,
