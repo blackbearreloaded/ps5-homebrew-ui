@@ -25,6 +25,7 @@
 #include "platform/ps5/system.hpp"
 #include "ui/fonts.hpp"
 
+#include <cstring>
 #include <GL/glcorearb.h>
 
 #include <cstddef>
@@ -44,16 +45,23 @@ namespace
 constexpr const char *kAssets = "/app0/assets";
 // Settings live in the title's own save area.
 constexpr const char *kDataRoot = "/download0/hui";
-// Development files (the tour trigger, its pictures and report, the quit
-// request). A title's sandbox has no /data, so they live in its own storage;
-// while the title runs, a PC reaches the folder over FTP as
-// /mnt/sandbox/<TITLE_ID>_000/download0/hui/dev.
+// Development output (the tour's pictures and report, the log). A title's
+// sandbox has no /data, so it lives in the title's own storage. While the
+// title runs, a PC can *read* the folder over FTP as
+// /mnt/sandbox/<TITLE_ID>_000/download0/hui/dev, but cannot write there.
 constexpr const char *kDevRoot = "/download0/hui/dev";
-// How long a finished tour waits for the PC to collect its evidence and send
-// the quit request before the app closes anyway.
-constexpr double kCollectSeconds = 600.0;
-constexpr int kCaptureWidth = 960;
-constexpr int kCaptureHeight = 540;
+// Requests therefore come in through the install folder, which a PC can
+// write: /data/homebrew/<TITLE_ID>/dev/request.txt is /app0/dev/request.txt
+// here. One line: "tour <design id|all> <token>" or "quit - <token>". A
+// request is honoured once per token (the last one is remembered in kDevRoot).
+constexpr const char *kRequestPath = "/app0/dev/request.txt";
+// How long a finished tour stays up so the PC can copy its evidence (the
+// storage is unmounted when the title closes) before the app closes itself.
+constexpr double kCollectSeconds = 240.0;
+// Quarter of a quarter: the title's storage is small and a tour takes
+// hundreds of pictures. Enough to compare layout and colour with the PC's.
+constexpr int kCaptureWidth = 480;
+constexpr int kCaptureHeight = 270;
 
 void log_heap(std::uint64_t frames)
 {
@@ -206,34 +214,43 @@ int main()
     sys::log("[HUI] version %s designs=%zu", version.empty() ? "unknown" : version.c_str(),
              shell.concept_count());
 
-    // A tour.txt file turns this launch into an unattended validation run:
+    // A tour request turns this launch into an unattended validation run:
     // every design is shown with scripted input, pictures and a report are
-    // written next to the trigger, and the app closes itself. The file may
-    // name one design id to tour only that one.
-    // The request may be there at launch or arrive while the app runs (the
-    // folder is only reachable from a PC once the title is up), so it is
-    // looked for again every second.
+    // written to kDevRoot, and the app closes itself a while later.
     std::unique_ptr<app::Tour> tour;
     save::ensure_directory(kDevRoot);
-    const std::string tour_trigger = std::string(kDevRoot) + "/tour.txt";
-    const std::string quit_trigger = std::string(kDevRoot) + "/quit.txt";
+    const std::string handled_path = std::string(kDevRoot) + "/handled.txt";
     const std::string report_path = std::string(kDevRoot) + "/tour/report.txt";
-    std::remove(quit_trigger.c_str()); // a request from an earlier session is void
-    const auto poll_tour = [&]()
+    bool quit_requested = false;
+    const auto poll_request = [&]()
     {
         std::string request;
-        if (!save::read_file(tour_trigger, &request, 256))
+        if (!save::read_file(kRequestPath, &request, 256))
             return;
-        while (!request.empty() &&
-               (request.back() == '\n' || request.back() == '\r' || request.back() == ' '))
-            request.pop_back();
-        std::remove(tour_trigger.c_str()); // one run per request
-        save::ensure_directory(std::string(kDevRoot) + "/tour");
-        std::remove(report_path.c_str()); // the new report must not be mistaken for an old one
-        tour = std::make_unique<app::Tour>(shell, request == "all" ? std::string() : request);
-        sys::log("[HUI] tour requested: %s", request.empty() ? "all" : request.c_str());
+        char verb[16] = {};
+        char argument[64] = {};
+        char token[64] = {};
+        if (std::sscanf(request.c_str(), "%15s %63s %63s", verb, argument, token) != 3)
+            return;
+        std::string handled;
+        save::read_file(handled_path, &handled, 128);
+        if (handled == token)
+            return; // this request was honoured by an earlier launch (or frame)
+        save::write_atomic(handled_path, token);
+        if (std::strcmp(verb, "quit") == 0)
+        {
+            quit_requested = true;
+        }
+        else if (std::strcmp(verb, "tour") == 0 && !tour)
+        {
+            save::ensure_directory(std::string(kDevRoot) + "/tour");
+            std::remove(report_path.c_str()); // a new report must not be taken for an old one
+            const bool all = std::strcmp(argument, "all") == 0;
+            tour = std::make_unique<app::Tour>(shell, all ? std::string() : std::string(argument));
+            sys::log("[HUI] tour requested: %s token=%s", argument, token);
+        }
     };
-    poll_tour();
+    poll_request();
     double collect_wait = -1.0; // seconds a finished tour has waited to be collected
 
     std::int64_t previous = sys::monotonic_us();
@@ -366,7 +383,7 @@ int main()
             save::write_atomic(report_path, report);
             sys::log("[HUI] tour finished designs=%zu", tour->report().size());
             // The storage is unmounted when the title closes, so the app stays
-            // up until the PC has copied the evidence and asks it to quit.
+            // up for a while: the PC copies the evidence, then the app closes.
             tour.reset();
             collect_wait = 0.0;
         }
@@ -374,18 +391,14 @@ int main()
             collect_wait += static_cast<double>(frame_ms) / 1000.0;
         if (frames % 60 == 0)
         {
-            std::string ignored;
-            const bool asked = save::read_file(quit_trigger, &ignored, 16);
-            if (asked || collect_wait > kCollectSeconds)
+            poll_request();
+            if (quit_requested || collect_wait > kCollectSeconds)
             {
-                std::remove(quit_trigger.c_str());
                 sys::log("[HUI] closing: %s",
-                         asked ? "quit requested by file" : "tour not collected");
+                         quit_requested ? "quit requested" : "tour evidence window over");
                 pad.close();
                 sys::quit();
             }
-            if (!tour && collect_wait < 0.0)
-                poll_tour();
         }
         if (stats.count() == 600)
         {

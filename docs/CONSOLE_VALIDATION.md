@@ -7,28 +7,33 @@ exactly that, so a validation takes one launch and no controller.
 
 ## The tour run
 
-The app keeps its development files in its own storage, `/download0/hui/dev`.
-A title's sandbox has no `/data`, and that storage is mounted only while the
-title runs; a PC reaches it over FTP as
-`/mnt/sandbox/<TITLE_ID>_000/download0/hui/dev`. So the request is handed to
-the *running* app. Once a second the app looks for `dev/tour.txt`, and when it
-finds it, it:
+Two facts about a title's sandbox shape the mechanism:
 
-1. deletes the file (one run per request);
-2. shows every design in turn and replays the inputs its `tour()` describes;
-3. saves a quarter-size picture of each tour state to
+- It has no `/data`. The app's output (log, pictures, report) goes to its own
+  storage, `/download0/hui/dev`, which exists only while the title runs. A PC
+  can *read* it over FTP as `/mnt/sandbox/<TITLE_ID>_000/download0/hui/dev`,
+  but cannot write there.
+- The install folder is writable from a PC and the app sees it as `/app0`.
+  So requests travel that way: `/data/homebrew/<TITLE_ID>/dev/request.txt`
+  holds one line, `tour <design id|all> <token>` or `quit - <token>`. The app
+  honours a request once per token (it remembers the last one), so a request
+  left in place does not make every later launch a tour.
+
+When the app finds a tour request it has not honoured yet, it:
+
+1. shows every design in turn and replays the inputs its `tour()` describes;
+2. saves a small picture (480 x 270) of each tour state to
    `dev/tour/NN-<id>[-<state>].bmp`;
-4. measures every presented frame per design;
-5. writes `dev/tour/report.txt` and logs the same lines;
-6. keeps running until `dev/quit.txt` appears (or ten minutes pass), because
-   closing unmounts the storage and the evidence with it;
-7. asks the system to close it (`sceSystemServiceLoadExec("exit", NULL)`).
+3. measures every presented frame per design;
+4. writes `dev/tour/report.txt` and logs the same lines;
+5. stays up for four more minutes, because closing unmounts the storage and
+   the evidence with it;
+6. asks the system to close it (`sceSystemServiceLoadExec("exit", NULL)`).
 
-`dev/quit.txt` works at any time, tour or not: it is the way to close the app
-from a PC without killing it. `dev/app.log` is the app's log.
+`dev/app.log` is the app's log. Put the request in place **before** launching:
+the tool does not write into the install folder of a running title.
 
-`tour.txt` may be empty or contain `all` (every design), or one design id
-(`aurora`) to run only that one.
+The design id `all` tours every design; one id (`aurora`) tours only that one.
 
 The report has one line per design:
 

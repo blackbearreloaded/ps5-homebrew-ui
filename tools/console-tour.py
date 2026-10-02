@@ -8,12 +8,13 @@ usage: PS5_HOST=<address> tools/console-tour.py <results dir> [design id|all]
 
 Steps: check the console's services; refuse if the title is running; upload
 dist/<TITLE_ID> (every file verified by hash); wait for its registration;
-record the kernel log; launch the title; hand it the tour request through its
-sandbox; wait for its report; download the report, the pictures and the app
-log; ask the app to close itself; check everything.
+put the tour request beside it; wait for its registration; record the kernel
+log; launch the title; wait for its report; download the report, the pictures
+and the app log from the title's storage; wait for the app to close itself;
+remove the request; check everything.
 
-The script never kills the app, never retries and never deletes anything on
-the console. If something is wrong it stops and says what it saw.
+The script never kills the app and never retries. The only thing it deletes
+on the console is its own request file. If something is wrong it stops and says what it saw.
 
 Environment:
   PS5_HOST          console address (required)
@@ -219,6 +220,12 @@ def main():
     (results / "installed.sha256").write_text(
         "".join(f"{digest}  {name}\n" for name, digest in sorted(manifest.items())))
 
+    # The request goes into the install folder (the app reads it as
+    # /app0/dev/request.txt): a running title's own storage can be read over
+    # FTP but not written. The token makes the app honour it once.
+    token = str(int(time.time()))
+    console.write(f"{remote}/dev/request.txt", f"tour {only} {token}\n".encode())
+    uploaded += 1
     console.close()
 
     # ShadowMount Plus registers a new title only once its folder has stopped
@@ -258,9 +265,9 @@ def main():
         stop(f"the launch helper failed: {launch.stderr.strip() or launch.stdout.strip()}")
 
     # The app's own storage is mounted only while the title runs, and a PC
-    # reaches it through the title's sandbox. So: wait for the app to come up,
-    # hand it the tour request there, wait for its report, copy the evidence,
-    # and only then ask it to close.
+    # can read it through the title's sandbox. So: wait for the app to come
+    # up and take the request, wait for its report, copy the evidence, and
+    # wait for the app to close itself (it does a few minutes after the tour).
     dev = f"/mnt/sandbox/{title}_000/download0/hui/dev"
     report_path = f"{dev}/tour/report.txt"
 
@@ -271,22 +278,18 @@ def main():
             done.set()
             stop("the console stopped answering during the run; do not retry, look at klog.txt")
 
-    ready = False
+    taken = False
     while time.time() - started < 90:
         time.sleep(3)
         console = connect()
-        ready = console.names(dev) is not None
+        taken = (console.read(f"{dev}/handled.txt") or b"").decode().strip() == token
         console.close()
-        if ready:
+        if taken:
             break
-    if not ready:
+    if not taken:
         done.set()
-        stop("the title did not come up (its storage never appeared); nothing else was done")
-    console = connect()
-    console.write(f"{dev}/tour.txt", (only + "\n").encode())
-    requested = console.stamp(f"{dev}/tour.txt") or console.stamp(f"{dev}/app.log")
-    console.close()
-    say("The app is up; tour requested")
+        stop("the app did not take the tour request (it may be running: close it by hand)")
+    say("The app is up and touring")
 
     finished = False
     while time.time() - started < timeout:
@@ -310,34 +313,31 @@ def main():
     data = console.read(report_path)
     if data is None:
         done.set()
-        stop("report.txt could not be read back; the app was left running")
+        stop("report.txt could not be read back; the app closes by itself in a few minutes")
     (results / "report.txt").write_bytes(data)
     log = console.read(f"{dev}/app.log") or b""
     (results / "app.log").write_bytes(log)
     pictures = []
     try:
         console.ftp.cwd(f"{dev}/tour")
-        # Pictures of earlier tours stay in the folder; take this run's only.
-        since = requested[0] if requested and requested[0] else ""
-        pictures = sorted(name for name, facts in console.ftp.mlsd()
-                          if name.endswith(".bmp") and facts.get("modify", "") >= since)
+        pictures = sorted(name for name, _ in console.ftp.mlsd() if name.endswith(".bmp"))
         console.ftp.cwd("/")
     except all_errors:
         pass
     for name in pictures:
-        data = console.read(f"{dev}/tour/{name}")
-        if data:
-            (results / "tour" / name).write_bytes(data)
+        picture = console.read(f"{dev}/tour/{name}")
+        if picture:
+            (results / "tour" / name).write_bytes(picture)
     lifecycle = console.read("/data/shadowmount/debug.log") or b""
     (results / "shadowmount.txt").write_text("".join(
         line + "\n" for line in lifecycle.decode("utf-8", "replace").splitlines() if title in line))
+    console.close()
     say(f"Downloaded the report, the log and {len(pictures)} pictures to {results}")
 
-    # Everything is on the PC: the app may close itself now.
-    console.write(f"{dev}/quit.txt", b"quit\n")
-    console.close()
+    # The app closes itself once its evidence window is over.
+    say("Waiting for the app to close itself")
     closed = False
-    for _ in range(24):
+    for _ in range(72):
         time.sleep(5)
         console = connect()
         closed = title not in running_titles(console)
@@ -349,6 +349,15 @@ def main():
     if klog is not None:
         klog.join(timeout=5)
     say("The app closed itself" if closed else "The app is still running: close it from the console")
+    if closed:
+        # The request has been honoured; the install folder goes back to what was built.
+        console = connect()
+        try:
+            console.ftp.sendcmd(f"DELE {remote}/dev/request.txt")
+            console.ftp.sendcmd(f"RMD {remote}/dev")
+        except all_errors:
+            pass
+        console.close()
 
     try:
         from PIL import Image
@@ -367,7 +376,7 @@ def main():
         if needed not in text:
             problems.append(f"app.log: no '{needed}' line")
     if not closed:
-        problems.append("the app did not close after the quit request")
+        problems.append("the app did not close after its evidence window")
     klog_file = results / "klog.txt"
     if klog_file.is_file():
         for line in klog_file.read_text(errors="replace").splitlines():
