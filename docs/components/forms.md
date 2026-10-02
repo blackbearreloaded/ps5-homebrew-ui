@@ -1,5 +1,9 @@
 # Forms
 
+[Back to the component guide](../COMPONENTS.md)
+
+<img src="../media/designs/components-forms.jpg" alt="The forms page of the Component Library">
+
 Components that edit values: the building blocks of a settings screen.
 
 | Component | Header | What it is |

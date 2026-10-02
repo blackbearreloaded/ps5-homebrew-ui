@@ -1,5 +1,9 @@
 # Overlays: Dialog, Sheet, ToastStack, Tooltip
 
+[Back to the component guide](../COMPONENTS.md)
+
+<img src="../media/designs/components-overlays.jpg" alt="The overlays page of the Component Library">
+
 Components that appear above a screen. Headers are in `src/ui/components/`:
 `dialog.hpp`, `sheet.hpp`, `toast.hpp`, `tooltip.hpp`, and `overlay.hpp` for
 what the four share. The gallery page is

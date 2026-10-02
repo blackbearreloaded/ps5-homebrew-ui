@@ -35,7 +35,8 @@ on a PC (`tools/render-media.sh`), with the same code that runs on the console.
 | 17 | [Launch Sequence](#boot) | Before the menu: studio splash, title, profiles and an honest loading screen | glass | [`boot.cpp`](../src/concepts/boot.cpp) |
 | 18 | [Control Room](#settings) | A settings screen with real controls: sliders, switches, steppers, a dialog | glass | [`settings.cpp`](../src/concepts/settings.cpp) |
 | 19 | [Theme Lab](#themes) | One screen in thirty design languages: L2 and R2 restyle every widget | glass | [`themes.cpp`](../src/concepts/themes.cpp) |
-| 20 | [Toolbox](#toolbox) | The kit on one screen: shapes, type, motion, glyphs and every sound | glass | [`toolbox.cpp`](../src/concepts/toolbox.cpp) |
+| 20 | [Component Library](#components) | Reusable lists, grids, dialogs, forms and indicators, restyled by thirty themes | glass | [`components.cpp`](../src/concepts/components.cpp) |
+| 21 | [Toolbox](#toolbox) | The kit on one screen: shapes, type, motion, glyphs and every sound | glass | [`toolbox.cpp`](../src/concepts/toolbox.cpp) |
 
 <a id="aurora"></a>
 
@@ -680,9 +681,106 @@ Source: [`src/concepts/themes.cpp`](../src/concepts/themes.cpp) &middot; tests: 
 </tr>
 </table>
 
+<a id="components"></a>
+
+## 20 &middot; Component Library
+
+Reusable lists, grids, dialogs, forms and indicators, restyled by thirty themes.
+
+<img src="media/designs/components.webp" width="640" alt="Component Library in motion">
+
+**What it demonstrates**
+
+- Components own their focus, motion and sound: a screen places them and reads events
+- One style struct per component: a ui::Theme plus the component's own knobs
+- Slots (std::function) replace parts of a component's drawing with your own
+- Every component drawn in all thirty themes, restyled live without losing state
+- Page changes slide in the direction of travel; theme changes hide behind a veil
+
+Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot; tests: [`tests/unit/components_test.cpp`](../tests/unit/components_test.cpp) &middot; sound set: `glass`
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components.jpg" alt="Component Library: components"></td>
+<td width="50%" valign="top"><img src="media/designs/components-brutal.jpg" alt="Component Library: components-brutal"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-classic.jpg" alt="Component Library: components-classic"></td>
+<td width="50%" valign="top"><img src="media/designs/components-clay.jpg" alt="Component Library: components-clay"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections-hero.jpg" alt="Component Library: components-collections-hero"></td>
+<td width="50%" valign="top"><img src="media/designs/components-collections-paged.jpg" alt="Component Library: components-collections-paged"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections-posters.jpg" alt="Component Library: components-collections-posters"></td>
+<td width="50%" valign="top"><img src="media/designs/components-collections-wheel.jpg" alt="Component Library: components-collections-wheel"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections.jpg" alt="Component Library: components-collections"></td>
+<td width="50%" valign="top"><img src="media/designs/components-forms-compact.jpg" alt="Component Library: components-forms-compact"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-forms-help.jpg" alt="Component Library: components-forms-help"></td>
+<td width="50%" valign="top"><img src="media/designs/components-forms-panel.jpg" alt="Component Library: components-forms-panel"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-forms-wide.jpg" alt="Component Library: components-forms-wide"></td>
+<td width="50%" valign="top"><img src="media/designs/components-forms.jpg" alt="Component Library: components-forms"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-hazard.jpg" alt="Component Library: components-hazard"></td>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-chunky.jpg" alt="Component Library: components-indicators-chunky"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-loaded.jpg" alt="Component Library: components-indicators-loaded"></td>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-slim.jpg" alt="Component Library: components-indicators-slim"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-status.jpg" alt="Component Library: components-indicators-status"></td>
+<td width="50%" valign="top"><img src="media/designs/components-indicators.jpg" alt="Component Library: components-indicators"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-lists-bar.jpg" alt="Component Library: components-lists-bar"></td>
+<td width="50%" valign="top"><img src="media/designs/components-lists-fill.jpg" alt="Component Library: components-lists-fill"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-lists-glow.jpg" alt="Component Library: components-lists-glow"></td>
+<td width="50%" valign="top"><img src="media/designs/components-lists.jpg" alt="Component Library: components-lists"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-boxed.jpg" alt="Component Library: components-navigation-boxed"></td>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-menu.jpg" alt="Component Library: components-navigation-menu"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-segmented.jpg" alt="Component Library: components-navigation-segmented"></td>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-underline.jpg" alt="Component Library: components-navigation-underline"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-navigation.jpg" alt="Component Library: components-navigation"></td>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-bottom.jpg" alt="Component Library: components-overlays-bottom"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-compact.jpg" alt="Component Library: components-overlays-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-sheet.jpg" alt="Component Library: components-overlays-sheet"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-toasts.jpg" alt="Component Library: components-overlays-toasts"></td>
+<td width="50%" valign="top"><img src="media/designs/components-overlays.jpg" alt="Component Library: components-overlays"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-paper.jpg" alt="Component Library: components-paper"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pico.jpg" alt="Component Library: components-pico"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel.jpg" alt="Component Library: components-pixel"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch.jpg" alt="Component Library: components-sketch"></td>
+</tr>
+</table>
+
 <a id="toolbox"></a>
 
-## 20 &middot; Toolbox
+## 21 &middot; Toolbox
 
 The kit on one screen: shapes, type, motion, glyphs and every sound.
 

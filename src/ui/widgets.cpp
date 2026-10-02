@@ -738,8 +738,9 @@ void Painter::progress(const gfx::Rect &r, float value)
     if (theme_.style == SurfaceStyle::bevel || theme_.corner == Corner::pixel)
     {
         // Blocks, as on old installers and pixel-art health bars.
-        const float inset = theme_.border + 2.0f;
-        const float block = r.h - 2.0f * inset;
+        // A thin bar keeps a visible block: the inset gives way first.
+        const float inset = std::min(theme_.border + 2.0f, r.h * 0.25f);
+        const float block = std::max(r.h - 2.0f * inset, 2.0f);
         const float step = block * 0.7f + 3.0f;
         const int count = static_cast<int>((r.w - 2.0f * inset) * value / step);
         for (int i = 0; i < count; ++i)

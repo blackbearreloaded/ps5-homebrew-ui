@@ -51,7 +51,7 @@ class Library final : public app::Concept
         }
         else if (grid_.handle(input, feedback) == ui::Event::activated)
         {
-            confirm_.open();
+            confirm_.open(feedback);                   // overlays play a cue as they appear
         }
         grid_.update(dt);
         confirm_.update(dt);
@@ -98,6 +98,152 @@ left and right, and `set_active()`).
 ## The catalogue
 
 <!-- BEGIN:components -->
+| Group | Components | Guide |
+| --- | --- | --- |
+| [Lists](#lists) | `ListView` | [components/lists.md](components/lists.md) |
+| [Collections](#collections) | `Card`, `GridView`, `Carousel` | [components/collections.md](components/collections.md) |
+| [Navigation](#navigation) | `TabBar`, `SideNav`, `Breadcrumb`, `PageDots`, `Menu` | [components/navigation.md](components/navigation.md) |
+| [Overlays](#overlays) | `Dialog`, `Sheet`, `ToastStack`, `Tooltip` | [components/overlays.md](components/overlays.md) |
+| [Forms](#forms) | `Form`, `Stepper`, `ChoicePicker`, `TextField` | [components/forms.md](components/forms.md) |
+| [Indicators](#indicators) | `ProgressBar`, `ProgressRing`, `Spinner`, `Meter`, `Badge`, `Chip`, `Avatar`, `AvatarStack`, `Rating`, `Counter`, `Skeleton`, `StatTile`, `EmptyState` | [components/indicators.md](components/indicators.md) |
+
+<a id="lists"></a>
+
+### Lists
+
+`ui::ListView` &middot; [knobs, slots, events and cues](components/lists.md)
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-lists-bar.jpg" alt="Lists: components-lists-bar"></td>
+<td width="50%" valign="top"><img src="media/designs/components-lists-fill.jpg" alt="Lists: components-lists-fill"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-lists-glow.jpg" alt="Lists: components-lists-glow"></td>
+<td width="50%" valign="top"><img src="media/designs/components-lists.jpg" alt="Lists: components-lists"></td>
+</tr>
+</table>
+
+<a id="collections"></a>
+
+### Collections
+
+`ui::Card`, `ui::GridView`, `ui::Carousel` &middot; [knobs, slots, events and cues](components/collections.md)
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections-hero.jpg" alt="Collections: components-collections-hero"></td>
+<td width="50%" valign="top"><img src="media/designs/components-collections-paged.jpg" alt="Collections: components-collections-paged"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections-posters.jpg" alt="Collections: components-collections-posters"></td>
+<td width="50%" valign="top"><img src="media/designs/components-collections-wheel.jpg" alt="Collections: components-collections-wheel"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-collections.jpg" alt="Collections: components-collections"></td>
+</tr>
+</table>
+
+<a id="navigation"></a>
+
+### Navigation
+
+`ui::TabBar`, `ui::SideNav`, `ui::Breadcrumb`, `ui::PageDots`, `ui::Menu` &middot; [knobs, slots, events and cues](components/navigation.md)
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-boxed.jpg" alt="Navigation: components-navigation-boxed"></td>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-menu.jpg" alt="Navigation: components-navigation-menu"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-segmented.jpg" alt="Navigation: components-navigation-segmented"></td>
+<td width="50%" valign="top"><img src="media/designs/components-navigation-underline.jpg" alt="Navigation: components-navigation-underline"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-navigation.jpg" alt="Navigation: components-navigation"></td>
+</tr>
+</table>
+
+<a id="overlays"></a>
+
+### Overlays
+
+`ui::Dialog`, `ui::Sheet`, `ui::ToastStack`, `ui::Tooltip` &middot; [knobs, slots, events and cues](components/overlays.md)
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-bottom.jpg" alt="Overlays: components-overlays-bottom"></td>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-compact.jpg" alt="Overlays: components-overlays-compact"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-sheet.jpg" alt="Overlays: components-overlays-sheet"></td>
+<td width="50%" valign="top"><img src="media/designs/components-overlays-toasts.jpg" alt="Overlays: components-overlays-toasts"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-overlays.jpg" alt="Overlays: components-overlays"></td>
+</tr>
+</table>
+
+<a id="forms"></a>
+
+### Forms
+
+`ui::Form`, `ui::Stepper`, `ui::ChoicePicker`, `ui::TextField` &middot; [knobs, slots, events and cues](components/forms.md)
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-forms-compact.jpg" alt="Forms: components-forms-compact"></td>
+<td width="50%" valign="top"><img src="media/designs/components-forms-help.jpg" alt="Forms: components-forms-help"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-forms-panel.jpg" alt="Forms: components-forms-panel"></td>
+<td width="50%" valign="top"><img src="media/designs/components-forms-wide.jpg" alt="Forms: components-forms-wide"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-forms.jpg" alt="Forms: components-forms"></td>
+</tr>
+</table>
+
+<a id="indicators"></a>
+
+### Indicators
+
+`ui::ProgressBar`, `ui::ProgressRing`, `ui::Spinner`, `ui::Meter`, `ui::Badge`, `ui::Chip`, `ui::Avatar`, `ui::AvatarStack`, `ui::Rating`, `ui::Counter`, `ui::Skeleton`, `ui::StatTile`, `ui::EmptyState` &middot; [knobs, slots, events and cues](components/indicators.md)
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-chunky.jpg" alt="Indicators: components-indicators-chunky"></td>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-loaded.jpg" alt="Indicators: components-indicators-loaded"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-slim.jpg" alt="Indicators: components-indicators-slim"></td>
+<td width="50%" valign="top"><img src="media/designs/components-indicators-status.jpg" alt="Indicators: components-indicators-status"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-indicators.jpg" alt="Indicators: components-indicators"></td>
+</tr>
+</table>
+
+### The same components in other themes
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-brutal.jpg" alt="components-brutal"></td>
+<td width="50%" valign="top"><img src="media/designs/components-classic.jpg" alt="components-classic"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-clay.jpg" alt="components-clay"></td>
+<td width="50%" valign="top"><img src="media/designs/components-hazard.jpg" alt="components-hazard"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-paper.jpg" alt="components-paper"></td>
+<td width="50%" valign="top"><img src="media/designs/components-pico.jpg" alt="components-pico"></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="media/designs/components-pixel.jpg" alt="components-pixel"></td>
+<td width="50%" valign="top"><img src="media/designs/components-sketch.jpg" alt="components-sketch"></td>
+</tr>
+</table>
 <!-- END:components -->
 
 ## Shared pieces
@@ -110,6 +256,17 @@ left and right, and `set_active()`).
   shake, silent on a held direction).
 - **`ui::fit_label`** / **`ui::fit_body`**: text cut to a width in the
   theme's faces.
+- **`ui::StatusKind`** (`overlay.hpp`) says what a message is (info, success,
+  warning, danger, question) and has an icon; **`ui::Status`**
+  (`progress.hpp`) is a colour role for indicators (neutral, primary, accent,
+  success, warning, danger). Both resolve to the theme's status colours.
+- **`ui::EdgeExits`** (`card.hpp`): grids and carousels can let the focus
+  leave through an edge instead of refusing, so a screen can chain them.
+- Overlays (`Dialog`, `Sheet`, `Menu`) play a cue as they appear, so their
+  `open()` and `close()` take the `Feedback`; `ToastStack::update` does too.
+- "Has the screen's focus" is `set_active(bool)` on lists and ratings and
+  `set_focused(bool)` on the navigation components (where `set_active(index)`
+  selects a tab).
 - **`ui::Feedback`**: what a component asks the platform to play; the same
   struct a design receives in `update()`.
 

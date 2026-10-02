@@ -11,9 +11,9 @@ Press **L1** / **R1** to switch between them.
 <img src="docs/media/switcher.webp" width="860" alt="L1 and R1 cycling through every design in the app">
 
 <!-- BEGIN:counts -->
-**20 designs** &middot; **30 themes**
+**21 designs** &middot; **30 themes**
 <!-- END:counts -->
-&middot; **67 sound effects** in two sets &middot; **one OpenGL 4.6 shader** behind all of it
+&middot; **30 reusable components** &middot; **67 sound effects** in two sets &middot; **one OpenGL 4.6 shader** behind all of it
 
 [Designs](docs/DESIGNS.md) &middot;
 [Themes](docs/THEMES.md) &middot;
@@ -97,7 +97,10 @@ its clip, its techniques and its source.
 </tr>
 <tr>
 <td width="50%" valign="top"><a href="docs/DESIGNS.md#themes"><img src="docs/media/designs/themes.jpg" alt="Theme Lab"></a><br><b>19 &middot; Theme Lab</b><br><sub>One screen in thirty design languages: L2 and R2 restyle every widget</sub></td>
-<td width="50%" valign="top"><a href="docs/DESIGNS.md#toolbox"><img src="docs/media/designs/toolbox.jpg" alt="Toolbox"></a><br><b>20 &middot; Toolbox</b><br><sub>The kit on one screen: shapes, type, motion, glyphs and every sound</sub></td>
+<td width="50%" valign="top"><a href="docs/DESIGNS.md#components"><img src="docs/media/designs/components.jpg" alt="Component Library"></a><br><b>20 &middot; Component Library</b><br><sub>Reusable lists, grids, dialogs, forms and indicators, restyled by thirty themes</sub></td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="docs/DESIGNS.md#toolbox"><img src="docs/media/designs/toolbox.jpg" alt="Toolbox"></a><br><b>21 &middot; Toolbox</b><br><sub>The kit on one screen: shapes, type, motion, glyphs and every sound</sub></td>
 </tr>
 </table>
 <!-- END:designs -->

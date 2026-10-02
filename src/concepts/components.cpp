@@ -282,14 +282,22 @@ class Components final : public app::Concept
                 tour_.push_back(step);
             tour_.push_back({0.6f, next_page});
         }
+        // The theme walk runs on the Forms page: switches, sliders, steppers,
+        // fields and panels show the most of a theme at once.
+        constexpr int kWalkPage = 4;
+        for (int i = 0; i < kWalkPage; ++i)
+            tour_.push_back({0.35f, next_page});
         const auto themes = ui::themes();
         for (std::size_t i = 0; i < themes.size(); ++i)
         {
             // A step's picture is taken before its press: it shows theme i.
-            const bool pictured = i == 1 || i == 5 || i == 10 || i == 13 || i == 27;
+            const bool pictured =
+                i == 1 || i == 2 || i == 5 || i == 7 || i == 10 || i == 13 || i == 18 || i == 27;
             tour_.push_back({pictured ? 0.75f : 0.5f, next_theme, Direction::none,
                              pictured ? themes[i].id : nullptr});
         }
+        for (int i = kWalkPage; i < static_cast<int>(pages_.size()); ++i)
+            tour_.push_back({0.35f, next_page});
     }
 
     app::Context &context_;

@@ -151,7 +151,11 @@ def components_catalogue():
         if guide.exists():
             for line in guide.read_text(encoding="utf-8").splitlines():
                 if line.startswith("## "):
-                    found.append(line[3:].strip())
+                    # "## Avatar and AvatarStack" names two; prose headings
+                    # ("## The gallery page") name none.
+                    for name in line[3:].strip().split(" and "):
+                        if re.fullmatch(r"[A-Z][A-Za-z]+", name):
+                            found.append(name)
         names[group] = found
         listed = ", ".join(f"`{name}`" for name in found) or "(in progress)"
         out.append(f"| [{title}](#{group}) | {listed} | [components/{group}.md](components/{group}.md) |")
