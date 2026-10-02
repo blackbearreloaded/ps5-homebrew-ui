@@ -96,12 +96,8 @@ struct Row
     float x[5]; // left edge used to keep a column while moving up and down
 };
 constexpr Row kRows[] = {
-    {kPrimary, 3, {136, 396, 634}},
-    {kTabs, 3, {136, 716, 858}},
-    {kToggle0, 2, {136, 636}},
-    {kCheck0, 5, {136, 366, 656, 800, 966}},
-    {kSlider, 1, {136}},
-    {kField, 1, {136}},
+    {kPrimary, 3, {136, 396, 634}},          {kTabs, 3, {136, 716, 858}}, {kToggle0, 2, {136, 636}},
+    {kCheck0, 5, {136, 366, 656, 800, 966}}, {kSlider, 1, {136}},         {kField, 1, {136}},
 };
 constexpr int kRowCount = static_cast<int>(std::size(kRows));
 constexpr int kColumnFirst = kRow0;
@@ -236,11 +232,11 @@ class Themes final : public app::Concept
             for (int i = 0; i < 4; ++i)
             {
                 const float phase = clock_ * 0.12f + static_cast<float>(i) * 1.7f;
-                frame.scene.circle(480.0f + static_cast<float>(i) * 380.0f + std::sin(phase) * 120.0f,
-                                   560.0f + std::cos(phase * 1.3f) * 220.0f, 170.0f,
-                                   gfx::mix(behind.primary, behind.accent,
-                                            static_cast<float>(i % 2))
-                                       .with_alpha(0.55f));
+                frame.scene.circle(
+                    480.0f + static_cast<float>(i) * 380.0f + std::sin(phase) * 120.0f,
+                    560.0f + std::cos(phase * 1.3f) * 220.0f, 170.0f,
+                    gfx::mix(behind.primary, behind.accent, static_cast<float>(i % 2))
+                        .with_alpha(0.55f));
             }
             frame.glass = true;
         }
@@ -277,16 +273,16 @@ class Themes final : public app::Concept
         const std::uint32_t next = action_bit(Action::jump_next);
         for (std::size_t i = 0; i < themes.size(); ++i)
         {
-            tour_.push_back({0.55f, use});                 // press the primary button
-            tour_.push_back({0.3f, 0, Direction::down});   // tabs
+            tour_.push_back({0.55f, use});               // press the primary button
+            tour_.push_back({0.3f, 0, Direction::down}); // tabs
             tour_.push_back({0.2f, use});
-            tour_.push_back({0.3f, 0, Direction::down});   // a switch, off and on
-            tour_.push_back({0.2f, use});
-            tour_.push_back({0.4f, use});
-            tour_.push_back({0.3f, 0, Direction::down});   // a check box, off and on
+            tour_.push_back({0.3f, 0, Direction::down}); // a switch, off and on
             tour_.push_back({0.2f, use});
             tour_.push_back({0.4f, use});
-            tour_.push_back({0.3f, 0, Direction::down});   // the slider
+            tour_.push_back({0.3f, 0, Direction::down}); // a check box, off and on
+            tour_.push_back({0.2f, use});
+            tour_.push_back({0.4f, use});
+            tour_.push_back({0.3f, 0, Direction::down}); // the slider
             tour_.push_back({0.2f, 0, Direction::right});
             tour_.push_back({0.2f, 0, Direction::right});
             tour_.push_back({0.25f, 0, Direction::left});
@@ -358,7 +354,8 @@ class Themes final : public app::Concept
             slider_ = next;
             // The pitch climbs with the value.
             play(feedback, audio::Cue::slider, 0.85f + 0.04f * static_cast<float>(slider_),
-                 kRects[kSlider].x + kRects[kSlider].w * static_cast<float>(slider_) / kSliderSteps);
+                 kRects[kSlider].x +
+                     kRects[kSlider].w * static_cast<float>(slider_) / kSliderSteps);
             return;
         }
         if (row >= 0)
@@ -481,8 +478,9 @@ class Themes final : public app::Concept
             break;
         case kField:
             // Each press types the next letter of a name, then starts over.
-            typed_ = typed_ >= static_cast<int>(std::char_traits<char>::length(kDemoName)) ? 0
-                                                                                           : typed_ + 1;
+            typed_ = typed_ >= static_cast<int>(std::char_traits<char>::length(kDemoName))
+                         ? 0
+                         : typed_ + 1;
             play(feedback, typed_ == 0 ? audio::Cue::erase : audio::Cue::type, 1.0f, x);
             break;
         case kRow0:
@@ -551,16 +549,22 @@ class Themes final : public app::Concept
         paint.label(theme.family, 96, 120, 21, paint.page_text_muted());
         paint.heading(theme.name, 94, 190, 66, paint.page_text());
         paint.body(theme.summary, 96, 232, 24, paint.page_text_muted());
-        std::snprintf(text, sizeof(text), "%02d / %02d", index + 1, static_cast<int>(themes.size()));
+        std::snprintf(text, sizeof(text), "%02d / %02d", index + 1,
+                      static_cast<int>(themes.size()));
         paint.label(text, 1824, 124, 24, paint.page_text(), gfx::Align::right);
-        // A tick per theme; the current one is long and in the primary colour.
+        // A tick per theme; the current one is long and in the primary colour
+        // (or its text colour, where the primary is too pale to see on the page).
+        const auto luminance = [](Color c) { return 0.299f * c.r + 0.587f * c.g + 0.114f * c.b; };
+        const Color marker = std::fabs(luminance(theme.primary) - luminance(theme.page)) < 0.2f
+                                 ? theme.on_primary
+                                 : theme.primary;
         for (int i = 0; i < static_cast<int>(themes.size()); ++i)
         {
             const bool current = i == index;
             list.rounded_rect({1824.0f - static_cast<float>(themes.size() - 1 - i) * 14.0f - 6.0f,
                                current ? 150.0f : 158.0f, 6.0f, current ? 22.0f : 8.0f},
                               theme.radius > 2.0f ? 3.0f : 0.0f,
-                              current ? theme.primary : paint.page_text_muted().with_alpha(0.5f));
+                              current ? marker : paint.page_text_muted().with_alpha(0.5f));
         }
 
         // ---- left panel: the controls ----
@@ -609,9 +613,10 @@ class Themes final : public app::Concept
         paint.progress({656, 800, 480, 24}, progress_);
         // Running text: how the theme reads, not only how its controls look.
         list.rounded_rect({136, 858, 1000, 1.5f}, 0, theme.text_muted.with_alpha(0.25f));
-        paint.body("Body text carries a theme as much as its buttons do: size, weight and colour", 136,
-                   896, 22, theme.text_muted);
-        paint.body("decide how a screen reads from across the room.", 136, 926, 22, theme.text_muted);
+        paint.body("Body text carries a theme as much as its buttons do: size, weight and colour",
+                   136, 896, 22, theme.text_muted);
+        paint.body("decide how a screen reads from across the room.", 136, 926, 22,
+                   theme.text_muted);
 
         // ---- right panel: a card, a list, the dialog button ----
         paint.panel({1216, 280, 608, 678});
@@ -647,8 +652,9 @@ class Themes final : public app::Concept
         const float show = dialog_show_.value;
         if (show > 0.01f)
         {
-            list.rounded_rect({0, 0, gfx::kVirtualWidth, gfx::kVirtualHeight}, 0,
-                              (theme.dark ? Color::rgb(0x000000) : theme.text).with_alpha(0.5f * show));
+            list.rounded_rect(
+                {0, 0, gfx::kVirtualWidth, gfx::kVirtualHeight}, 0,
+                (theme.dark ? Color::rgb(0x000000) : theme.text).with_alpha(0.5f * show));
             list.push_opacity(tween::clamp01(show));
             list.push_transform(0.94f + 0.06f * tween::clamp01(show), 960, 540, 0, 0);
             paint.panel({560, 350, 800, 380});

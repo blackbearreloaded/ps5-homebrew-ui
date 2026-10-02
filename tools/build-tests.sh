@@ -47,7 +47,7 @@ for source in "${sources[@]}"; do
             "${sanitizers[@]}" -isystem "$gtest/googletest/include" -I"$gtest/googletest" \
             -MD -MF "$object.d" -c "$source" -o "$object"
     elif [[ $source == *.c ]]; then
-        # Vendored C (for example the Tatham puzzles) builds without -Werror.
+        # Vendored C builds without -Werror.
         ninja_inputs=("$source" "$cc")
         ninja_edge CC "$object" "${compiler_cache[@]}" "$cc" -std=c11 -O2 -w \
             "${sanitizers[@]}" -I"$root/src" -MD -MF "$object.d" -c "$source" -o "$object"

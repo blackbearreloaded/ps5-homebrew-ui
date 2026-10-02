@@ -73,7 +73,7 @@ constexpr float kRowPitch = kCardH + kCardGap;
 constexpr float kCardRadius = 14.0f;
 constexpr float kCoverInset = 12.0f; // paper margin around the cover
 constexpr float kLift = 0.08f;       // how much the focused card grows
-constexpr float kTilt = 0.042f;     // radians the sheet under a lifted card turns
+constexpr float kTilt = 0.042f;      // radians the sheet under a lifted card turns
 constexpr float kRingGap = 12.0f;    // from the lifted card to the focus ring's outer edge
 constexpr float kGridTop = 210.0f;   // the clipped grid area
 constexpr float kGridBottom = 990.0f;
@@ -154,15 +154,15 @@ constexpr const char *kTechniques[] = {
 };
 
 constexpr app::TourStep kTour[] = {
-    {0.6f, action_bit(Action::jump_next)},                          // Favorites: nothing yet
+    {0.6f, action_bit(Action::jump_next)}, // Favorites: nothing yet
     {0.9f, action_bit(Action::jump_prev), Direction::none, "empty"},
-    {0.7f, action_bit(Action::north)},                              // star three titles
+    {0.7f, action_bit(Action::north)}, // star three titles
     {0.25f, 0, Direction::right},
     {0.2f, 0, Direction::right},
     {0.25f, action_bit(Action::north)},
     {0.25f, 0, Direction::down},
     {0.25f, action_bit(Action::north)},
-    {0.6f, action_bit(Action::west)},                               // sort: cards take off
+    {0.6f, action_bit(Action::west)}, // sort: cards take off
     {0.2f, 0, Direction::none, "travel"},
     {1.0f, 0, Direction::down},
     {0.3f, 0, Direction::right},
@@ -178,14 +178,14 @@ constexpr app::TourStep kTour[] = {
 // re-ordering: only its targets change.
 struct Card
 {
-    tween::Spring x, y;   // top-left corner in grid (content) coordinates
-    tween::Spring shown;  // 0 gone, 1 on the table
-    tween::Spring lift;   // 0 resting, 1 focused
-    tween::Bounce star;   // favourite sticker, overshoots
-    tween::Bounce done;   // finished stamp, overshoots
+    tween::Spring x, y;  // top-left corner in grid (content) coordinates
+    tween::Spring shown; // 0 gone, 1 on the table
+    tween::Spring lift;  // 0 resting, 1 focused
+    tween::Bounce star;  // favourite sticker, overshoots
+    tween::Bounce done;  // finished stamp, overshoots
     float target_x = 0.0f;
     float target_y = 0.0f;
-    float delay = 0.0f; // seconds until the targets above take effect
+    float delay = 0.0f;  // seconds until the targets above take effect
     bool wanted = false; // part of the current filter
     int slot = 0;        // its place in the visible order
 };
@@ -720,8 +720,7 @@ class Paper final : public app::Concept
                 close_dialog();
                 break;
             case DialogAction::favorite:
-                toggle_favorite(dialog_item_, feedback,
-                                ui::pan_for_x(action_rect(1.0f).cx()));
+                toggle_favorite(dialog_item_, feedback, ui::pan_for_x(action_rect(1.0f).cx()));
                 break;
             case DialogAction::finish:
                 if (!finished_[index])
@@ -1011,8 +1010,8 @@ class Paper final : public app::Concept
         const float width = gfx::kVirtualWidth;
         if (above > 0.01f)
         {
-            const Color night = gfx::mix(kNightTop, kNightBottom, kGridTop / gfx::kVirtualHeight)
-                                    .with_alpha(above);
+            const Color night =
+                gfx::mix(kNightTop, kNightBottom, kGridTop / gfx::kVirtualHeight).with_alpha(above);
             list.gradient_rect({0, kGridTop - kFeather, width, kFeather}, 0, night.with_alpha(0.0f),
                                night);
             list.rounded_rect({0, kGridTop, width, kEdgeCover}, 0, night);
@@ -1348,7 +1347,7 @@ class Paper final : public app::Concept
     }
 
     app::Context &context_;
-    std::vector<Card> cards_;        // by catalogue index
+    std::vector<Card> cards_;         // by catalogue index
     std::vector<std::string> titles_; // fitted to the card width
     std::vector<bool> favorite_;
     std::vector<bool> finished_;

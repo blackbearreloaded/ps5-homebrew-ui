@@ -53,45 +53,45 @@ const Color kGold = Color::rgb(0xffd166);
 
 // ---- the row: where a cover sits at distance d from the wheel position ----
 constexpr float kCentreX = 960.0f;
-constexpr float kCover = 440.0f;    // size of the centred cover
-constexpr float kRadius = 28.0f;    // its corner radius; scales with the cover
-constexpr float kBaseY = 592.0f;    // the floor line under the centred cover
-constexpr float kVanishY = 516.0f;  // far covers stand closer to this height
-constexpr float kSpreadA = 560.0f;  // x = A * (1 - exp(-k |d|)) + B * |d|: the first
-constexpr float kSpreadK = 0.95f;   //   step is wide, later ones crowd together
+constexpr float kCover = 440.0f;   // size of the centred cover
+constexpr float kRadius = 28.0f;   // its corner radius; scales with the cover
+constexpr float kBaseY = 592.0f;   // the floor line under the centred cover
+constexpr float kVanishY = 516.0f; // far covers stand closer to this height
+constexpr float kSpreadA = 560.0f; // x = A * (1 - exp(-k |d|)) + B * |d|: the first
+constexpr float kSpreadK = 0.95f;  //   step is wide, later ones crowd together
 constexpr float kSpreadB = 40.0f;
-constexpr float kFarScale = 0.36f;  // size of the farthest covers
+constexpr float kFarScale = 0.36f; // size of the farthest covers
 constexpr float kScaleFall = 1.1f;
-constexpr float kFarLight = 0.26f;  // brightness of the farthest covers
+constexpr float kFarLight = 0.26f; // brightness of the farthest covers
 constexpr float kLightFall = 0.8f;
-constexpr float kSoftAbs = 0.3f;    // rounds |d| at 0 so size has no sharp peak
-constexpr float kReach = 6.0f;      // covers farther than this are not drawn
+constexpr float kSoftAbs = 0.3f; // rounds |d| at 0 so size has no sharp peak
+constexpr float kReach = 6.0f;   // covers farther than this are not drawn
 
 // ---- the floor and the reflections ----
-constexpr float kFloorY = 536.0f;        // the floor is opaque from here down
-constexpr float kHorizon = 120.0f;       // ... and fades in over this height
-constexpr float kReflectPart = 0.42f;    // how much of a cover is mirrored
-constexpr float kReflectSquash = 0.8f;   // the mirror image is a little flatter
-constexpr float kReflectLight = 0.3f;    // and much darker
-constexpr float kReflectHaze = 0.18f;    // veil opacity right under the cover
+constexpr float kFloorY = 536.0f;      // the floor is opaque from here down
+constexpr float kHorizon = 120.0f;     // ... and fades in over this height
+constexpr float kReflectPart = 0.42f;  // how much of a cover is mirrored
+constexpr float kReflectSquash = 0.8f; // the mirror image is a little flatter
+constexpr float kReflectLight = 0.3f;  // and much darker
+constexpr float kReflectHaze = 0.18f;  // veil opacity right under the cover
 
 // ---- the wheel: units are covers and seconds ----
 constexpr int kStart = 3;
-constexpr int kJump = 5;                 // L2 / R2
-constexpr float kStickDead = 0.12f;      // below this the stick does not scrub
-constexpr float kScrubSpeed = 11.0f;     // covers per second at full deflection
-constexpr float kScrubResponse = 5.0f;   // how quickly the wheel takes the stick's speed
-constexpr float kFriction = 1.8f;        // coasting: speed decays by e every 1/1.8 s
-constexpr float kSnapSpeed = 1.4f;       // below this a coasting wheel is caught
-constexpr float kSnapLook = 0.18f;       // ... on the cover it would reach in this time
+constexpr int kJump = 5;               // L2 / R2
+constexpr float kStickDead = 0.12f;    // below this the stick does not scrub
+constexpr float kScrubSpeed = 11.0f;   // covers per second at full deflection
+constexpr float kScrubResponse = 5.0f; // how quickly the wheel takes the stick's speed
+constexpr float kFriction = 1.8f;      // coasting: speed decays by e every 1/1.8 s
+constexpr float kSnapSpeed = 1.4f;     // below this a coasting wheel is caught
+constexpr float kSnapLook = 0.18f;     // ... on the cover it would reach in this time
 constexpr float kSnapOmega = 13.0f;
-constexpr float kSnapDamping = 0.8f;     // a touch under critical: weight, not wobble
-constexpr float kRubber = 0.3f;          // how far a held stick stretches past an end
+constexpr float kSnapDamping = 0.8f; // a touch under critical: weight, not wobble
+constexpr float kRubber = 0.3f;      // how far a held stick stretches past an end
 constexpr float kRubberRate = 12.0f;
-constexpr float kRefuseKick = 3.2f;      // speed given to the wheel by a refused press
-constexpr float kMaxEndSpeed = 8.0f;     // a coasting wheel hits an end no faster
-constexpr float kEndSlack = 0.02f;       // this far past an end counts as hitting it
-constexpr float kTickInterval = 0.085f;  // at most about twelve ticks a second
+constexpr float kRefuseKick = 3.2f;     // speed given to the wheel by a refused press
+constexpr float kMaxEndSpeed = 8.0f;    // a coasting wheel hits an end no faster
+constexpr float kEndSlack = 0.02f;      // this far past an end counts as hitting it
+constexpr float kTickInterval = 0.085f; // at most about twelve ticks a second
 
 // ---- the caption and the scrub bar ----
 constexpr float kHeaderY = 94.0f;
@@ -100,7 +100,7 @@ constexpr float kMetaY = 856.0f;
 constexpr float kBarX = 560.0f;
 constexpr float kBarW = 800.0f;
 constexpr float kBarY = 918.0f;
-constexpr float kCalmFrom = 5.5f;        // faster than this the caption starts to hide
+constexpr float kCalmFrom = 5.5f; // faster than this the caption starts to hide
 constexpr float kCalmSpan = 2.5f;
 
 // ---- the opened cover and its panel ----
@@ -108,7 +108,7 @@ const Rect kOpenRect{176.0f, 250.0f, 520.0f, 520.0f};
 const Rect kPanel{760.0f, 210.0f, 1064.0f, 600.0f};
 constexpr float kPanelRadius = 40.0f;
 constexpr float kPanelPad = 56.0f;
-constexpr float kOpenSlide = 520.0f;     // how far the other covers move away
+constexpr float kOpenSlide = 520.0f; // how far the other covers move away
 
 constexpr const char *kTechniques[] = {
     "A wheel with position and velocity: stick scrubbing, inertia, spring snap to a cover",
@@ -145,7 +145,7 @@ enum class Drive
 struct Pose
 {
     Rect rect;
-    float light = 1.0f;   // brightness of the artwork
+    float light = 1.0f; // brightness of the artwork
     float alpha = 1.0f;
     float reflect = 1.0f; // strength of its mirror image
 };
@@ -241,10 +241,9 @@ class CoverFlow final : public app::Concept
             frame.glass = true;
             draw_details(frame.overlay, frame.glass_texture, lift);
             if (flare > 0.0f)
-                frame.overlay.rounded_rect(
-                    {0, 0, gfx::kVirtualWidth, gfx::kVirtualHeight}, 0,
-                    gfx::mix(item(opened_).accent, kWhite, 0.55f)
-                        .with_alpha(0.26f * lift * flare * flare * flare));
+                frame.overlay.rounded_rect({0, 0, gfx::kVirtualWidth, gfx::kVirtualHeight}, 0,
+                                           gfx::mix(item(opened_).accent, kWhite, 0.55f)
+                                               .with_alpha(0.26f * lift * flare * flare * flare));
         }
         draw_hints(lift > 0.5f ? frame.overlay : frame.scene, lift);
     }
@@ -595,9 +594,9 @@ class CoverFlow final : public app::Concept
             Rect open = kOpenRect;
             if (launch_.running && !reduced())
                 open = open.inset(-14.0f * tween::ping(tween::cubic_out(launch_.progress())));
-            result.rect = {tween::lerp(result.rect.x, open.x, t), tween::lerp(result.rect.y, open.y, t),
-                           tween::lerp(result.rect.w, open.w, t),
-                           tween::lerp(result.rect.h, open.h, t)};
+            result.rect = {
+                tween::lerp(result.rect.x, open.x, t), tween::lerp(result.rect.y, open.y, t),
+                tween::lerp(result.rect.w, open.w, t), tween::lerp(result.rect.h, open.h, t)};
             result.light = tween::lerp(result.light, 1.0f, t);
             // It left the floor: its mirror image goes first.
             result.reflect = 1.0f - tween::clamp01(lift * 3.0f);
@@ -918,8 +917,9 @@ class CoverFlow final : public app::Concept
                 const Rect bar{tile.x + 22, tile.y + 98, tile.w - 44, 4};
                 list.rounded_rect(bar, 2, kWhite.with_alpha(0.16f));
                 if (it.progress > 0.0f)
-                    list.rounded_rect({bar.x, bar.y, std::max(4.0f, bar.w * it.progress * appear), 4},
-                                      2, it.accent);
+                    list.rounded_rect(
+                        {bar.x, bar.y, std::max(4.0f, bar.w * it.progress * appear), 4}, 2,
+                        it.accent);
                 break;
             }
             }
@@ -936,8 +936,8 @@ class CoverFlow final : public app::Concept
         list.rounded_rect(play, 34, kWhite);
         ui::draw_button(list, fonts, ui::GlyphStyle::light(), ui::Button::cross, play.x + 24,
                         play.cy(), 34);
-        const char *verb = launch_.running ? "Starting \xE2\x80\xA6"
-                                           : (it.progress > 0.0f ? "Resume" : "Play");
+        const char *verb =
+            launch_.running ? "Starting \xE2\x80\xA6" : (it.progress > 0.0f ? "Resume" : "Play");
         ui::text(list, fonts.semibold, verb, play.x + 74, play.cy() + 10, 28, kInk);
 
         // Beside it, the favourite state: not focusable, Triangle toggles it.

@@ -14,16 +14,16 @@ BlackBearReloaded designed and implemented the emitter, startup behavior,
 compatibility stubs, relocation population, manifests, and metadata in this
 repository. Its complete build inputs are:
 
-- [`tooling/native/libc_builder.cpp`](../tooling/native/libc_builder.cpp):
+- [`tooling/native/libc_builder.cpp`](../../tooling/native/libc_builder.cpp):
   deterministic clean-room ELF emitter;
-- [`tooling/native/runtime/api-surface.txt`](../tooling/native/runtime/api-surface.txt):
+- [`tooling/native/runtime/api-surface.txt`](../../tooling/native/runtime/api-surface.txt):
   loader-visible export ABI manifest;
-- [`tooling/native/runtime/imports.txt`](../tooling/native/runtime/imports.txt):
+- [`tooling/native/runtime/imports.txt`](../../tooling/native/runtime/imports.txt):
   named system imports and relocation roles;
-- [`tooling/native/self_container.cpp`](../tooling/native/self_container.cpp):
+- [`tooling/native/self_container.cpp`](../../tooling/native/self_container.cpp):
   development FSELF writer and integrity verifier;
-- [`tools/rebuild-libc.sh`](../tools/rebuild-libc.sh) and
-  [`tools/rebuild-libc.ps1`](../tools/rebuild-libc.ps1): deterministic build,
+- [`tools/rebuild-libc.sh`](../../tools/rebuild-libc.sh) and
+  [`tools/rebuild-libc.ps1`](../../tools/rebuild-libc.ps1): deterministic build,
   attribution, size, and digest gates.
 
 The emitter accepts only the two text manifests. It does not accept a reference
@@ -90,7 +90,7 @@ Generated FSELF SHA-256: e6ff45d16adf687855cc3b33b0c8a4132b6504360b221e0a34c7e99
 ```
 
 The expected FSELF digest is tracked in
-[`runtime/libc.prx.sha256`](../runtime/libc.prx.sha256). Verify it with:
+[`runtime/libc.prx.sha256`](../../runtime/libc.prx.sha256). Verify it with:
 
 ```bash
 cd runtime
@@ -160,4 +160,4 @@ firmware, loader, or application. Preserve the digest when comparing results.
 The shim, manifests, and emitter may be redistributed under
 GPL-3.0-or-later. No Sony runtime implementation, proprietary SDK binary,
 encryption key, or game file is included. Native external tools retain their
-upstream licenses; see [`THIRD_PARTY_NOTICES.md`](../NOTICE.md).
+upstream licenses; see [`THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md).

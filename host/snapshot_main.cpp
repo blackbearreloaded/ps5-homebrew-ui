@@ -9,6 +9,12 @@
 // the tour marks are rendered, so a full run takes seconds. With
 // HUI_STRIP=<from>,<to> it instead writes every frame of the switch between
 // two designs (for reviewing the transition).
+//
+// HUI_REEL=<dir> records instead of photographing: every third simulated frame
+// is piped to ffmpeg, which writes animated WebP clips into <dir>.
+//   HUI_REEL_SPLIT=1   one clip per tour picture (the Theme Lab: one per theme)
+//   otherwise          one clip per design, its whole tour
+//   HUI_REEL=<dir> HUI_REEL_SWITCH=1   one clip of L1/R1 cycling through all designs
 
 #include "app/shell.hpp"
 #include "app/tour.hpp"
@@ -16,6 +22,7 @@
 #include "demo/catalog.hpp"
 #include "gfx/gl_program.hpp"
 #include "gfx/renderer.hpp"
+#include "manifest.hpp"
 #include "ui/fonts.hpp"
 
 #include <EGL/egl.h>
@@ -72,6 +79,64 @@ bool load_font(hui::gfx::Renderer &renderer, const std::string &path, hui::gfx::
     ref->texture = renderer.batch().create_font_texture(*font);
     return true;
 }
+
+// Streams raw frames to ffmpeg and gives the finished clip its name on close
+// (the name is only known once the tour reaches the picture that ends it).
+class Recorder
+{
+  public:
+    Recorder(std::string directory, int width, int height, int fps)
+        : directory_(std::move(directory)), width_(width), height_(height), fps_(fps)
+    {
+    }
+    ~Recorder()
+    {
+        // Frames after the last picture belong to no clip.
+        if (pipe_ != nullptr)
+        {
+            pclose(pipe_);
+            std::remove((directory_ + "/.recording.webp").c_str());
+        }
+    }
+    void frame(const unsigned char *rgba)
+    {
+        if (pipe_ == nullptr)
+        {
+            char command[512];
+            std::snprintf(command, sizeof(command),
+                          "ffmpeg -loglevel error -y -f rawvideo -pix_fmt rgba -s %dx%d -r %d -i - "
+                          "-vf vflip -c:v libwebp_anim -lossless 0 -q:v 62 -compression_level 5 "
+                          "-loop 0 '%s/.recording.webp'",
+                          width_, height_, fps_, directory_.c_str());
+            pipe_ = popen(command, "w");
+            frames_ = 0;
+        }
+        if (pipe_ != nullptr)
+        {
+            std::fwrite(rgba, 1, static_cast<std::size_t>(width_) * height_ * 4, pipe_);
+            ++frames_;
+        }
+    }
+    void close(const std::string &name)
+    {
+        if (pipe_ == nullptr)
+            return;
+        pclose(pipe_);
+        pipe_ = nullptr;
+        const std::string from = directory_ + "/.recording.webp";
+        const std::string to = directory_ + "/" + name + ".webp";
+        std::rename(from.c_str(), to.c_str());
+        std::fprintf(stderr, "recorded %s: %d frames\n", to.c_str(), frames_);
+    }
+
+  private:
+    std::string directory_;
+    int width_;
+    int height_;
+    int fps_;
+    FILE *pipe_ = nullptr;
+    int frames_ = 0;
+};
 
 } // namespace
 
@@ -187,6 +252,11 @@ int main(int argc, char **argv)
     hui::app::Shell shell(fonts, catalog, data_root, renderer.glass_texture());
     shell.set_version("host");
 
+    constexpr float kDt = 1.0f / 60.0f;
+    // HUI_MANIFEST=<file.json>: describe every design and theme (host/manifest.cpp).
+    if (const char *manifest = std::getenv("HUI_MANIFEST"))
+        return hui::host::write_manifest(manifest, shell) ? 0 : 1;
+
     std::vector<unsigned char> pixels(static_cast<std::size_t>(width * height * 4));
     stbi_flip_vertically_on_write(1);
     bool ok = true;
@@ -208,7 +278,6 @@ int main(int argc, char **argv)
                      renderer.last_instances(), renderer.last_draw_calls(), glGetError());
     };
 
-    constexpr float kDt = 1.0f / 60.0f;
     if (const char *strip = std::getenv("HUI_STRIP"))
     {
         int from = 0;
@@ -228,6 +297,73 @@ int main(int argc, char **argv)
             render(name);
         }
         return ok ? 0 : 1;
+    }
+
+    if (const char *reel = std::getenv("HUI_REEL"))
+    {
+        constexpr int kEvery = 3; // 60 Hz simulated, 20 frames per second recorded
+        hui::save::ensure_directory(reel);
+        Recorder recorder(reel, width, height, 60 / kEvery);
+        const auto record = [&]()
+        {
+            shell.compose(renderer);
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+            glClearColor(0, 0, 0, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            renderer.present(framebuffer, width, height);
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+            recorder.frame(pixels.data());
+        };
+        hui::InputFrame idle;
+        idle.connected = true;
+        long count = 0;
+        if (std::getenv("HUI_REEL_SWITCH") != nullptr)
+        {
+            // R1 through every design, then the info panel: the app in one clip.
+            shell.show(0, false);
+            for (std::size_t i = 0; i <= shell.concept_count(); ++i)
+            {
+                for (int frame = 0; frame < 66; ++frame, ++count)
+                {
+                    hui::InputFrame input = idle;
+                    if (frame == 0 && i > 0)
+                        input.pressed = hui::action_bit(hui::Action::page_next);
+                    shell.update(input, kDt);
+                    if (count % kEvery == 0)
+                        record();
+                }
+            }
+            recorder.close("switcher");
+            return 0;
+        }
+        const bool split = std::getenv("HUI_REEL_SPLIT") != nullptr;
+        hui::app::Tour tour(shell, only);
+        std::size_t design = shell.current();
+        char name[96];
+        while (!tour.finished() && count < 60 * 60 * 12)
+        {
+            const hui::InputFrame input = tour.step(kDt);
+            if (!split && shell.current() != design)
+            {
+                std::snprintf(name, sizeof(name), "%s", shell.concept_at(design).info().id);
+                recorder.close(name);
+                design = shell.current();
+            }
+            shell.update(input, kDt);
+            if (count % kEvery == 0)
+                record();
+            ++count;
+            if (!tour.capture().empty())
+            {
+                if (split)
+                    recorder.close(tour.capture());
+                tour.capture_done();
+            }
+        }
+        if (!split)
+            recorder.close(shell.concept_at(design).info().id);
+        return 0;
     }
 
     hui::app::Tour tour(shell, only);

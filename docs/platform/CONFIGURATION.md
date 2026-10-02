@@ -1,6 +1,6 @@
 # Application configuration and versioning
 
-[`sce_sys/param.json`](../sce_sys/param.json) is the single source of truth for
+[`sce_sys/param.json`](../../sce_sys/param.json) is the single source of truth for
 application identity, Shell metadata, and release versioning. The build
 validates it and copies it unchanged into `dist/<TITLE_ID>/sce_sys/param.json`.
 There is no second project manifest to keep synchronized.

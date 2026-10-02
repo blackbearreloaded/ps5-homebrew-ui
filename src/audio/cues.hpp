@@ -39,32 +39,32 @@ enum class Cue : std::uint8_t
     saved,        // settings stored
     welcome,      // the app, or a design, opened
     resume,       // back into the content
-    // ---- feedback (sfx bus) ----
-    tick,       // fine movement: a cursor, a dial detent
-    type,       // a character was entered
-    place,      // put something down
-    mark,       // flagged or noted
-    erase,      // removed
-    rotate,     // turned
-    slide,      // moved along a track
-    flip,       // turned over
-    pickup,     // grabbed
-    drop,       // released
-    connect,    // linked two things
-    reveal,     // uncovered
-    cascade,    // a chain of things resolving
-    merge,      // two became one (pitch it up as values grow)
-    spawn,      // something new appeared
-    invalid,    // that move is not allowed
-    undo,       // stepped back
-    redo,       // stepped forward
-    new_game,   // fresh start
-    restart,    // reset
-    solve,      // long reveal
-    complete,   // success fanfare
-    new_record, // personal best
-    explode,    // failure with weight
-    game_over,  // the end
+                  // ---- feedback (sfx bus) ----
+    tick,         // fine movement: a cursor, a dial detent
+    type,         // a character was entered
+    place,        // put something down
+    mark,         // flagged or noted
+    erase,        // removed
+    rotate,       // turned
+    slide,        // moved along a track
+    flip,         // turned over
+    pickup,       // grabbed
+    drop,         // released
+    connect,      // linked two things
+    reveal,       // uncovered
+    cascade,      // a chain of things resolving
+    merge,        // two became one (pitch it up as values grow)
+    spawn,        // something new appeared
+    invalid,      // that move is not allowed
+    undo,         // stepped back
+    redo,         // stepped forward
+    new_game,     // fresh start
+    restart,      // reset
+    solve,        // long reveal
+    complete,     // success fanfare
+    new_record,   // personal best
+    explode,      // failure with weight
+    game_over,    // the end
     count,
 };
 

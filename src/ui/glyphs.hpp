@@ -36,10 +36,10 @@ enum class Button : std::uint8_t
 // mono() draws the face symbols in the ink colour for strict palettes.
 struct GlyphStyle
 {
-    gfx::Color body;        // the button's cap
-    gfx::Color edge;        // its outline
-    gfx::Color ink;         // lettering and symbols
-    gfx::Color label;       // the text beside a glyph in a hint row
+    gfx::Color body;          // the button's cap
+    gfx::Color edge;          // its outline
+    gfx::Color ink;           // lettering and symbols
+    gfx::Color label;         // the text beside a glyph in a hint row
     bool tinted_faces = true; // face symbols in their DualSense colours
 
     static GlyphStyle dark();

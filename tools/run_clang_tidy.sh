@@ -27,8 +27,8 @@ gtest=$(bash "$root/tools/setup-test-dependencies.sh")
 mapfile -d '' test_sources < <(find "$root/tests" -type f -name '*.cpp' -print0)
 if (( ${#test_sources[@]} )); then
     "$tidy" "${test_sources[@]}" --quiet --warnings-as-errors='*' -- \
-        -std=c++20 -DCOMBINED -I"$root/src" -I"$root/tests" \
-        -I"$root/src/third_party/sgt-puzzles" -isystem "$gtest/googletest/include"
+        -std=c++20 "-DHUI_SOURCE_DIR=\"$root\"" -I"$root/src" -I"$root/tests" \
+        -isystem "$gtest/googletest/include"
 fi
 
 # The application headers include the ps5-opengl SDK's EGL/GL headers.
@@ -49,7 +49,7 @@ app_cpp_sources+=("$root/tooling/native/app_crt.cpp" "$root/tooling/native/app_c
 if (( ${#app_cpp_sources[@]} )); then
     "$tidy" "${app_cpp_sources[@]}" --quiet --warnings-as-errors='*' -- \
         -std=c++20 -fno-exceptions -fno-rtti --target=x86_64-sie-ps5 \
-        -DGL_GLEXT_PROTOTYPES=1 -DCOMBINED -I"$root/src" \
-        -I"$root/src/third_party/sgt-puzzles" -isystem "$opengl" \
+        -DGL_GLEXT_PROTOTYPES=1 -I"$root/src" \
+        -isystem "$opengl" \
         -isystem "$sdk/target/include/c++/v1" -isystem "$sdk/target/include"
 fi

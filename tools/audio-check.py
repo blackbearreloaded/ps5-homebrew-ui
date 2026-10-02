@@ -2,10 +2,10 @@
 # ps5-homebrew-ui - Validates delivered sound effects and music .
 # Copyright (C) 2026 BlackBearReloaded
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Checks assets/audio/sfx/*.wav and assets/audio/music/*.ogg.
+"""Checks assets/audio/sfx/<set>/*.wav and assets/audio/music/*.ogg.
 
 Errors (the file would be rejected or misplayed) make the exit status 1.
-Warnings point at spec targets such as length, loudness and fades; they are
+Warnings point at targets such as length, loudness and fades; they are
 advice for the mix, not failures. Music loudness needs ffmpeg.
 """
 
@@ -23,32 +23,29 @@ ROOT = Path(__file__).resolve().parent.parent
 SFX = ROOT / "assets/audio/sfx"
 MUSIC = ROOT / "assets/audio/music"
 
-# Cue -> (min seconds, max seconds) from the Appendix A tables.
-CUES = {
-    "ui_focus": (0.02, 0.06), "ui_select": (0.08, 0.15), "ui_back": (0.08, 0.15),
-    "ui_tab": (0.1, 0.2), "ui_favorite_on": (0.2, 0.4), "ui_favorite_off": (0.1, 0.2),
-    "ui_launch": (0.3, 0.7), "ui_pause_open": (0.15, 0.3), "ui_pause_close": (0.15, 0.3),
-    "ui_toggle": (0.06, 0.12), "ui_slider": (0.03, 0.06), "ui_error": (0.1, 0.2),
-    "ui_notify": (0.3, 0.6), "cursor": (0.015, 0.04), "place": (0.06, 0.15),
-    "mark": (0.06, 0.15), "erase": (0.06, 0.15), "digit": (0.06, 0.12),
-    "rotate": (0.08, 0.2), "slide": (0.08, 0.2), "flip": (0.06, 0.15),
-    "pickup": (0.06, 0.15), "drop": (0.06, 0.15), "connect": (0.15, 0.3),
-    "reveal": (0.06, 0.12), "cascade": (0.2, 0.5), "merge": (0.1, 0.2),
-    "spawn": (0.06, 0.12), "invalid": (0.1, 0.2), "undo": (0.08, 0.15),
-    "redo": (0.08, 0.15), "new_game": (0.3, 0.7), "restart": (0.3, 0.6),
-    "solve_reveal": (0.5, 1.5), "complete": (1.5, 4.0), "new_record": (1.0, 2.5),
-    "explode": (0.8, 2.0), "game_over": (1.0, 3.0),
+# Target lengths in seconds for the cues that have one; other cues are only
+# checked for format, level and fades.
+LENGTHS = {
+    "focus": (0.02, 0.06), "select": (0.08, 0.2), "back": (0.08, 0.2), "tab": (0.1, 0.22),
+    "toggle": (0.05, 0.12), "slider": (0.03, 0.06), "error": (0.1, 0.3), "tick": (0.015, 0.04),
+    "type": (0.06, 0.12), "notify": (0.3, 0.8), "launch": (0.3, 1.3), "complete": (1.5, 4.0),
+    "new_record": (1.0, 2.5), "welcome": (0.8, 1.5),
 }
 # Every .ogg in the music folder joins the shuffled playlist; keep names simple.
 MUSIC_NAMES = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _.-]*$")
-SFX_NAME = re.compile(r"^(?:(?P<game>[a-z0-9]+)\.)?(?P<cue>[a-z_]+?)(?:_(?P<n>\d\d))?$")
+SFX_NAME = re.compile(r"^(?P<cue>[a-z_]+?)(?:_(?P<n>\d\d))?$")
 
 
-def game_ids():
-    ids = {"g2048", "tenfold"}
-    meta = ROOT / "src/games/sgt/upstream_meta.inc"
-    ids.update(re.findall(r"^SGT_GAME\((\w+),", meta.read_text(), re.M))
-    return ids
+def cue_names():
+    """The cue vocabulary, read from the table the app itself uses."""
+    source = (ROOT / "src/audio/cues.cpp").read_text()
+    return set(re.findall(r'^\s*\{"(\w+)", Bus::', source, re.M))
+
+
+def set_names():
+    source = (ROOT / "src/audio/cues.cpp").read_text()
+    match = re.search(r"kSetNames\[kSoundSetCount\] = \{([^}]*)\}", source)
+    return re.findall(r'"(\w+)"', match.group(1)) if match else []
 
 
 def dbfs(value):
@@ -62,11 +59,11 @@ class Report:
 
     def error(self, path, text):
         self.errors += 1
-        print(f"ERROR {path.name}: {text}")
+        print(f"ERROR {path.parent.name}/{path.name}: {text}")
 
     def warn(self, path, text):
         self.warnings += 1
-        print(f"warn  {path.name}: {text}")
+        print(f"warn  {path.parent.name}/{path.name}: {text}")
 
 
 def read_wav(path):
@@ -87,15 +84,20 @@ def read_wav(path):
     return rate, channels, width, frames, samples, scale
 
 
-def check_sfx(report, games):
-    files = sorted(SFX.glob("*.wav")) if SFX.is_dir() else []
+def check_sfx(report, cues):
+    files = []
+    sets = set_names()
+    for folder in sorted(p for p in SFX.iterdir() if p.is_dir()) if SFX.is_dir() else []:
+        if folder.name not in sets:
+            print(f"ERROR {folder.name}/: not a sound set (known: {', '.join(sets)})")
+            report.errors += 1
+            continue
+        files += sorted(folder.glob("*.wav"))
     for path in files:
         match = SFX_NAME.match(path.stem)
-        if not match or match.group("cue") not in CUES:
-            report.error(path, "unknown cue name (see PLAN.md Appendix A)")
+        if not match or match.group("cue") not in cues:
+            report.error(path, "unknown cue name (see audio::Cue in src/audio/cues.hpp)")
             continue
-        if match.group("game") and match.group("game") not in games:
-            report.error(path, f"unknown game id '{match.group('game')}'")
         try:
             rate, channels, width, frames, samples, scale = read_wav(path)
         except (wave.Error, EOFError) as exc:
@@ -112,9 +114,10 @@ def check_sfx(report, games):
             report.error(path, "no audio")
             continue
         seconds = frames / rate
-        low, high = CUES[match.group("cue")]
-        if seconds < low * 0.5 or seconds > high * 1.5:
-            report.warn(path, f"{seconds:.3f} s (target {low}-{high} s)")
+        if match.group("cue") in LENGTHS:
+            low, high = LENGTHS[match.group("cue")]
+            if seconds < low * 0.5 or seconds > high * 1.5:
+                report.warn(path, f"{seconds:.3f} s (target {low}-{high} s)")
         peak = max(abs(s) for s in samples) / scale
         if dbfs(peak) > -1.0:
             report.warn(path, f"peak {dbfs(peak):.1f} dBFS (keep at or below -1)")
@@ -183,7 +186,7 @@ def check_music(report):
 
 def main():
     report = Report()
-    sfx = check_sfx(report, game_ids())
+    sfx = check_sfx(report, cue_names())
     music = check_music(report)
     print(f"audio-check: {sfx} sound effect(s), {music} music track(s), "
           f"{report.errors} error(s), {report.warnings} warning(s)")

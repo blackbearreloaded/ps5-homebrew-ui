@@ -47,20 +47,20 @@ using gfx::Rect;
 // ---- the design language ----------------------------------------------------
 
 const Color kInk = Color::rgb(0xf4f6fb);
-const Color kNight = Color::rgb(0x070b12);    // scrims, tiles, text on the accent
+const Color kNight = Color::rgb(0x070b12); // scrims, tiles, text on the accent
 const Color kGlassTint = Color::rgb(0x0e1726);
-const Color kAccent = Color::rgb(0xffc14d);   // the one highlight colour: amber
+const Color kAccent = Color::rgb(0xffc14d); // the one highlight colour: amber
 const Color kHealth = Color::rgb(0xee4b44);
 const Color kHealthLight = Color::rgb(0xff9580);
-const Color kGhost = Color::rgb(0xffe9cf);    // the part of the bar just lost
+const Color kGhost = Color::rgb(0xffe9cf); // the part of the bar just lost
 const Color kHeal = Color::rgb(0x7df0a2);
 const Color kStamina = Color::rgb(0x86d4ff);
-const Color kDanger = Color::rgb(0xc20f1e);   // the low-health vignette
+const Color kDanger = Color::rgb(0xc20f1e); // the low-health vignette
 const Color kClear = Color::rgb(0x000000, 0.0f);
 
 constexpr float kTau = 6.2831853f;
-constexpr float kMargin = 96.0f;  // safe area, left and right
-constexpr float kTop = 64.0f;     // top edge of the HUD's upper row
+constexpr float kMargin = 96.0f; // safe area, left and right
+constexpr float kTop = 64.0f;    // top edge of the HUD's upper row
 constexpr float kRight = gfx::kVirtualWidth - kMargin;
 
 // Vitals (top-left).
@@ -72,10 +72,10 @@ constexpr float kStaminaY = 124.0f;
 constexpr float kStaminaW = 260.0f;
 constexpr float kStaminaH = 10.0f;
 constexpr int kMaxHealth = 100;
-constexpr int kLowHealth = 25;         // below this the bar pulses
+constexpr int kLowHealth = 25; // below this the bar pulses
 constexpr int kHealAmount = 25;
-constexpr float kGhostHold = 0.4f;     // seconds the ghost waits before draining
-constexpr float kDownSeconds = 2.0f;   // the "DOWN" state before the revive
+constexpr float kGhostHold = 0.4f;   // seconds the ghost waits before draining
+constexpr float kDownSeconds = 2.0f; // the "DOWN" state before the revive
 
 // Compass (top-centre).
 constexpr float kCompassW = 520.0f;
@@ -217,11 +217,13 @@ struct Ambient
 };
 // Things that "happen" in the world while the player watches.
 constexpr Ambient kAmbient[] = {
-    {ToastKind::pickup, "Picked up Rope \xC3\x97" "2"},
+    {ToastKind::pickup, "Picked up Rope \xC3\x97"
+                        "2"},
     {ToastKind::area, "Area discovered: Hollow Reach"},
     {ToastKind::pickup, "Picked up Ember Shard"},
     {ToastKind::area, "Waystone attuned: Greywater Ford"},
-    {ToastKind::pickup, "Picked up Field Tonic \xC3\x97" "1"},
+    {ToastKind::pickup, "Picked up Field Tonic \xC3\x97"
+                        "1"},
 };
 constexpr int kAmbientCount = static_cast<int>(sizeof(kAmbient) / sizeof(kAmbient[0]));
 
@@ -399,9 +401,9 @@ class Hud final : public app::Concept
         // red vignette that breathes while health is low, kicks on every hit
         // and closes in while the player is down.
         const float beat = context_.settings.reduced_motion ? 0.5f : ui::breathe(game_time_, 1.1f);
-        const float strength = (danger_.value * (0.3f + 0.22f * beat) + hit_.value * 0.3f +
-                                down_.value * 0.42f) *
-                               (1.0f - 0.6f * pause);
+        const float strength =
+            (danger_.value * (0.3f + 0.22f * beat) + hit_.value * 0.3f + down_.value * 0.42f) *
+            (1.0f - 0.6f * pause);
         if (strength > 0.01f)
         {
             frame.post.mode = gfx::BackdropMode::vignette;
@@ -1619,9 +1621,9 @@ class Hud final : public app::Concept
         // The play hints stay in the scene: they blur away with the world.
         frame.scene.push_opacity(tween::stagger(age_, 8, 0.07f, 0.5f) * (1.0f - pause));
         const ui::Hint play[] = {
-            {ui::Button::dpad, "Abilities"},   {confirm_glyph(), "Take a hit"},
-            {ui::Button::square, "Heal"},      {ui::Button::triangle, "Objective"},
-            {ui::Button::r2, "Sprint"},        {ui::Button::left_stick, "Turn"},
+            {ui::Button::dpad, "Abilities"}, {confirm_glyph(), "Take a hit"},
+            {ui::Button::square, "Heal"},    {ui::Button::triangle, "Objective"},
+            {ui::Button::r2, "Sprint"},      {ui::Button::left_stick, "Turn"},
             {ui::Button::options, "Pause"},
         };
         ui::draw_hints(frame.scene, fonts, style, play, 7, kRight, true);
@@ -1631,23 +1633,21 @@ class Hud final : public app::Concept
             return;
         const float choice = dialog_value_.value;
         frame.overlay.push_opacity(pause * (1.0f - choice));
-        const ui::Hint menu[] = {{ui::Button::dpad, "Move"},
-                                 {confirm_glyph(), "Choose"},
-                                 {back_glyph(), "Resume"}};
+        const ui::Hint menu[] = {
+            {ui::Button::dpad, "Move"}, {confirm_glyph(), "Choose"}, {back_glyph(), "Resume"}};
         ui::draw_hints(frame.overlay, fonts, style, menu, 3, kRight, true);
         frame.overlay.pop_opacity();
         frame.overlay.push_opacity(pause * choice);
-        const ui::Hint ask[] = {{ui::Button::dpad, "Move"},
-                                {confirm_glyph(), "Choose"},
-                                {back_glyph(), "Cancel"}};
+        const ui::Hint ask[] = {
+            {ui::Button::dpad, "Move"}, {confirm_glyph(), "Choose"}, {back_glyph(), "Cancel"}};
         ui::draw_hints(frame.overlay, fonts, style, ask, 3, kRight, true);
         frame.overlay.pop_opacity();
     }
 
     app::Context &context_;
-    float age_ = 0.0f;       // seconds since enter(): drives the entrance
-    float clock_ = 0.0f;     // free-running interface time
-    float game_time_ = 0.0f; // gameplay time: stands still while paused
+    float age_ = 0.0f;        // seconds since enter(): drives the entrance
+    float clock_ = 0.0f;      // free-running interface time
+    float game_time_ = 0.0f;  // gameplay time: stands still while paused
     float world_time_ = 0.0f; // the backdrop's clock: gameplay time times speed
     float session_time_ = 0.0f;
     std::uint32_t rng_ = 0x51f15eedu;

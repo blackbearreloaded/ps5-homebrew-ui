@@ -220,7 +220,8 @@ Theme gloss()
 {
     Theme t = web_light("gloss", "Gloss", "Skeuomorphic",
                         "Gradients, glassy highlights and dark edges: buttons that look pressable");
-    t.backdrop = backdrop(BackdropMode::gradient, 0xdfe6ee, 0xb9c5d3, 0xffffff, 0, 0.5f, 0.0f, 0.6f);
+    t.backdrop =
+        backdrop(BackdropMode::gradient, 0xdfe6ee, 0xb9c5d3, 0xffffff, 0, 0.5f, 0.0f, 0.6f);
     t.page = rgb(0xcdd6e0);
     t.surface = rgb(0xeef2f6);
     t.surface_high = rgb(0xb4c0ce);
@@ -246,8 +247,9 @@ Theme gloss()
 
 Theme classic()
 {
-    Theme t = web_light("classic", "Classic", "Bevelled desktop",
-                        "Grey panels with a light and a dark edge; nothing eases, everything clicks");
+    Theme t =
+        web_light("classic", "Classic", "Bevelled desktop",
+                  "Grey panels with a light and a dark edge; nothing eases, everything clicks");
     t.backdrop = plain(0x0a7a7a);
     t.page = rgb(0x0a7a7a);
     t.surface = rgb(0xc3c3c3);
@@ -441,8 +443,9 @@ Theme mantine()
 
 Theme daisy()
 {
-    Theme t = web_light("daisy", "Daisy", "Clean and customisable \xC2\xB7 after daisyUI",
-                        "Indigo, pink and teal on white; small radii; a hint of depth under buttons");
+    Theme t =
+        web_light("daisy", "Daisy", "Clean and customisable \xC2\xB7 after daisyUI",
+                  "Indigo, pink and teal on white; small radii; a hint of depth under buttons");
     t.surface_high = rgb(0xf4f4f5);
     t.text = rgb(0x18181b);
     t.text_muted = rgb(0x71717a);
@@ -543,8 +546,8 @@ Theme nuxt()
 {
     Theme t = web_dark("fresh", "Fresh", "Modern flat \xC2\xB7 after Nuxt UI",
                        "Slate night, one vivid green, hairline rings, pill badges");
-    t.backdrop = backdrop(BackdropMode::gradient, 0x020618, 0x0b1224, 0x00dc82, 0, 0.5f, -0.1f,
-                          0.16f);
+    t.backdrop =
+        backdrop(BackdropMode::gradient, 0x020618, 0x0b1224, 0x00dc82, 0, 0.5f, -0.1f, 0.16f);
     t.page = rgb(0x070d1f);
     t.surface = rgb(0x0f172b);
     t.surface_high = rgb(0x1d293d);
@@ -588,8 +591,9 @@ Theme shoelace()
 
 Theme propeller()
 {
-    Theme t = web_light("paper", "Material", "Material Design \xC2\xB7 after Propeller",
-                        "Raised sheets with real shadows, capitals, underlined fields, a pink accent");
+    Theme t =
+        web_light("paper", "Material", "Material Design \xC2\xB7 after Propeller",
+                  "Raised sheets with real shadows, capitals, underlined fields, a pink accent");
     t.backdrop = plain(0xeeeeee);
     t.page = rgb(0xeeeeee);
     t.surface_high = rgb(0xdcdcdc);
@@ -642,8 +646,9 @@ Theme semantic()
 
 Theme bootstrap()
 {
-    Theme t = web_light("standard", "Standard", "General purpose \xC2\xB7 after Bootstrap 5",
-                        "The familiar default: medium corners, blue and grey buttons, a wide focus halo");
+    Theme t =
+        web_light("standard", "Standard", "General purpose \xC2\xB7 after Bootstrap 5",
+                  "The familiar default: medium corners, blue and grey buttons, a wide focus halo");
     t.surface_high = rgb(0xe9ecef);
     t.primary = rgb(0x0d6efd);
     t.secondary = rgb(0x6c757d);
@@ -757,8 +762,9 @@ Theme uikit()
 
 Theme materialize()
 {
-    Theme t = web_light("layers", "Layers", "Material Design \xC2\xB7 after Materialize",
-                        "Teal and coral, flat layers stacked by elevation, capitals, underlined fields");
+    Theme t =
+        web_light("layers", "Layers", "Material Design \xC2\xB7 after Materialize",
+                  "Teal and coral, flat layers stacked by elevation, capitals, underlined fields");
     t.backdrop = plain(0xfafafa);
     t.page = rgb(0xfafafa);
     t.surface_high = rgb(0xe0e0e0);
@@ -847,8 +853,9 @@ Theme papercss()
 
 Theme milligram()
 {
-    Theme t = web_light("light", "Featherweight", "Ultra-light \xC2\xB7 after Milligram",
-                        "Almost nothing: thin grey rules and small purple capitals with wide tracking");
+    Theme t =
+        web_light("light", "Featherweight", "Ultra-light \xC2\xB7 after Milligram",
+                  "Almost nothing: thin grey rules and small purple capitals with wide tracking");
     t.surface_high = rgb(0xf4f5f6);
     t.text = rgb(0x606c76);
     t.text_muted = rgb(0x9aa5ae);
@@ -897,12 +904,37 @@ std::span<const Theme> themes()
 {
     static const std::array<Theme, 30> kThemes = {
         // Design languages.
-        acrylic(), brutal(), clay(), tiles(), gloss(), classic(), blueprint(), hazard(), candy(),
+        acrylic(),
+        brutal(),
+        clay(),
+        tiles(),
+        gloss(),
+        classic(),
+        blueprint(),
+        hazard(),
+        candy(),
         contrast(),
         // Modelled on web frameworks.
-        pixel(), mantine(), daisy(), pico(), ant(), chakra(), nuxt(), shoelace(), propeller(),
-        semantic(), bootstrap(), preline(), flowbite(), bulma(), uikit(), materialize(),
-        foundation(), papercss(), milligram(), primer(),
+        pixel(),
+        mantine(),
+        daisy(),
+        pico(),
+        ant(),
+        chakra(),
+        nuxt(),
+        shoelace(),
+        propeller(),
+        semantic(),
+        bootstrap(),
+        preline(),
+        flowbite(),
+        bulma(),
+        uikit(),
+        materialize(),
+        foundation(),
+        papercss(),
+        milligram(),
+        primer(),
     };
     return kThemes;
 }

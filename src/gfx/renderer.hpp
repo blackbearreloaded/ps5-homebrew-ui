@@ -88,8 +88,7 @@ class Renderer
         const DrawList *list = nullptr;
     };
 
-    void play(const Layer &layer, int width, int height, float virtual_width,
-              float virtual_height);
+    void play(const Layer &layer, int width, int height, float virtual_width, float virtual_height);
     void capture_glass(std::size_t layers, float virtual_width, float virtual_height);
 
     GlBatch batch_;

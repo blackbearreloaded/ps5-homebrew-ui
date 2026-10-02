@@ -77,6 +77,7 @@ void main()
 constexpr const char *kFragment = R"(
 layout(location = 0) uniform vec4 u_viewport;
 layout(location = 2) uniform sampler2D u_texture;
+layout(location = 3) uniform sampler2D u_fonts[4];
 in vec2 v_local;
 in vec2 v_virtual;
 in vec2 v_uv;
@@ -143,7 +144,19 @@ void main()
     }
     else if (shape == 1)
     {
-        float sdf = texture(u_texture, v_uv).r;
+        // The font atlases stay bound to their own units; the slot picks one.
+        int slot = int(v_params.z + 0.5);
+        float sdf;
+        if (slot == 1)
+            sdf = texture(u_fonts[0], v_uv).r;
+        else if (slot == 2)
+            sdf = texture(u_fonts[1], v_uv).r;
+        else if (slot == 3)
+            sdf = texture(u_fonts[2], v_uv).r;
+        else if (slot == 4)
+            sdf = texture(u_fonts[3], v_uv).r;
+        else
+            sdf = texture(u_texture, v_uv).r;
         float distance = (sdf - 0.5) * 2.0 * v_params.x;
         color = vec4(fill.rgb, fill.a * clamp(distance / px + 0.5, 0.0, 1.0));
     }
@@ -274,6 +287,11 @@ void GlBatch::release()
         glDeleteVertexArrays(1, &mesh_vao_);
     if (mesh_program_ != 0)
         glDeleteProgram(mesh_program_);
+    if (font_count_ != 0)
+        glDeleteTextures(static_cast<GLsizei>(font_count_), font_textures_);
+    for (GLuint &texture : font_textures_)
+        texture = 0;
+    font_count_ = 0;
     buffer_ = vao_ = program_ = mesh_buffer_ = mesh_vao_ = mesh_program_ = 0;
     capacity_ = 0;
     mesh_capacity_ = 0;
@@ -325,6 +343,12 @@ std::uint32_t GlBatch::create_font_texture(const Font &font)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    if (font_count_ < kFontSlots)
+    {
+        font_textures_[font_count_] = texture;
+        ++font_count_;
+        return kFontHandleBase | font_count_;
+    }
     return texture;
 }
 
@@ -386,6 +410,14 @@ void GlBatch::draw(const DrawList &list, const Viewport &viewport, int surface_w
     }
     glUseProgram(program_);
     glUniform1i(2, 0);
+    // Font atlases on units 1..4 for the whole frame; unit 0 changes per run.
+    const GLint font_units[kFontSlots] = {1, 2, 3, 4};
+    glUniform1iv(3, static_cast<GLsizei>(kFontSlots), font_units);
+    for (std::uint32_t slot = 0; slot < font_count_; ++slot)
+    {
+        glActiveTexture(GL_TEXTURE1 + slot);
+        glBindTexture(GL_TEXTURE_2D, font_textures_[slot]);
+    }
     glActiveTexture(GL_TEXTURE0);
 
     GLuint bound_texture = 0;

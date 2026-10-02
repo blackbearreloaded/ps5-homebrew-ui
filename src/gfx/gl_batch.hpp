@@ -29,7 +29,10 @@ class GlBatch
     bool init();
     // Deletes the programs, vertex arrays and buffers; init() recreates them.
     void release();
-    // Uploads a font atlas as a single-level R8 texture; returns its name.
+    // Uploads a font atlas as a single-level R8 texture and gives it one of
+    // the font slots; returns the handle DrawList::text takes. With every
+    // slot taken it returns a plain texture name, which also works but starts
+    // a new draw call wherever that font is used.
     std::uint32_t create_font_texture(const Font &font);
     // Uploads RGBA8 pixels as a single-level texture; returns its name.
     std::uint32_t create_texture(int width, int height, const std::uint8_t *rgba);
@@ -53,6 +56,8 @@ class GlBatch
     GLuint mesh_buffer_ = 0;
     std::size_t mesh_capacity_ = 0; // vertices
     std::size_t draw_calls_ = 0;
+    GLuint font_textures_[kFontSlots] = {};
+    std::uint32_t font_count_ = 0;
 };
 
 } // namespace hui::gfx

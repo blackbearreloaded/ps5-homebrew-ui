@@ -1,5 +1,10 @@
 # Contributing
 
+New to the repository? Start with [AGENTS.md](AGENTS.md) (it is written for
+people too) and [docs/CRAFT.md](docs/CRAFT.md). A new design follows
+[docs/BUILDING_A_DESIGN.md](docs/BUILDING_A_DESIGN.md) and comes with tour
+pictures you have looked at and behaviour tests.
+
 Before committing a change:
 
 1. Run `make test` and `make lint`; add a focused unit or integration regression

@@ -66,6 +66,16 @@ struct Rect
     }
 };
 
+// Font atlases live on texture units of their own, so text never breaks a
+// run of shapes: GlBatch::create_font_texture returns a handle made of this
+// base plus a slot number (1..kFontSlots) instead of a GL texture name.
+constexpr std::uint32_t kFontHandleBase = 0xf0000000u;
+constexpr std::uint32_t kFontSlots = 4;
+constexpr bool is_font_handle(std::uint32_t texture)
+{
+    return (texture & 0xfffffff0u) == kFontHandleBase;
+}
+
 // Shape modes understood by the batch shader (keep in sync with gl_batch.cpp).
 enum class Shape : std::uint8_t
 {
@@ -87,7 +97,7 @@ struct Instance
     float color_top[4];    // rgba (straight alpha)
     float color_bottom[4]; // rgba
     float border_color[4]; // rgba
-    float params[4];       // radius|range|start angle, border|thickness, softness, shape
+    float params[4];       // radius|range|start angle, border|thickness, softness|font slot, shape
     float extra[4];        // uv rect, segment endpoints, rotation or sweep (per shape)
 };
 static_assert(sizeof(Instance) == 96);

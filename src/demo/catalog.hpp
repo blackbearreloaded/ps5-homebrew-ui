@@ -29,10 +29,10 @@ struct Item
     const char *genre;
     const char *blurb;
     int year;
-    float rating;   // 0..5
-    float progress; // 0..1 of the story
-    int hours;      // time played
-    int players;    // local players supported
+    float rating;      // 0..5
+    float progress;    // 0..1 of the story
+    int hours;         // time played
+    int players;       // local players supported
     gfx::Color dark;   // palette: the deepest tone of the cover
     gfx::Color mid;    // its body colour
     gfx::Color accent; // the colour a design may pick up as highlight

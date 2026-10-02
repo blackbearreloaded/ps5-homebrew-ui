@@ -11,6 +11,8 @@ and commented; read them when you need exact signatures.
 | Frame composition and frosted glass | `gfx/renderer.hpp` |
 | Fonts and text helpers | `ui/fonts.hpp`, `gfx/font.hpp` |
 | Controller glyphs and hint rows | `ui/glyphs.hpp` |
+| Standard widgets in thirty themes | `ui/theme.hpp`, `ui/widgets.hpp` ([THEMES.md](THEMES.md)) |
+| Hard-edged bitmap text | `ui/pixel_font.hpp` |
 | Easing curves and springs | `core/tween.hpp` |
 | Focus rings, scrolling, pulses, colour springs | `ui/motion.hpp` |
 | Controller input | `core/input.hpp` |
@@ -38,14 +40,16 @@ A `DrawList` records one frame of 2D drawing. Later calls draw on top.
 | `gradient_rect_h(r, radius, left, right)` | Horizontal gradient |
 | `bordered_rect(r, radius, fill, border, border_color)` | Fill plus an inner border; a transparent fill gives an outline |
 | `rotated_rect(r, radius, angle, fill)` | Rectangle turned about its centre |
+| `chamfer_rect(r, cut, fill, border, border_color)` | Rectangle with corners cut at 45 degrees |
 | `circle(cx, cy, radius, fill)` / `ring(cx, cy, radius, thickness, color)` | Disc / outline |
 | `arc(cx, cy, radius, thickness, start, sweep, color, round_caps)` | Ring sector: gauges, spinners, radial menus. `radius` is the outer edge |
 | `line(x1, y1, x2, y2, thickness, color)` | Segment with round caps |
-| `triangle(r, fill, outline)` | Upward triangle; `outline > 0` strokes it |
+| `triangle(r, fill, outline, angle)` | Triangle pointing up, or turned by `angle` (1.5708 points right): chevrons, play icons, arrowheads. `outline > 0` strokes it |
 | `star(cx, cy, radius, fill, outline)` | Five-pointed star |
 | `shadow(r, radius, softness, color)` | Soft dark falloff; offset the rect down to "lift" a card |
 | `glow(r, radius, spread, color)` | The same falloff used as coloured light |
 | `image(texture, r, uv, tint, radius)` | Texture, tinted, optional rounded corners |
+| `image_gradient(texture, r, uv, top, bottom, radius)` | The same with a tint that blends top to bottom: fades and reflections |
 | `glass(texture, r, radius, tint)` | The blurred copy of what is behind `r` (frosted panels) |
 | `polygon(xy, count, fill)` | Filled polygon; edges are not anti-aliased, keep it small |
 | `text(...)` | One line of text; prefer `ui::text` below |
@@ -104,6 +108,8 @@ ui::upper("Continue playing");                // ASCII capitals for tracked labe
 
 Text is positioned by its **baseline**. Fonts are baked signed-distance
 fields: any size is sharp, and one atlas per face is all the memory they use.
+The four atlases sit on texture units of their own, so text never interrupts
+a run of shapes: a screen full of mixed text and shapes is one draw call.
 The glyph set is printable ASCII plus `· × © ° – — • … ← ↑ → ↓ ✓` (and, in
 DejaVu Sans Mono, `█ ● ▲ ▶ ▼ ◀`). Check `font->has_glyph(codepoint)` before
 relying on a symbol; draw icons from shapes instead of hunting for glyphs.
@@ -174,6 +180,7 @@ frames that ask for it.
 | `nav_repeat` | True when `nav` is a repeat, not a fresh press |
 | `is_pressed(Action::confirm)` | Went down this frame |
 | `is_held(Action::west)` | Is down |
+| `nav_from_stick` | The step came from the left stick, not the D-pad (for screens that also use the stick as an analog control) |
 | `stick_x`, `stick_y` | Left stick, -1..1, right and down positive, after a radial dead zone |
 | `stick2_x`, `stick2_y` | Right stick |
 | `trigger_l`, `trigger_r` | Analog triggers, 0..1 |
@@ -182,6 +189,19 @@ Actions: `confirm` (Cross), `back` (Circle), `north` (Triangle), `west`
 (Square), `jump_prev` / `jump_next` (L2 / R2), `menu` (Options), `l3`, `r3`.
 Confirm and back follow the player's button-swap setting. **L1, R1 and the
 touchpad belong to the shell**: a design never sees them.
+
+## Controller glyphs and hints
+
+```cpp
+const ui::Hint hints[] = {{ui::Button::cross, "Select"}, {ui::Button::l2, "Tab", ui::Button::r2}};
+ui::draw_hints(list, fonts, ui::GlyphStyle::dark(), hints, 2, 1824, true);  // right-aligned at x
+float width = ui::measure_hints(fonts, hints, 2);                           // for a plate behind it
+ui::draw_button(list, fonts, style, ui::Button::triangle, x, cy, 40);       // one glyph
+```
+
+`GlyphStyle::dark()` suits dark pages, `light()` light ones, and
+`mono(ink, body)` draws every glyph in one colour. `HintLayout` sets the
+glyph size, text size, the row's centre line and the label face.
 
 ## Feedback: sound and rumble
 
@@ -207,7 +227,10 @@ Stated plainly, so you do not look for it:
 - **No retained widget tree or layout engine.** Screens are immediate mode:
   you compute rectangles and draw. For a controller-driven UI of fixed
   resolution this is less code, not more.
-- **No rotation of text or images**, only of rounded rectangles.
+- **No rotation of text or images**, only of rounded rectangles and
+  triangles. No non-uniform scale: `push_transform` scales both axes alike.
+- **`glow` and `shadow` are filled.** They light the area under a shape as
+  well as around it: draw them first, then the shape on top.
 - **No rounded clipping.** Clips are rectangles; rounded images use the
   `radius` argument instead.
 - **No text shaping.** Left-to-right text in the baked glyph set only. For

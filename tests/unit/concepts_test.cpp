@@ -67,11 +67,10 @@ TEST_F(EveryConcept, SurvivesItsTourAndAlwaysDraws)
 // A player can lean on any button: no input sequence may break a design.
 TEST_F(EveryConcept, SurvivesArbitraryInput)
 {
-    const hui::Action actions[] = {hui::Action::confirm,   hui::Action::back,
-                                   hui::Action::north,     hui::Action::west,
-                                   hui::Action::jump_prev, hui::Action::jump_next,
-                                   hui::Action::menu,      hui::Action::l3,
-                                   hui::Action::r3};
+    const hui::Action actions[] = {
+        hui::Action::confirm, hui::Action::back,      hui::Action::north,
+        hui::Action::west,    hui::Action::jump_prev, hui::Action::jump_next,
+        hui::Action::menu,    hui::Action::l3,        hui::Action::r3};
     const hui::Direction directions[] = {hui::Direction::up, hui::Direction::down,
                                          hui::Direction::left, hui::Direction::right};
     for (hui::app::ConceptFactory factory : hui::app::concept_registry())

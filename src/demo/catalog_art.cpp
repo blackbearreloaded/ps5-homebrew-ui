@@ -25,8 +25,8 @@ namespace
 using gfx::Color;
 
 constexpr gfx::BackdropMode kModes[] = {
-    gfx::BackdropMode::aurora, gfx::BackdropMode::waves, gfx::BackdropMode::bokeh,
-    gfx::BackdropMode::grid,   gfx::BackdropMode::vista, gfx::BackdropMode::stars,
+    gfx::BackdropMode::aurora, gfx::BackdropMode::waves,  gfx::BackdropMode::bokeh,
+    gfx::BackdropMode::grid,   gfx::BackdropMode::vista,  gfx::BackdropMode::stars,
     gfx::BackdropMode::dots,   gfx::BackdropMode::aurora,
 };
 

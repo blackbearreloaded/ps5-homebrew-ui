@@ -38,8 +38,8 @@ struct Fonts
 // Draws one line with its baseline at y; x is the left edge, centre or right
 // edge depending on align. Returns the width.
 inline float text(gfx::DrawList &list, const FontRef &font, std::string_view value, float x,
-                  float baseline, float size, gfx::Color color,
-                  gfx::Align align = gfx::Align::left, float tracking = 0.0f)
+                  float baseline, float size, gfx::Color color, gfx::Align align = gfx::Align::left,
+                  float tracking = 0.0f)
 {
     return list.text(*font.font, font.texture, value, x, baseline, size, color, align, tracking);
 }
@@ -70,8 +70,8 @@ inline float paragraph(gfx::DrawList &list, const FontRef &font, std::string_vie
         const bool last =
             drawn + 1 == max_lines && lines.size() > static_cast<std::size_t>(max_lines);
         if (last)
-            text(list, font, font.font->fit(line + " \xE2\x80\xA6", size, width), x, y, size,
-                 color, align);
+            text(list, font, font.font->fit(line + " \xE2\x80\xA6", size, width), x, y, size, color,
+                 align);
         else
             text(list, font, line, x, y, size, color, align);
         y += line_height;

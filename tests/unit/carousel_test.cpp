@@ -21,9 +21,9 @@ using hui::audio::Cue;
 using hui::audio::CueEvent;
 
 constexpr float kFrame = 1.0f / 60.0f;
-constexpr float kMiddle = 960.0f;   // where a cover at rest is centred
-constexpr float kCentred = 440.0f;  // ... and how large it is
-constexpr int kStart = 3;           // the cover the design opens on
+constexpr float kMiddle = 960.0f;  // where a cover at rest is centred
+constexpr float kCentred = 440.0f; // ... and how large it is
+constexpr int kStart = 3;          // the cover the design opens on
 constexpr int kCovers = 24;
 
 class CoverFlow : public hui::testing::ConceptFixture

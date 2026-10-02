@@ -276,14 +276,18 @@ float DrawList::text(const Font &font, std::uint32_t font_texture, std::string_v
     glyph_scratch_.clear();
     const float width = font.layout(text, x, baseline, size, align, glyph_scratch_, tracking);
     const float range = font.sdf_range(size) * transform_.scale;
+    // A font handle names a slot the shader samples by itself: such glyphs
+    // join the current run. Any other texture is bound per run, as images are.
+    const bool slotted = is_font_handle(font_texture);
+    const float slot = slotted ? static_cast<float>(font_texture & 0xfu) : 0.0f;
     for (const GlyphQuad &q : glyph_scratch_)
     {
-        Instance &i = append(font_texture);
+        Instance &i = append(slotted ? 0u : font_texture);
         const Rect t = apply({q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0});
         set4(i.rect, t.x, t.y, t.w, t.h);
         set_color(i.color_top, color);
         set_color(i.color_bottom, color);
-        set4(i.params, range, 0.0f, 0.0f, static_cast<float>(Shape::glyph));
+        set4(i.params, range, 0.0f, slot, static_cast<float>(Shape::glyph));
         set4(i.extra, q.u0, q.v0, q.u1, q.v1);
     }
     return width;

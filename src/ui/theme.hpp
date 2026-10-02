@@ -82,16 +82,16 @@ struct Theme
     // ---- shape ----
     SurfaceStyle style = SurfaceStyle::soft;
     Corner corner = Corner::round;
-    float radius = 12.0f;      // controls; 100 or more means "pill"
-    float radius_card = 20.0f; // panels and dialogs
-    float border = 0.0f;       // stroke width; 0 for none
+    float radius = 12.0f;        // controls; 100 or more means "pill"
+    float radius_card = 20.0f;   // panels and dialogs
+    float border = 0.0f;         // stroke width; 0 for none
     float button_border = -1.0f; // buttons' stroke; negative means "same as border"
     bool pill_chips = false;     // chips and badges are pills whatever the radius
     bool pill_switches = true;   // switches are pills with a round thumb
     float shadow_offset = 6.0f;
     float shadow_blur = 16.0f;
-    float focus_width = 3.0f; // the ring's stroke
-    float focus_gap = 4.0f;   // its distance from the control
+    float focus_width = 3.0f;      // the ring's stroke
+    float focus_gap = 4.0f;        // its distance from the control
     bool underline_fields = false; // text fields are a line, not a box
 
     // ---- type ----

@@ -227,7 +227,9 @@ std::span<const app::TourStep> tour() const override { return kTour; }
 ```
 
 Each step waits, takes a picture if it names one (before its input acts),
-then sends its input for one frame. A first picture is always taken after the
+then sends its input for one frame. A step can also hold things during its
+wait: `stick_x` / `stick_y` (the left stick), `hold` (action bits) and
+`trigger_l` / `trigger_r`, for designs driven by analog input. A first picture is always taken after the
 entrance animation. Pictures land in `build/snapshots/NN-id-name.png`.
 
 Leave the design in a neutral state at the end of the tour (dialogs closed).

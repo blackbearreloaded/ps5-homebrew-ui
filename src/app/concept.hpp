@@ -116,14 +116,14 @@ struct Frame
 // validation run): wait, optionally save a picture, then send the input.
 struct TourStep
 {
-    float wait = 0.5f;             // seconds before the step acts
-    std::uint32_t press = 0;       // action bits pressed for one frame
+    float wait = 0.5f;       // seconds before the step acts
+    std::uint32_t press = 0; // action bits pressed for one frame
     Direction nav = Direction::none;
     const char *capture = nullptr; // picture name suffix, taken after the wait
     float stick_x = 0.0f;          // left stick held during the wait
     float stick_y = 0.0f;
-    std::uint32_t hold = 0;        // action bits held during the wait
-    float trigger_l = 0.0f;        // analog triggers held during the wait
+    std::uint32_t hold = 0; // action bits held during the wait
+    float trigger_l = 0.0f; // analog triggers held during the wait
     float trigger_r = 0.0f;
 };
 
@@ -134,8 +134,8 @@ struct ConceptInfo
     const char *tagline; // one line: what the design is for
     const char *source;  // repository path of its implementation
     audio::SoundSet sounds = audio::SoundSet::glass;
-    gfx::Color accent;                         // light bar and shell chrome
-    std::span<const char *const> techniques;   // listed in the info panel
+    gfx::Color accent;                       // light bar and shell chrome
+    std::span<const char *const> techniques; // listed in the info panel
 };
 
 // A complete, self-contained UI design. The shell owns the L1/R1 switch and

@@ -238,8 +238,8 @@ class Toolbox final : public app::Concept
         };
         constexpr Cell kTop[] = {{"rounded"}, {"gradient"}, {"gradient_h"}, {"bordered"},
                                  {"rotated"}, {"circle"},   {"ring"},       {"arc"}};
-        constexpr Cell kBottom[] = {{"line"},   {"triangle"}, {"star"},  {"shadow"},
-                                    {"glow"},   {"image"},    {"polygon"}, {"clip"}};
+        constexpr Cell kBottom[] = {{"line"}, {"triangle"}, {"star"},    {"shadow"},
+                                    {"glow"}, {"image"},    {"polygon"}, {"clip"}};
         for (int i = 0; i < 8; ++i)
         {
             const float cx = 136.0f + static_cast<float>(i) * 100.0f;
@@ -305,8 +305,8 @@ class Toolbox final : public app::Concept
                 break;
             case 6:
             {
-                const float points[] = {cx - 30, cy + 26, cx - 12, cy - 28, cx + 4,  cy + 4,
-                                        cx + 20, cy - 22, cx + 32, cy + 26};
+                const float points[] = {cx - 30, cy + 26, cx - 12, cy - 28, cx + 4,
+                                        cy + 4,  cx + 20, cy - 22, cx + 32, cy + 26};
                 list.polygon(points, 5, Color::rgb(0x2b6cff));
                 break;
             }
@@ -447,11 +447,11 @@ class Toolbox final : public app::Concept
             list.rounded_rect({r.x, r.y + 10 * (1.0f - appear), r.w, r.h}, 12, kPanel);
             if (i == played_ && flash_.value > 0.0f)
                 list.rounded_rect(r, 12, kAccent.with_alpha(0.55f * flash_.value));
-            ui::text(list, fonts.regular,
-                     fonts.regular.font->fit(audio::cue_name(static_cast<audio::Cue>(i)), 18,
-                                             r.w - 16),
-                     r.cx(), r.y + 31 + 10 * (1.0f - appear), 18,
-                     i == focus_ ? kInk : kInk.with_alpha(0.72f), gfx::Align::center);
+            ui::text(
+                list, fonts.regular,
+                fonts.regular.font->fit(audio::cue_name(static_cast<audio::Cue>(i)), 18, r.w - 16),
+                r.cx(), r.y + 31 + 10 * (1.0f - appear), 18,
+                i == focus_ ? kInk : kInk.with_alpha(0.72f), gfx::Align::center);
             list.pop_opacity();
         }
         Rect ring = ring_.value();

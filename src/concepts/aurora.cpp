@@ -39,7 +39,7 @@ using gfx::Rect;
 const Color kWhite = Color::rgb(0xffffff);
 
 constexpr float kMargin = 96.0f;
-constexpr float kCard = 196.0f;       // card size at rest
+constexpr float kCard = 196.0f; // card size at rest
 constexpr float kCardGap = 26.0f;
 constexpr float kCardGrow = 1.2f;     // focused card scale
 constexpr float kShelfY = 730.0f;     // top of the focused shelf's cards
@@ -305,8 +305,8 @@ class Aurora final : public app::Concept
     {
         if (input.nav == Direction::up || input.nav == Direction::down)
         {
-            const int next = std::clamp(action_ + (input.nav == Direction::down ? 1 : -1), 0,
-                                        kActions - 1);
+            const int next =
+                std::clamp(action_ + (input.nav == Direction::down ? 1 : -1), 0, kActions - 1);
             if (next != action_)
             {
                 action_ = next;
@@ -357,9 +357,9 @@ class Aurora final : public app::Concept
         for (int i = 0; i < 4; ++i)
         {
             const bool active = i == 0;
-            const float w = ui::text(list, active ? fonts.semibold : fonts.regular, tabs[i], x,
-                                     92 - 10 * (1.0f - in), 26,
-                                     kWhite.with_alpha(active ? 1.0f : 0.55f));
+            const float w =
+                ui::text(list, active ? fonts.semibold : fonts.regular, tabs[i], x,
+                         92 - 10 * (1.0f - in), 26, kWhite.with_alpha(active ? 1.0f : 0.55f));
             if (active)
                 list.rounded_rect({x, 104, w, 4}, 2, palette_[3].value());
             x += w + 44;
@@ -367,8 +367,7 @@ class Aurora final : public app::Concept
         ui::text(list, fonts.regular, "21:47", 1824 - 64, 92, 26, kWhite.with_alpha(0.8f),
                  gfx::Align::right);
         list.circle(1800, 82, 22, palette_[3].value());
-        ui::text(list, fonts.semibold, "B", 1800, 91, 22, Color::rgb(0x0b0d16),
-                 gfx::Align::center);
+        ui::text(list, fonts.semibold, "B", 1800, 91, 22, Color::rgb(0x0b0d16), gfx::Align::center);
         list.pop_opacity();
     }
 
@@ -397,7 +396,8 @@ class Aurora final : public app::Concept
         ui::text(list, fonts.display, it.title, x - 4, 304, 88, kWhite);
         std::snprintf(text, sizeof(text), "%s  \xC2\xB7  %d  \xC2\xB7  %s", it.genre, it.year,
                       it.studio);
-        float cursor = x + ui::text(list, fonts.regular, text, x, 358, 26, kWhite.with_alpha(0.78f));
+        float cursor =
+            x + ui::text(list, fonts.regular, text, x, 358, 26, kWhite.with_alpha(0.78f));
         list.star(cursor + 42, 349, 12, Color::rgb(0xffd166));
         std::snprintf(text, sizeof(text), "%.1f", static_cast<double>(it.rating));
         ui::text(list, fonts.semibold, text, cursor + 62, 358, 26, kWhite);
@@ -462,8 +462,9 @@ class Aurora final : public app::Concept
             const Shelf &shelf = shelves_[static_cast<std::size_t>(r)];
             // Shelves above the focused one are gone; the one below peeks in.
             const float distance = static_cast<float>(r) - row_position_.value;
-            const float visible = tween::clamp01(1.0f + distance * 2.5f) *
-                                  (distance > 0.0f ? 1.0f - 0.45f * tween::clamp01(distance) : 1.0f);
+            const float visible =
+                tween::clamp01(1.0f + distance * 2.5f) *
+                (distance > 0.0f ? 1.0f - 0.45f * tween::clamp01(distance) : 1.0f);
             if (visible <= 0.01f)
                 continue;
             const float in = tween::stagger(age_, 3 + r, 0.09f, 0.6f);
@@ -518,7 +519,8 @@ class Aurora final : public app::Concept
         list.shadow({sheet.x, sheet.y + 20, sheet.w, sheet.h}, 44, 60, Color::rgb(0x000000, 0.5f));
         // Frosted panel: the blurred screen, a tint, then a hairline of light.
         list.glass(glass, sheet, 44, kWhite);
-        list.rounded_rect(sheet, 44, gfx::mix(it.dark, Color::rgb(0x0b0d16), 0.5f).with_alpha(0.62f));
+        list.rounded_rect(sheet, 44,
+                          gfx::mix(it.dark, Color::rgb(0x0b0d16), 0.5f).with_alpha(0.62f));
         list.bordered_rect(sheet, 44, Color::rgb(0x000000, 0.0f), 1.5f, kWhite.with_alpha(0.22f));
 
         const Rect art{sheet.x + 56, sheet.y + 56, 300, 300};

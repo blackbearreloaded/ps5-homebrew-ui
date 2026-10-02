@@ -111,8 +111,8 @@ bool Pad::open()
 
 void Pad::set_light_bar(std::uint8_t r, std::uint8_t g, std::uint8_t b)
 {
-    const std::uint32_t packed = (static_cast<std::uint32_t>(r) << 16) |
-                                 (static_cast<std::uint32_t>(g) << 8) | b;
+    const std::uint32_t packed =
+        (static_cast<std::uint32_t>(r) << 16) | (static_cast<std::uint32_t>(g) << 8) | b;
     if (handle_ < 0 || packed == light_bar_)
         return;
     light_bar_ = packed;

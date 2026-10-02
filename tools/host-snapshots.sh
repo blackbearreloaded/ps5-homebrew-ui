@@ -18,7 +18,7 @@ build="$root/build/host-snapshots"
 ninja_begin "$build/build.ninja"
 
 # Everything under src/ except the console platform layer and entry point.
-sources=("$root/host/snapshot_main.cpp" "$root/host/platform_host.cpp")
+sources=("$root/host/snapshot_main.cpp" "$root/host/manifest.cpp" "$root/host/platform_host.cpp")
 while IFS= read -r -d '' source; do
     sources+=("$source")
 done < <(find "$root/src" -type f \( -name '*.cpp' -o -name '*.c' \) \
@@ -35,7 +35,7 @@ for source in "${sources[@]}"; do
     else
         ninja_inputs=("$source" "$cxx")
         ninja_edge CXX "$object" "${compiler_cache[@]}" "$cxx" -std=c++20 -O2 -Wall -Wextra \
-            -DGL_GLEXT_PROTOTYPES=1 -I"$root/src" -MD -MF "$object.d" -c "$source" -o "$object"
+            -DGL_GLEXT_PROTOTYPES=1 -I"$root/src" -I"$root/host" -MD -MF "$object.d" -c "$source" -o "$object"
     fi
     objects+=("$object")
 done

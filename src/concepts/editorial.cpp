@@ -52,21 +52,21 @@ const Color kPaperTop = Color::rgb(0xf3efe6);
 const Color kPaperBottom = Color::rgb(0xe9e3d6);
 const Color kPaperLight = Color::rgb(0x161410); // added to the paper, so it stays subtle
 const Color kInk = Color::rgb(0x15161a);
-const Color kAccent = Color::rgb(0xe5432d); // vermilion
+const Color kAccent = Color::rgb(0xe5432d);   // vermilion
 const Color kPlateInk = Color::rgb(0xfbf7ee); // type on the colour plate
 const Color kWhite = Color::rgb(0xffffff);
 
-constexpr float kRestAlpha = 0.35f;  // rows that are not focused
-constexpr float kQuietAlpha = 0.6f;  // captions, bylines
-constexpr float kRuleAlpha = 0.16f;  // hairlines
+constexpr float kRestAlpha = 0.35f; // rows that are not focused
+constexpr float kQuietAlpha = 0.6f; // captions, bylines
+constexpr float kRuleAlpha = 0.16f; // hairlines
 
 // ---- the page grid ---------------------------------------------------------
 constexpr float kMargin = 96.0f;
 constexpr float kRight = gfx::kVirtualWidth - kMargin;
-constexpr float kHeavyRule = 60.0f;    // the masthead's thick rule
+constexpr float kHeavyRule = 60.0f;     // the masthead's thick rule
 constexpr float kHeadBaseline = 100.0f; // issue line, running head
-constexpr float kHeadRule = 124.0f;    // hairline under it; everything hangs from here
-constexpr float kCapsSize = 16.0f;     // small tracked capitals
+constexpr float kHeadRule = 124.0f;     // hairline under it; everything hangs from here
+constexpr float kCapsSize = 16.0f;      // small tracked capitals
 constexpr float kCapsTracking = 3.5f;
 
 // ---- the list (left column, 55 % of the screen) ----------------------------
@@ -75,16 +75,16 @@ constexpr int kVisibleRows = 6;
 constexpr float kColumnRight = 1056.0f;
 constexpr float kRowPitch = 136.0f;
 constexpr float kListHeight = kRowPitch * kVisibleRows;
-constexpr float kRowCapTop = 34.0f;    // top of the numeral and the title's capitals
-constexpr float kRowTitle = 66.0f;     // title baseline, from the row's hairline
+constexpr float kRowCapTop = 34.0f; // top of the numeral and the title's capitals
+constexpr float kRowTitle = 66.0f;  // title baseline, from the row's hairline
 constexpr float kRowUnderline = 82.0f;
-constexpr float kRowBase = 104.0f;     // numeral and small caps share this baseline
+constexpr float kRowBase = 104.0f; // numeral and small caps share this baseline
 constexpr float kNumeralSize = 100.0f;
 constexpr float kTitleSize = 48.0f;
 constexpr float kTitleX = kMargin + 168.0f;
-constexpr float kFocusShift = 20.0f;   // the focused row steps aside for the bar
+constexpr float kFocusShift = 20.0f; // the focused row steps aside for the bar
 constexpr float kBarWidth = 6.0f;
-constexpr float kFootnote = 1016.0f;   // small caps on the hint row's centre line
+constexpr float kFootnote = 1016.0f; // small caps on the hint row's centre line
 constexpr float kRibbonWidth = 22.0f;
 constexpr float kRibbonHeight = 48.0f;
 constexpr float kRibbonNotch = 10.0f;
@@ -92,7 +92,7 @@ constexpr float kRibbonNotch = 10.0f;
 // ---- the spread (right column) ---------------------------------------------
 constexpr float kSpreadX = 1152.0f;
 constexpr Rect kCoverList{kSpreadX, 156.0f, 480.0f, 480.0f};
-constexpr float kGhostSize = 360.0f;   // the faint numeral behind the cover
+constexpr float kGhostSize = 360.0f; // the faint numeral behind the cover
 // Height of a display numeral per unit of size: between the flat-topped
 // figures (0.70) and the round ones, which overshoot (0.72).
 constexpr float kFigureHeight = 0.711f;
@@ -118,13 +118,13 @@ constexpr float kBodyRule = 412.0f;
 constexpr float kBodyTop = 428.0f;
 constexpr float kBodySize = 25.0f;
 constexpr float kBodyLine = 38.0f;
-constexpr float kBodyFirst = 30.0f;    // first baseline below kBodyTop
-constexpr int kBodyLines = 11;         // lines per column
+constexpr float kBodyFirst = 30.0f; // first baseline below kBodyTop
+constexpr int kBodyLines = 11;      // lines per column
 constexpr float kBodyHeight = kBodyLine * kBodyLines + 8.0f;
 // One press scrolls a pair of columns (a leaf). Leaves are stacked two blank
 // lines apart, so text in motion shows where one ends and the next begins.
 constexpr float kLeafPitch = kBodyLine * (kBodyLines + 2);
-constexpr int kDropLines = 3;          // lines the drop cap spans
+constexpr int kDropLines = 3; // lines the drop cap spans
 constexpr float kDropSize = 134.0f;
 constexpr float kDropGap = 14.0f;
 constexpr float kFootRule = 880.0f;
@@ -133,14 +133,14 @@ constexpr float kFootBaseline = 930.0f;
 // ---- motion: slow and confident --------------------------------------------
 constexpr float kFocusOmega = 11.0f;
 constexpr float kViewOmega = 10.0f;
-constexpr float kCalmOmega = 40.0f;    // "Reduce motion": springs become quick fades
+constexpr float kCalmOmega = 40.0f; // "Reduce motion": springs become quick fades
 constexpr float kWipeSeconds = 0.42f;
 constexpr float kChangeSeconds = 0.45f;
 constexpr float kTurnSeconds = 0.55f;
-constexpr float kSpreadSlide = 30.0f;  // vertical travel of the right column
-constexpr float kTurnSlide = 150.0f;   // horizontal travel of a page turn
-constexpr float kListTravel = 420.0f;  // how far the list leaves
-constexpr float kPageTravel = 360.0f;  // how far the reading page arrives from
+constexpr float kSpreadSlide = 30.0f; // vertical travel of the right column
+constexpr float kTurnSlide = 150.0f;  // horizontal travel of a page turn
+constexpr float kListTravel = 420.0f; // how far the list leaves
+constexpr float kPageTravel = 360.0f; // how far the reading page arrives from
 
 // The weekly selection: catalogue indices, chosen for a varied run of colours.
 constexpr int kSelection[kFeatures] = {1, 7, 16, 4, 21, 14, 8, 2};
@@ -195,7 +195,7 @@ constexpr app::TourStep kTour[] = {
 // once: wrapping text allocates, so it is done at start-up, not per frame.
 struct Feature
 {
-    int item = 0;                  // catalogue index
+    int item = 0; // catalogue index
     char numeral[4] = "01";
     char drop_cap[2] = "A";
     std::string title;             // fitted to the list's column
@@ -442,9 +442,7 @@ class Editorial final : public app::Concept
             // column alone, and its first line does not end one alone. The
             // column is left a line short instead.
             const auto blank = [&](int line)
-            {
-                return line >= count || f.body[static_cast<std::size_t>(line)].empty();
-            };
+            { return line >= count || f.body[static_cast<std::size_t>(line)].empty(); };
             if (take > 2 && !blank(at + take) && blank(at + take + 1))
                 --take;
             if (take > 2 && !blank(at + take) && blank(at + take - 2))
@@ -750,8 +748,7 @@ class Editorial final : public app::Concept
             if (top + kRowPitch <= kHeadRule || top >= bottom)
                 continue;
             // Rows crossing the edge of the list fade instead of being cut.
-            const float inside =
-                std::min(top + kRowPitch - kHeadRule, bottom - top) / kRowPitch;
+            const float inside = std::min(top + kRowPitch - kHeadRule, bottom - top) / kRowPitch;
             const float in = tween::stagger(age_, 2 + i, 0.06f, 0.6f);
             const float lit = tween::clamp01(lit_[at].value);
             const float ink = tween::lerp(kRestAlpha, 1.0f, lit);
@@ -855,10 +852,10 @@ class Editorial final : public app::Concept
                 direction_ * (1.0f - tween::quint_out(t)) * travel(turn_ ? 72.0f : 40.0f);
             list.image(item(previous_).cover, rect, gfx::kCanvasUv, kWhite, 4);
             list.push_clip(rect);
-            list.image(item(focus_).cover,
-                       {rect.x + (turn_ ? slide : 0.0f), rect.y + (turn_ ? 0.0f : slide), rect.w,
-                        rect.h},
-                       gfx::kCanvasUv, kWhite.with_alpha(tween::smoothstep(t * 1.5f)), 4);
+            list.image(
+                item(focus_).cover,
+                {rect.x + (turn_ ? slide : 0.0f), rect.y + (turn_ ? 0.0f : slide), rect.w, rect.h},
+                gfx::kCanvasUv, kWhite.with_alpha(tween::smoothstep(t * 1.5f)), 4);
             list.pop_clip();
         }
         else
@@ -1053,8 +1050,8 @@ class Editorial final : public app::Concept
         const char *bookmark = marked ? "Remove bookmark" : "Bookmark";
         // The two rows cross-fade as the view changes.
         const float t = view();
-        const float browsing = tween::stagger(age_, 10, 0.06f, 0.6f) *
-                               (1.0f - tween::smoothstep(t * 2.0f));
+        const float browsing =
+            tween::stagger(age_, 10, 0.06f, 0.6f) * (1.0f - tween::smoothstep(t * 2.0f));
         if (browsing > 0.01f)
         {
             list.push_opacity(browsing);
@@ -1078,20 +1075,20 @@ class Editorial final : public app::Concept
     app::Context &context_;
     std::array<Feature, kFeatures> features_;
     std::array<bool, kFeatures> bookmarked_{};
-    float age_ = 0.0f;   // seconds since enter(): drives the entrance
-    float clock_ = 0.0f; // free-running time for idle motion
-    int focus_ = 0;      // the focused row, and the article being read
-    int previous_ = 0;   // the feature that is fading out
-    float direction_ = 1.0f; // +1 toward later features: where content travels
-    bool turn_ = false;      // the last change was a page turn (sideways)
-    tween::Timer change_;    // the cross-fade between previous_ and focus_
-    std::array<tween::Spring, kFeatures> lit_;   // 0..1 focus light of each row
-    std::array<float, kFeatures> wipe_{};        // 0..1 underline progress
+    float age_ = 0.0f;                            // seconds since enter(): drives the entrance
+    float clock_ = 0.0f;                          // free-running time for idle motion
+    int focus_ = 0;                               // the focused row, and the article being read
+    int previous_ = 0;                            // the feature that is fading out
+    float direction_ = 1.0f;                      // +1 toward later features: where content travels
+    bool turn_ = false;                           // the last change was a page turn (sideways)
+    tween::Timer change_;                         // the cross-fade between previous_ and focus_
+    std::array<tween::Spring, kFeatures> lit_;    // 0..1 focus light of each row
+    std::array<float, kFeatures> wipe_{};         // 0..1 underline progress
     std::array<tween::Bounce, kFeatures> ribbon_; // 0..1 bookmark drop
-    ui::Scroller scroll_;                        // the list
+    ui::Scroller scroll_;                         // the list
     bool reading_ = false;
-    tween::Spring view_;        // 0 the list, 1 the article
-    tween::Spring body_scroll_; // pixels, always a whole number of lines at rest
+    tween::Spring view_;          // 0 the list, 1 the article
+    tween::Spring body_scroll_;   // pixels, always a whole number of lines at rest
     float leaving_scroll_ = 0.0f; // where the departing article was scrolled to
     ui::SpringColor plate_[2];
     ui::Pulse nudge_;

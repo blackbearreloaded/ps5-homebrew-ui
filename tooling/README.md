@@ -20,5 +20,5 @@ Linux/WSL or `../tools/rebuild-libc.ps1` on Windows to prove both hashes.
 `.deps/native/`; neither is installed globally. The shell and PowerShell
 bootstrappers share the same cache layout.
 
-See [`../docs/NATIVE_TOOLING.md`](../docs/NATIVE_TOOLING.md) for the format
+See [`../docs/platform/NATIVE_TOOLING.md`](../docs/platform/NATIVE_TOOLING.md) for the format
 boundary and low-level commands.

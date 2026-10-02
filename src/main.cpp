@@ -17,6 +17,7 @@
 #include "core/settings.hpp"
 #include "core/version.hpp"
 #include "demo/catalog.hpp"
+#include "gfx/canvas.hpp"
 #include "gfx/renderer.hpp"
 #include "platform/ps5/audio_out.hpp"
 #include "platform/ps5/display_egl.hpp"
@@ -46,6 +47,8 @@ constexpr const char *kDataRoot = "/download0/hui";
 // Development files (the tour trigger, its pictures and report) live where
 // FTP can reach them.
 constexpr const char *kDevRoot = "/data/ps5-homebrew-ui";
+constexpr int kCaptureWidth = 960;
+constexpr int kCaptureHeight = 540;
 
 void log_heap(std::uint64_t frames)
 {
@@ -155,7 +158,8 @@ int main()
     gfx::Font display_font;
     gfx::Font mono;
     ui::Fonts fonts;
-    if (!renderer.init() || !load_font(renderer, "inter-regular.huifont", &regular, &fonts.regular) ||
+    if (!renderer.init() ||
+        !load_font(renderer, "inter-regular.huifont", &regular, &fonts.regular) ||
         !load_font(renderer, "inter-semibold.huifont", &semibold, &fonts.semibold) ||
         !load_font(renderer, "montserrat-medium.huifont", &display_font, &fonts.display) ||
         !load_font(renderer, "dejavu-sans-mono.huifont", &mono, &fonts.mono))
@@ -203,8 +207,8 @@ int main()
         const std::string trigger = std::string(kDevRoot) + "/tour.txt";
         if (save::read_file(trigger, &request, 256))
         {
-            while (!request.empty() && (request.back() == '\n' || request.back() == '\r' ||
-                                        request.back() == ' '))
+            while (!request.empty() &&
+                   (request.back() == '\n' || request.back() == '\r' || request.back() == ' '))
                 request.pop_back();
             std::remove(trigger.c_str()); // one run per request
             save::ensure_directory(std::string(kDevRoot) + "/tour");
@@ -220,6 +224,7 @@ int main()
     double fps_seconds = 0.0;
     int fps_frames = 0;
     PadSample samples[64];
+    gfx::Canvas capture;
     std::int64_t last_frame_start = sys::monotonic_us();
     for (;;)
     {
@@ -274,8 +279,19 @@ int main()
         renderer.present(0, display.width(), display.height());
         if (tour && !tour->capture().empty())
         {
+            // The picture is the same frame drawn once more into a small
+            // off-screen target: reading the display surface back is slow, and
+            // a quarter-size picture is enough to compare with the PC render.
+            if (capture.texture() == 0)
+                capture.create(kCaptureWidth, kCaptureHeight, 1);
+            capture.bind();
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            renderer.present(capture.framebuffer(), kCaptureWidth, kCaptureHeight);
+            glBindFramebuffer(GL_FRAMEBUFFER, capture.framebuffer());
             const std::string path = std::string(kDevRoot) + "/tour/" + tour->capture() + ".bmp";
-            const bool ok = save_picture(path, display.width(), display.height());
+            const bool ok = save_picture(path, kCaptureWidth, kCaptureHeight);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             sys::log("[HUI] tour picture %s ok=%d", tour->capture().c_str(), ok ? 1 : 0);
             tour->capture_done();
             last_frame_start = sys::monotonic_us(); // saving is slow; the frame was not

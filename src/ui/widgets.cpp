@@ -26,7 +26,8 @@ const Color kWhite{1.0f, 1.0f, 1.0f, 1.0f};
 // amount > 0 lightens toward white, < 0 darkens toward black.
 Color shade(Color c, float amount)
 {
-    const Color target = amount > 0.0f ? Color{1.0f, 1.0f, 1.0f, c.a} : Color{0.0f, 0.0f, 0.0f, c.a};
+    const Color target =
+        amount > 0.0f ? Color{1.0f, 1.0f, 1.0f, c.a} : Color{0.0f, 0.0f, 0.0f, c.a};
     return gfx::mix(c, target, std::fabs(amount));
 }
 
@@ -101,8 +102,8 @@ float Painter::label(std::string_view value, float x, float baseline, float size
         return pixel_text(list_, value, x, baseline - size * 0.04f, size * 0.62f, color, align);
     // Capitals read larger than mixed case: shrink them a little.
     if (theme_.caps)
-        return text(list_, font(theme_.label), upper(value), x, baseline, size * 0.86f, color, align,
-                    theme_.tracking);
+        return text(list_, font(theme_.label), upper(value), x, baseline, size * 0.86f, color,
+                    align, theme_.tracking);
     return text(list_, font(theme_.label), value, x, baseline, size, color, align, theme_.tracking);
 }
 
@@ -183,10 +184,14 @@ void Painter::stroke(const gfx::Rect &r, float radius, float width, gfx::Color c
         const float j = std::min(2.2f, small * 0.05f);
         const float over = std::min(3.0f, small * 0.07f);
         const float x0 = r.x, y0 = r.y, x1 = r.x + r.w, y1 = r.y + r.h;
-        list_.line(x0 - over, y0 + wobble(r, 1) * j, x1 + over, y0 + wobble(r, 2) * j, width, color);
-        list_.line(x1 + wobble(r, 3) * j, y0 - over, x1 + wobble(r, 4) * j, y1 + over, width, color);
-        list_.line(x1 + over, y1 + wobble(r, 5) * j, x0 - over, y1 + wobble(r, 6) * j, width, color);
-        list_.line(x0 + wobble(r, 7) * j, y1 + over, x0 + wobble(r, 8) * j, y0 - over, width, color);
+        list_.line(x0 - over, y0 + wobble(r, 1) * j, x1 + over, y0 + wobble(r, 2) * j, width,
+                   color);
+        list_.line(x1 + wobble(r, 3) * j, y0 - over, x1 + wobble(r, 4) * j, y1 + over, width,
+                   color);
+        list_.line(x1 + over, y1 + wobble(r, 5) * j, x0 - over, y1 + wobble(r, 6) * j, width,
+                   color);
+        list_.line(x0 + wobble(r, 7) * j, y1 + over, x0 + wobble(r, 8) * j, y0 - over, width,
+                   color);
     }
     else
     {
@@ -194,8 +199,8 @@ void Painter::stroke(const gfx::Rect &r, float radius, float width, gfx::Color c
     }
 }
 
-gfx::Rect Painter::surface(const gfx::Rect &r, float radius, gfx::Color fill_color,
-                           gfx::Color edge, float raise, float border)
+gfx::Rect Painter::surface(const gfx::Rect &r, float radius, gfx::Color fill_color, gfx::Color edge,
+                           float raise, float border)
 {
     raise = tween::clamp01(raise);
     const float offset = theme_.shadow_offset;
@@ -452,9 +457,9 @@ void Painter::button(const gfx::Rect &r, std::string_view value, ButtonKind kind
             const Color edge = framed ? theme_.outline
                                       : (theme_.style == SurfaceStyle::sketch ? theme_.on_primary
                                                                               : theme_.primary);
-            content = surface(r, radius, theme_.primary, edge, 1.0f - look.press,
-                              framed || theme_.style == SurfaceStyle::sketch ? theme_.border
-                                                                             : line);
+            content =
+                surface(r, radius, theme_.primary, edge, 1.0f - look.press,
+                        framed || theme_.style == SurfaceStyle::sketch ? theme_.border : line);
             ink = theme_.on_primary;
         }
     }
@@ -496,7 +501,8 @@ void Painter::toggle(const gfx::Rect &r, float value, const Look &look)
     const float pad = framed ? theme_.border + 2.0f : 5.0f;
     const float size = r.h - 2.0f * pad;
     const Rect thumb{r.x + pad + (r.w - 2.0f * pad - size) * value, r.y + pad, size, size};
-    const float thumb_radius = theme_.pill_switches ? size * 0.5f : std::min(theme_.radius, size * 0.5f);
+    const float thumb_radius =
+        theme_.pill_switches ? size * 0.5f : std::min(theme_.radius, size * 0.5f);
     switch (theme_.style)
     {
     case SurfaceStyle::outline:
@@ -664,10 +670,9 @@ void Painter::progress(const gfx::Rect &r, float value)
         const float step = block * 0.7f + 3.0f;
         const int count = static_cast<int>((r.w - 2.0f * inset) * value / step);
         for (int i = 0; i < count; ++i)
-            list_.rounded_rect({r.x + inset + static_cast<float>(i) * step, r.y + inset,
-                                block * 0.7f, block},
-                               0, theme_.style == SurfaceStyle::bevel ? theme_.primary
-                                                                      : theme_.accent);
+            list_.rounded_rect(
+                {r.x + inset + static_cast<float>(i) * step, r.y + inset, block * 0.7f, block}, 0,
+                theme_.style == SurfaceStyle::bevel ? theme_.primary : theme_.accent);
         return;
     }
     const float inset = theme_.style == SurfaceStyle::hard ? theme_.border : 0.0f;
@@ -703,10 +708,10 @@ void Painter::tabs(const gfx::Rect &r, std::span<const char *const> labels, floa
     const int nearest = static_cast<int>(active + 0.5f);
     const bool boxed = theme_.style == SurfaceStyle::hard || theme_.style == SurfaceStyle::bevel ||
                        theme_.style == SurfaceStyle::pixel;
-    const bool segmented =
-        theme_.style == SurfaceStyle::neumorphic || theme_.style == SurfaceStyle::glass ||
-        theme_.style == SurfaceStyle::gloss ||
-        (theme_.style == SurfaceStyle::soft && theme_.radius >= 5.0f);
+    const bool segmented = theme_.style == SurfaceStyle::neumorphic ||
+                           theme_.style == SurfaceStyle::glass ||
+                           theme_.style == SurfaceStyle::gloss ||
+                           (theme_.style == SurfaceStyle::soft && theme_.radius >= 5.0f);
     if (segmented)
     {
         // A segmented control: a well with a raised piece that slides.
@@ -717,8 +722,8 @@ void Painter::tabs(const gfx::Rect &r, std::span<const char *const> labels, floa
                 theme_.outline, 1.0f, 0.0f);
         for (int i = 0; i < count; ++i)
         {
-            const Color ink = i == nearest ? (tinted ? theme_.on_primary : theme_.primary)
-                                           : theme_.text_muted;
+            const Color ink =
+                i == nearest ? (tinted ? theme_.on_primary : theme_.primary) : theme_.text_muted;
             label(labels[static_cast<std::size_t>(i)], r.x + (static_cast<float>(i) + 0.5f) * seg,
                   baseline_for(r.cy(), 22), 22, ink, gfx::Align::center);
         }
