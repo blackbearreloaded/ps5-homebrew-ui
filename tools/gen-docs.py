@@ -95,8 +95,13 @@ def designs_page(designs):
         for technique in d["techniques"]:
             out.append(f"- {technique}")
         out.append("")
+        # A design without behaviour tests of its own is still covered by the
+        # shared tour and random-input tests.
+        test = f'tests/unit/{d["id"]}_test.cpp'
+        if not (ROOT / test).exists():
+            test = "tests/unit/concepts_test.cpp"
         out.append(f'Source: [`{d["source"]}`](../{d["source"]}) &middot; '
-                   f'tests: [`tests/unit/{d["id"]}_test.cpp`](../tests/unit/{d["id"]}_test.cpp) '
+                   f'tests: [`{test}`](../{test}) '
                    f'&middot; sound set: `{d["sounds"]}`')
         shots = pictures(d["id"])
         if shots:

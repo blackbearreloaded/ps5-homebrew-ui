@@ -672,7 +672,7 @@ One screen in thirty design languages: L2 and R2 restyle every widget.
 - Row and column focus navigation that keeps your column across rows of different widgets
 - A bitmap face drawn from rectangles and hand-drawn strokes, for looks a font cannot give
 
-Source: [`src/concepts/themes.cpp`](../src/concepts/themes.cpp) &middot; tests: [`tests/unit/themes_test.cpp`](../tests/unit/themes_test.cpp) &middot; sound set: `glass`
+Source: [`src/concepts/themes.cpp`](../src/concepts/themes.cpp) &middot; tests: [`tests/unit/concepts_test.cpp`](../tests/unit/concepts_test.cpp) &middot; sound set: `glass`
 
 <table>
 <tr>
@@ -697,7 +697,7 @@ Reusable lists, grids, dialogs, forms and indicators, restyled by thirty themes.
 - Every component drawn in all thirty themes, restyled live without losing state
 - Page changes slide in the direction of travel; theme changes hide behind a veil
 
-Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot; tests: [`tests/unit/components_test.cpp`](../tests/unit/components_test.cpp) &middot; sound set: `glass`
+Source: [`src/concepts/components.cpp`](../src/concepts/components.cpp) &middot; tests: [`tests/unit/concepts_test.cpp`](../tests/unit/concepts_test.cpp) &middot; sound set: `glass`
 
 <table>
 <tr>
@@ -794,7 +794,7 @@ The kit on one screen: shapes, type, motion, glyphs and every sound.
 - Controller glyphs drawn from shapes, lit by the buttons you hold
 - A sound board: every cue of both sound sets, panned by where it sits
 
-Source: [`src/concepts/toolbox.cpp`](../src/concepts/toolbox.cpp) &middot; tests: [`tests/unit/toolbox_test.cpp`](../tests/unit/toolbox_test.cpp) &middot; sound set: `glass`
+Source: [`src/concepts/toolbox.cpp`](../src/concepts/toolbox.cpp) &middot; tests: [`tests/unit/concepts_test.cpp`](../tests/unit/concepts_test.cpp) &middot; sound set: `glass`
 
 <table>
 <tr>
