@@ -84,11 +84,14 @@ bool Font::load(std::string_view data)
         return false;
     }
     const char *cursor = data.data() + sizeof(ff::Header);
+    // A font may have no glyphs or (monospaced faces) no kerning pairs.
     glyphs_.resize(header_.glyph_count);
-    std::memcpy(glyphs_.data(), cursor, glyph_bytes);
+    if (glyph_bytes != 0)
+        std::memcpy(glyphs_.data(), cursor, glyph_bytes);
     cursor += glyph_bytes;
     kerns_.resize(header_.kern_count);
-    std::memcpy(kerns_.data(), cursor, kern_bytes);
+    if (kern_bytes != 0)
+        std::memcpy(kerns_.data(), cursor, kern_bytes);
     cursor += kern_bytes;
     atlas_.assign(reinterpret_cast<const std::uint8_t *>(cursor),
                   reinterpret_cast<const std::uint8_t *>(cursor) + atlas_bytes);

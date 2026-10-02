@@ -8,7 +8,7 @@
 #include "core/input.hpp"
 #include "core/settings.hpp"
 #include "demo/catalog.hpp"
-#include "gfx/backdrop.hpp"
+#include "gfx/backdrop_spec.hpp"
 #include "gfx/draw_list.hpp"
 #include "ui/fonts.hpp"
 

@@ -85,13 +85,9 @@ jobs:
           fi
           echo "TITLE_ID=$title_id" >> "$GITHUB_ENV"
           echo "CONTENT_VERSION=$content_version" >> "$GITHUB_ENV"
-          # A push to main releases param.json's version once: when no tag for
-          # it exists yet. Bump contentVersion to publish the next release.
+          # Only a version tag publishes a release; pushes to main just build.
           release=false
           if [[ $GITHUB_REF_TYPE == tag ]]; then
-            release=true
-          elif [[ $GITHUB_EVENT_NAME == push && $GITHUB_REF == refs/heads/main ]] &&
-               ! git ls-remote --exit-code --tags origin "refs/tags/$content_version" >/dev/null; then
             release=true
           fi
           echo "version=$content_version" >> "$GITHUB_OUTPUT"

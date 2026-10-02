@@ -6,12 +6,16 @@
 
 #include "app/concept.hpp"
 #include "core/tween.hpp"
-#include "gfx/renderer.hpp"
 
 #include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>
+
+namespace hui::gfx
+{
+class Renderer;
+}
 
 namespace hui::app
 {
