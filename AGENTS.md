@@ -15,6 +15,9 @@ OpenGL 4.6:
   and two sets of sound effects, and a themeable widget set;
 - **designs** (`src/concepts/*.cpp`): complete screens, one file each, switched
   with L1/R1 in one native app;
+- **components** (`src/ui/components`): reusable pieces that own their
+  focus, values, motion and sound (lists, grids, dialogs, forms, ...), styled
+  by a theme plus their own knobs and extended through slots;
 - **themes** (`src/ui/theme.cpp`): design languages as data, applied to one
   widget set (`ui::Painter`);
 - a **tour** that drives the app without a person, used for pictures, tests
@@ -30,6 +33,7 @@ rendering path.
 | Any UI work | [docs/CRAFT.md](docs/CRAFT.md): the quality bar and the checklist |
 | A new screen | [docs/BUILDING_A_DESIGN.md](docs/BUILDING_A_DESIGN.md), then `src/concepts/aurora.cpp` |
 | What can I draw or call? | [docs/KIT.md](docs/KIT.md), then the header itself |
+| A list, grid, form, dialog, tabs, toast, progress... | [docs/COMPONENTS.md](docs/COMPONENTS.md), then the component's header in `src/ui/components/` |
 | Standard widgets, a new theme | [docs/THEMES.md](docs/THEMES.md), `src/ui/widgets.hpp`, `src/concepts/themes.cpp` |
 | Sound, rumble | [docs/SOUND.md](docs/SOUND.md) |
 | Backgrounds | [docs/BACKDROPS.md](docs/BACKDROPS.md) |
@@ -91,6 +95,16 @@ galleries in the README and the docs.
 - Every action has a cue; list ends refuse softly and stay silent on a held
   direction; `settings.reduced_motion` is honoured.
 - Content is invented. No real product names, brands, logos or artwork.
+
+**Components**
+
+- Before hand-rolling a list, a grid, tabs, a dialog, a form or a progress
+  indicator, use the one in `src/ui/components/`. Customise through its style
+  struct and slots; if a knob is missing, add the knob.
+- A component draws through `ui::Painter` with `style.theme` (no colour
+  literals), moves at `style.omega()`, plays `style.sounds`, and never
+  includes `app/`, `concepts/` or `demo/`. The checklist is at the end of
+  [docs/COMPONENTS.md](docs/COMPONENTS.md).
 
 **Assets**
 

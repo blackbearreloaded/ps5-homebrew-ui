@@ -112,6 +112,7 @@ src/
   app/                shell, tour, the Concept interface
   concepts/           the designs, one file each, and their registry
   ui/                 fonts, glyphs, motion helpers, themes, widgets, pixel font, confetti
+  ui/components/      the component library (lists, grids, dialogs, forms, indicators)
   gfx/                draw list, GL batch, fonts, backdrops, renderer, canvas
   audio/              mixer, cues and sound bank, music player, WAV decoder
   core/               input, tweens and springs, settings, save files, frame statistics

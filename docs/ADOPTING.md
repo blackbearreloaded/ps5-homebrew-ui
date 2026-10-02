@@ -19,6 +19,7 @@ Copy these directories into your project and add them to your build:
 | --- | --- | --- |
 | `src/gfx/` | Draw list, GL batch, SDF fonts, backdrops, renderer, canvas | OpenGL headers, `platform/ps5/system.hpp` for logging |
 | `src/ui/` | Fonts, controller glyphs, motion helpers, themes, widgets, pixel font, confetti | `gfx/`, `core/tween.hpp`, `audio/cues.hpp` (for the sound set enum) |
+| `src/ui/components/` | The component library: lists, grids, carousels, tabs, menus, dialogs, sheets, toasts, forms, indicators ([COMPONENTS.md](COMPONENTS.md)) | the rest of `src/ui/`, `core/input.hpp` |
 | `src/core/` | Input model, tweens and springs, settings, save files | nothing |
 | `src/audio/` | Mixer, cue vocabulary and sound bank, music player | `core/save_file` (file reading), `third_party/stb` |
 | `src/platform/ps5/` | EGL display, controller, audio output thread, system services | ps5-opengl SDK, PS5 payload SDK |

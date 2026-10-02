@@ -17,6 +17,7 @@ Press **L1** / **R1** to switch between them.
 
 [Designs](docs/DESIGNS.md) &middot;
 [Themes](docs/THEMES.md) &middot;
+[Components](docs/COMPONENTS.md) &middot;
 [The craft](docs/CRAFT.md) &middot;
 [Kit reference](docs/KIT.md) &middot;
 [Build a design](docs/BUILDING_A_DESIGN.md) &middot;
@@ -45,6 +46,7 @@ documentation to learn the craft, enough working code to copy from.
 | **Sound** | A 32-voice mixer on its own thread, a vocabulary of 42 cues, two complete sets of recorded effects, stereo placement, pitch that carries meaning, music with ducking, controller rumble. |
 | **Type and glyphs** | Six baked distance-field fonts, sharp at any size. Every DualSense button drawn from shapes, in any colour scheme. |
 | **Widgets and themes** | Buttons, switches, sliders, tabs, fields, chips, lists and dialogs in thirty design languages, from frosted glass to neo-brutalism to 8-bit. |
+| **Components** | A library of reusable pieces that own their focus, motion and sound: lists, grids, carousels, tabs, menus, dialogs, sheets, toasts, forms, progress, badges, counters and more. Each is restyled by any theme, tuned through a style struct and extended through slots. |
 | **Designs** | Complete screens, each in one file: a home screen, a library, a storefront, a HUD with a pause menu, a radial menu, an on-screen keyboard, a settings screen that really works, and more. |
 | **A tour** | The app can drive itself. The same scripted run renders every picture in these docs on a PC, runs the unit tests, and validates a build on the console. |
 | **A PS5 build** | Reproducible native build and packaging, from [ps5-native-app-boilerplate](https://github.com/blackbearreloaded/ps5-native-app-boilerplate), rendering through [ps5-opengl](https://github.com/blackbearreloaded/ps5-opengl). |
@@ -190,6 +192,9 @@ To see it on a console, copy `dist/<TITLE_ID>` to `/data/homebrew/` (or
 - **Build a screen.** [docs/BUILDING_A_DESIGN.md](docs/BUILDING_A_DESIGN.md)
   takes you from an empty file to a design with pictures and tests in an
   afternoon. You iterate on a PC; a full render takes seconds.
+- **Assemble from components.** [docs/COMPONENTS.md](docs/COMPONENTS.md): a
+  list, a grid, a form or a dialog is a member variable, three calls per
+  frame and a style struct.
 - **Style standard widgets.** [docs/THEMES.md](docs/THEMES.md): pick one of
   thirty themes or define your own as data.
 - **Take the kit.** [docs/ADOPTING.md](docs/ADOPTING.md): which directories to
@@ -202,6 +207,7 @@ To see it on a console, copy `dist/<TITLE_ID>` to `/data/homebrew/` (or
 | [CRAFT.md](docs/CRAFT.md) | What makes a console UI feel finished: the ten-foot rules, motion, sound, edges, depth, type, and the checklist |
 | [DESIGNS.md](docs/DESIGNS.md) | Every design: clip, pictures, techniques, source |
 | [THEMES.md](docs/THEMES.md) | The widget set, the theme tokens, all thirty themes, adding your own |
+| [COMPONENTS.md](docs/COMPONENTS.md) | The component library: the five rules, customising, every component with its knobs, slots, events and cues |
 | [KIT.md](docs/KIT.md) | API reference: shapes, text, backdrops, glass, motion, input, feedback |
 | [BUILDING_A_DESIGN.md](docs/BUILDING_A_DESIGN.md) | Step by step, with a complete skeleton, the tour, tests and pitfalls |
 | [SOUND.md](docs/SOUND.md) | The cue vocabulary, the two sound sets, levels, adding recordings |
@@ -238,6 +244,7 @@ Not yet validated on a console for this revision.
 ```
 src/concepts/     the designs, one file each
 src/ui/           fonts, glyphs, motion helpers, themes, widgets
+src/ui/components the component library
 src/gfx/          draw list, GL batch, backdrops, renderer
 src/audio/        mixer, cues, sound bank, music
 src/core/         input, springs and easing, settings, save files

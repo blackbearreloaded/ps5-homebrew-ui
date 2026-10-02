@@ -12,6 +12,8 @@ and commented; read them when you need exact signatures.
 | Fonts and text helpers | `ui/fonts.hpp`, `gfx/font.hpp` |
 | Controller glyphs and hint rows | `ui/glyphs.hpp` |
 | Standard widgets in thirty themes | `ui/theme.hpp`, `ui/widgets.hpp` ([THEMES.md](THEMES.md)) |
+| Whole components: lists, grids, dialogs, forms, indicators | `ui/components.hpp` ([COMPONENTS.md](COMPONENTS.md)) |
+| Sounds and rumble a screen asks for | `ui/feedback.hpp` |
 | Hard-edged bitmap text | `ui/pixel_font.hpp` |
 | Easing curves and springs | `core/tween.hpp` |
 | Focus rings, scrolling, pulses, colour springs | `ui/motion.hpp` |
