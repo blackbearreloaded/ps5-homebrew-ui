@@ -1,0 +1,8 @@
+# ps5-homebrew-ui - LeakSanitizer suppressions for vendored upstream code.
+# Copyright (C) 2026 BlackBearReloaded
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Mines allocates its mine layout on the first click (open_square ->
+# new_mine_layout); upstream does not free it on every path. 121 bytes per
+# game, not caused by the front end.
+leak:new_mine_layout

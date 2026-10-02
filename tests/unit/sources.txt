@@ -1,0 +1,23 @@
+# Platform-neutral application sources compiled into build/tests/unit_tests.
+# One repository-relative path (or glob) per line; '#' starts a comment.
+# Nothing here may need an OpenGL context: the designs only record draw lists.
+host/platform_host.cpp
+src/app/shell.cpp
+src/app/tour.cpp
+src/audio/cues.cpp
+src/audio/mixer.cpp
+src/audio/music.cpp
+src/audio/wav.cpp
+src/concepts/*.cpp
+src/core/frame_stats.cpp
+src/core/input.cpp
+src/core/save_file.cpp
+src/core/settings.cpp
+src/core/version.cpp
+src/demo/catalog.cpp
+src/gfx/draw_list.cpp
+src/gfx/font.cpp
+src/gfx/triangulate.cpp
+src/third_party/stb/vorbis.c
+src/ui/confetti.cpp
+src/ui/glyphs.cpp
