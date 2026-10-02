@@ -14,12 +14,16 @@
 
 extern int sceKernelUsleep(uint32_t microseconds);
 
-/* The log goes where FTP can read it while the app runs. */
-#define HUI_DATA_DIR "/data/ps5-homebrew-ui"
+/* The log goes into the title's own storage (a sandbox has no /data). While
+ * the title runs, FTP reads it at
+ * /mnt/sandbox/<TITLE_ID>_000/download0/hui/dev/app.log. */
+#define HUI_PARENT_DIR "/download0/hui"
+#define HUI_DATA_DIR HUI_PARENT_DIR "/dev"
 #define HUI_LOG_PATH HUI_DATA_DIR "/app.log"
 
 __attribute__((constructor)) static void hui_open_log(void)
 {
+    mkdir(HUI_PARENT_DIR, 0755);
     mkdir(HUI_DATA_DIR, 0755);
     /* Keep the previous launch's log for post-close inspection. */
     rename(HUI_LOG_PATH, HUI_DATA_DIR "/app.prev.log");

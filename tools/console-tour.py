@@ -7,9 +7,10 @@
 usage: PS5_HOST=<address> tools/console-tour.py <results dir> [design id|all]
 
 Steps: check the console's services; refuse if the title is running; upload
-dist/<TITLE_ID> (every file verified by hash); write the tour trigger; record
-the kernel log; launch the title; wait for the app to finish its tour and
-close itself; download the report, the pictures and the app log; check them.
+dist/<TITLE_ID> (every file verified by hash); wait for its registration;
+record the kernel log; launch the title; hand it the tour request through its
+sandbox; wait for its report; download the report, the pictures and the app
+log; ask the app to close itself; check everything.
 
 The script never kills the app, never retries and never deletes anything on
 the console. If something is wrong it stops and says what it saw.
@@ -39,7 +40,6 @@ from ftplib import FTP, all_errors, error_perm
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-DEV_ROOT = "/data/ps5-homebrew-ui"
 BAD_LOG_WORDS = ("fatal", "failed", "rejected", "refused", "assertion")
 BAD_KLOG_WORDS = ("panic", "crash", "coredump", "segv", "sigsegv")
 
@@ -219,9 +219,6 @@ def main():
     (results / "installed.sha256").write_text(
         "".join(f"{digest}  {name}\n" for name, digest in sorted(manifest.items())))
 
-    report_path = f"{DEV_ROOT}/tour/report.txt"
-    before = console.stamp(report_path)
-    console.write(f"{DEV_ROOT}/tour.txt", (only + "\n").encode())
     console.close()
 
     # ShadowMount Plus registers a new title only once its folder has stopped
@@ -260,53 +257,98 @@ def main():
         done.set()
         stop(f"the launch helper failed: {launch.stderr.strip() or launch.stdout.strip()}")
 
-    seen_running = False
-    finished = False
-    while time.time() - started < timeout:
-        time.sleep(5)
+    # The app's own storage is mounted only while the title runs, and a PC
+    # reaches it through the title's sandbox. So: wait for the app to come up,
+    # hand it the tour request there, wait for its report, copy the evidence,
+    # and only then ask it to close.
+    dev = f"/mnt/sandbox/{title}_000/download0/hui/dev"
+    report_path = f"{dev}/tour/report.txt"
+
+    def connect():
         try:
-            console = Console(host, ftp_port)
+            return Console(host, ftp_port)
         except all_errors:
             done.set()
             stop("the console stopped answering during the run; do not retry, look at klog.txt")
-        active = running_titles(console)
-        now = console.stamp(report_path)
-        changed = now is not None and now != before
+
+    ready = False
+    while time.time() - started < 90:
+        time.sleep(3)
+        console = connect()
+        ready = console.names(dev) is not None
         console.close()
-        seen_running = seen_running or title in active
-        if not seen_running and time.time() - started > 60:
+        if ready:
+            break
+    if not ready:
+        done.set()
+        stop("the title did not come up (its storage never appeared); nothing else was done")
+    console = connect()
+    console.write(f"{dev}/tour.txt", (only + "\n").encode())
+    requested = console.stamp(f"{dev}/tour.txt") or console.stamp(f"{dev}/app.log")
+    console.close()
+    say("The app is up; tour requested")
+
+    finished = False
+    while time.time() - started < timeout:
+        time.sleep(5)
+        console = connect()
+        active = running_titles(console)
+        reported = console.stamp(report_path) is not None
+        console.close()
+        if title not in active:
             done.set()
-            stop("the title was never seen running (not registered, or it failed to start)")
-        if changed and title not in active:
+            stop("the title closed before its tour reported; look at klog.txt")
+        if reported:
             finished = True
             break
-    elapsed = time.time() - started
+    if not finished:
+        done.set()
+        stop(f"no finished tour after {timeout} s; the app was left as it is")
+    say(f"Tour finished after {time.time() - started:.0f} s; collecting")
+
+    console = connect()
+    data = console.read(report_path)
+    if data is None:
+        done.set()
+        stop("report.txt could not be read back; the app was left running")
+    (results / "report.txt").write_bytes(data)
+    log = console.read(f"{dev}/app.log") or b""
+    (results / "app.log").write_bytes(log)
+    pictures = []
+    try:
+        console.ftp.cwd(f"{dev}/tour")
+        # Pictures of earlier tours stay in the folder; take this run's only.
+        since = requested[0] if requested and requested[0] else ""
+        pictures = sorted(name for name, facts in console.ftp.mlsd()
+                          if name.endswith(".bmp") and facts.get("modify", "") >= since)
+        console.ftp.cwd("/")
+    except all_errors:
+        pass
+    for name in pictures:
+        data = console.read(f"{dev}/tour/{name}")
+        if data:
+            (results / "tour" / name).write_bytes(data)
+    lifecycle = console.read("/data/shadowmount/debug.log") or b""
+    (results / "shadowmount.txt").write_text("".join(
+        line + "\n" for line in lifecycle.decode("utf-8", "replace").splitlines() if title in line))
+    say(f"Downloaded the report, the log and {len(pictures)} pictures to {results}")
+
+    # Everything is on the PC: the app may close itself now.
+    console.write(f"{dev}/quit.txt", b"quit\n")
+    console.close()
+    closed = False
+    for _ in range(24):
+        time.sleep(5)
+        console = connect()
+        closed = title not in running_titles(console)
+        console.close()
+        if closed:
+            break
     time.sleep(3)
     done.set()
     if klog is not None:
         klog.join(timeout=5)
-    if not finished:
-        stop(f"no finished tour after {timeout} s; the app was left as it is")
-    say(f"Tour finished and the app closed itself after {elapsed:.0f} s")
-
-    console = Console(host, ftp_port)
-    for name in ("report.txt",):
-        data = console.read(f"{DEV_ROOT}/tour/{name}")
-        if data is None:
-            stop(f"{name} could not be read back")
-        (results / name).write_bytes(data)
-    log = console.read(f"{DEV_ROOT}/app.log") or b""
-    (results / "app.log").write_bytes(log)
-    lifecycle = console.read("/data/shadowmount/debug.log") or b""
-    (results / "shadowmount.txt").write_text("".join(
-        line + "\n" for line in lifecycle.decode("utf-8", "replace").splitlines() if title in line))
-    pictures = [n for n in (console.names(f"{DEV_ROOT}/tour") or []) if n.endswith(".bmp")]
-    for name in sorted(pictures):
-        data = console.read(f"{DEV_ROOT}/tour/{name}")
-        if data:
-            (results / "tour" / name).write_bytes(data)
-    console.close()
-    say(f"Downloaded the report, the log and {len(pictures)} pictures to {results}")
+    say("The app closed itself" if closed else "The app is still running: close it from the console")
 
     try:
         from PIL import Image
@@ -321,9 +363,11 @@ def main():
     for line in text.splitlines():
         if any(word in line.lower() for word in BAD_LOG_WORDS) and "rejected=0" not in line:
             problems.append(f"app.log: {line.strip()}")
-    for needed in ("first-swap ok", "tour finished", "quit requested"):
+    for needed in ("first-swap ok", "tour finished"):
         if needed not in text:
             problems.append(f"app.log: no '{needed}' line")
+    if not closed:
+        problems.append("the app did not close after the quit request")
     klog_file = results / "klog.txt"
     if klog_file.is_file():
         for line in klog_file.read_text(errors="replace").splitlines():

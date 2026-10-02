@@ -7,15 +7,25 @@ exactly that, so a validation takes one launch and no controller.
 
 ## The tour run
 
-When the app starts and finds `/data/ps5-homebrew-ui/tour.txt`, it:
+The app keeps its development files in its own storage, `/download0/hui/dev`.
+A title's sandbox has no `/data`, and that storage is mounted only while the
+title runs; a PC reaches it over FTP as
+`/mnt/sandbox/<TITLE_ID>_000/download0/hui/dev`. So the request is handed to
+the *running* app. Once a second the app looks for `dev/tour.txt`, and when it
+finds it, it:
 
 1. deletes the file (one run per request);
 2. shows every design in turn and replays the inputs its `tour()` describes;
 3. saves a quarter-size picture of each tour state to
-   `/data/ps5-homebrew-ui/tour/NN-<id>[-<state>].bmp`;
+   `dev/tour/NN-<id>[-<state>].bmp`;
 4. measures every presented frame per design;
-5. writes `/data/ps5-homebrew-ui/tour/report.txt` and logs the same lines;
-6. asks the system to close it (`sceSystemServiceLoadExec("exit", NULL)`).
+5. writes `dev/tour/report.txt` and logs the same lines;
+6. keeps running until `dev/quit.txt` appears (or ten minutes pass), because
+   closing unmounts the storage and the evidence with it;
+7. asks the system to close it (`sceSystemServiceLoadExec("exit", NULL)`).
+
+`dev/quit.txt` works at any time, tour or not: it is the way to close the app
+from a PC without killing it. `dev/app.log` is the app's log.
 
 `tour.txt` may be empty or contain `all` (every design), or one design id
 (`aurora`) to run only that one.
