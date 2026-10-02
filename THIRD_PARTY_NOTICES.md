@@ -152,9 +152,13 @@ carry matching SPDX identifiers.
 
 ## Presentation assets
 
-`sce_sys/icon0.png` is drawn by the project's own renderer
-(`HUI_ICON=sce_sys/icon0.png tools/host-snapshots.sh`). The cover art inside
-the app is rendered at start-up from invented titles; no real product's name,
-artwork or trademark is used.
+`sce_sys/icon0.png`, `sce_sys/pic0.dds` (shown while the title is selected) and
+`sce_sys/pic1.dds` (shown while it starts) are the project's own artwork,
+supplied by its owner; `background-source.png` and
+`launch-background-source.png` are the pictures the two backgrounds were made
+from. `HUI_ICON=<file> tools/host-snapshots.sh` still renders a plain icon
+with the project's own renderer, for forks that want one of their own. The
+cover art inside the app is rendered at start-up from invented titles; no real
+product's name, artwork or trademark is used.
 
 No proprietary runtime module, encryption key, or game file is included.
