@@ -13,7 +13,7 @@ Press **L1** / **R1** to switch between them.
 <!-- BEGIN:counts -->
 **21 designs** &middot; **30 themes** &middot; **99 reusable components**
 <!-- END:counts -->
-&middot; **30 reusable components** &middot; **67 sound effects** in two sets &middot; **one OpenGL 4.6 shader** behind all of it
+&middot; **67 sound effects** in two sets &middot; **one OpenGL 4.6 shader** behind all of it
 
 [Designs](docs/DESIGNS.md) &middot;
 [Themes](docs/THEMES.md) &middot;
