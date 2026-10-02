@@ -81,6 +81,8 @@ class Painter
     void well(const gfx::Rect &r, float radius, gfx::Color fill);
     // The theme's focus indicator around r, at an opacity.
     void focus_ring(const gfx::Rect &r, float radius, float amount);
+    // Light spreading outward from a shape's edge; its inside stays clear.
+    void halo(const gfx::Rect &r, float radius, float spread, gfx::Color color);
     // A plain filled or stroked shape with the theme's corner type.
     void fill(const gfx::Rect &r, float radius, gfx::Color color);
     void stroke(const gfx::Rect &r, float radius, float width, gfx::Color color);

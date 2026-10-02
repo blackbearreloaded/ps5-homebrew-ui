@@ -138,15 +138,16 @@ class Components final : public app::Concept
         frame.backdrop.time = clock_;
         if (theme.style == ui::SurfaceStyle::glass)
         {
-            // Glass needs something behind it worth blurring.
+            // Glass needs something behind it worth blurring: slow pools of
+            // light, soft enough not to compete with text drawn on the page.
             for (int i = 0; i < 4; ++i)
             {
                 const float phase = clock_ * 0.12f + static_cast<float>(i) * 1.7f;
-                frame.scene.circle(480.0f + static_cast<float>(i) * 380.0f +
-                                       std::sin(phase) * 120.0f,
-                                   560.0f + std::cos(phase * 1.3f) * 220.0f, 170.0f,
+                const float cx = 480.0f + static_cast<float>(i) * 380.0f + std::sin(phase) * 120.0f;
+                const float cy = 560.0f + std::cos(phase * 1.3f) * 220.0f;
+                frame.scene.shadow({cx - 150.0f, cy - 150.0f, 300.0f, 300.0f}, 150.0f, 170.0f,
                                    gfx::mix(theme.primary, theme.accent, static_cast<float>(i % 2))
-                                       .with_alpha(0.3f));
+                                       .with_alpha(0.34f));
             }
             frame.glass = true;
         }
@@ -156,8 +157,10 @@ class Components final : public app::Concept
                                  theme.page.with_alpha(1.0f - shown));
 
         gfx::DrawList &list = frame.overlay;
-        ui::Canvas canvas{list, context_.fonts, frame.glass_texture, clock_};
-        ui::Painter paint(list, context_.fonts, theme, frame.glass_texture);
+        // The blurred copy exists only in frames that asked for it.
+        const std::uint32_t glass = frame.glass ? frame.glass_texture : 0;
+        ui::Canvas canvas{list, context_.fonts, glass, clock_};
+        ui::Painter paint(list, context_.fonts, theme, glass);
         list.push_opacity(tween::smoothstep(shown) * tween::cubic_out(age_ / 0.3f));
         draw_header(paint, theme);
 
@@ -175,6 +178,10 @@ class Components final : public app::Concept
             draw_page(canvas, page_, 1.0f, 0.0f);
         }
 
+        // Dialogs, sheets and toasts cover the header and the page; the hint
+        // row stays readable above their scrim, since it describes them.
+        if (!page_switch_.running)
+            pages_[static_cast<std::size_t>(page_)]->draw_modal(canvas);
         draw_hints(list, paint, theme);
         list.pop_opacity();
     }

@@ -47,6 +47,12 @@ class Page
     // L2/R2 (page) and Options (theme).
     virtual void update(const InputFrame &input, float dt, ui::Feedback &feedback) = 0;
     virtual void draw(ui::Canvas &canvas) const = 0;
+    // Drawn after the page and the gallery's header, under the hint row:
+    // scrims, dialogs, sheets and toasts go here.
+    virtual void draw_modal(ui::Canvas &canvas) const
+    {
+        (void)canvas;
+    }
     virtual std::span<const ui::Hint> hints() const = 0;
     // Inputs that show the page off; the gallery appends "next page" itself.
     // Leave the page as it was found (nothing open, first variant).

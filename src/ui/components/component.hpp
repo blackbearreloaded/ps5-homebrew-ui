@@ -166,6 +166,10 @@ class Highlight
     // The text colour for an item `focus` (0..1) under this highlight.
     static gfx::Color text_color(const ComponentStyle &style, const HighlightStyle &look,
                                  float focus);
+    // The same for text whose resting colour is not theme.text (text drawn
+    // straight on the page, for instance).
+    static gfx::Color text_color(const ComponentStyle &style, const HighlightStyle &look,
+                                 float focus, gfx::Color resting);
 
   private:
     tween::Bounce x_, y_, w_, h_;

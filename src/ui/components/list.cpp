@@ -176,8 +176,10 @@ void ListView::draw(Canvas &canvas) const
     // The clip is a little taller than the rows so a ring or a glow around
     // the first and last row is not cut.
     const float bleed = style.highlight.kind == HighlightKind::glow ? 30.0f : 10.0f;
-    list.push_clip({in.x - bleed, in.y - (overflow ? 0.0f : bleed), in.w + 2.0f * bleed,
-                    in.h + (overflow ? 0.0f : 2.0f * bleed)});
+    // A list that scrolls keeps a smaller margin: enough for a ring, and the
+    // rows passing through it are already faded.
+    const float above = overflow ? std::min(bleed, 9.0f) : bleed;
+    list.push_clip({in.x - bleed, in.y - above, in.w + 2.0f * bleed, in.h + 2.0f * above});
 
     // How visible a row is: 1 inside the view, fading as it is cut.
     const auto visibility = [&](const Rect &row)
@@ -241,7 +243,8 @@ void ListView::draw(Canvas &canvas) const
         if (item.header)
         {
             paint.label(upper(item.title), row.x + style.padding, row.y + row.h - 14.0f,
-                        style.header_size, theme.text_muted);
+                        style.header_size,
+                        style.panel || style.cards ? theme.text_muted : paint.page_text_muted());
         }
         else
         {
@@ -253,8 +256,13 @@ void ListView::draw(Canvas &canvas) const
             }
             else
             {
-                Color ink = Highlight::text_color(style, style.highlight, focus);
-                Color quiet = gfx::mix(theme.text_muted, ink, focus * 0.6f);
+                // Rows without a surface of their own sit on the page, and a
+                // theme may use other text colours there.
+                const bool on_page = !style.panel && !style.cards;
+                Color ink = Highlight::text_color(style, style.highlight, focus,
+                                                  on_page ? paint.page_text() : theme.text);
+                Color quiet = gfx::mix(on_page ? paint.page_text_muted() : theme.text_muted, ink,
+                                       focus * 0.6f);
                 if (item.disabled)
                 {
                     ink = ink.with_alpha(0.42f);

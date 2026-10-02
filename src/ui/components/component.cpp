@@ -122,11 +122,17 @@ float Highlight::coverage(const Rect &item) const
 
 Color Highlight::text_color(const ComponentStyle &style, const HighlightStyle &look, float focus)
 {
+    return text_color(style, look, focus, style.theme.text);
+}
+
+Color Highlight::text_color(const ComponentStyle &style, const HighlightStyle &look, float focus,
+                            Color resting)
+{
     if (look.kind != HighlightKind::fill)
-        return style.theme.text;
+        return resting;
     const Color plate = look.color.a > 0.0f ? look.color : style.theme.primary;
     const Color on = look.color.a > 0.0f ? Painter::on(plate) : style.theme.on_primary;
-    return gfx::mix(style.theme.text, on, tween::clamp01(focus));
+    return gfx::mix(resting, on, tween::clamp01(focus));
 }
 
 void Highlight::draw(Canvas &canvas, const ComponentStyle &style, const HighlightStyle &look,

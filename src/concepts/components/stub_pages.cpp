@@ -58,14 +58,6 @@ std::unique_ptr<Page> make_navigation_page(app::Context &)
 {
     return std::make_unique<StubPage>("Navigation");
 }
-std::unique_ptr<Page> make_overlays_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Overlays");
-}
-std::unique_ptr<Page> make_forms_page(app::Context &)
-{
-    return std::make_unique<StubPage>("Forms");
-}
 std::unique_ptr<Page> make_indicators_page(app::Context &)
 {
     return std::make_unique<StubPage>("Indicators");

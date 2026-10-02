@@ -422,6 +422,23 @@ void Painter::well(const gfx::Rect &r, float radius, gfx::Color fill_color)
     }
 }
 
+// Light that spreads outward from a shape's edge and leaves its inside
+// alone (DrawList::glow fills the inside too, which washes out a control
+// when the ring is drawn after it). Built from strokes of falling opacity.
+void Painter::halo(const gfx::Rect &r, float radius, float spread, gfx::Color color)
+{
+    constexpr int kSteps = 5;
+    const float width = spread / static_cast<float>(kSteps);
+    for (int i = 0; i < kSteps; ++i)
+    {
+        const float out = width * static_cast<float>(i + 1);
+        const float fall = 1.0f - static_cast<float>(i) / static_cast<float>(kSteps);
+        list_.bordered_rect(r.inset(-out), radius > 0.0f ? radius + out : 0.0f,
+                            gfx::Color{0.0f, 0.0f, 0.0f, 0.0f}, width + 0.75f,
+                            color.with_alpha(fall * fall));
+    }
+}
+
 void Painter::focus_ring(const gfx::Rect &r, float radius, float amount)
 {
     if (amount <= 0.01f)
@@ -461,7 +478,7 @@ void Painter::focus_ring(const gfx::Rect &r, float radius, float amount)
         break;
     }
     case SurfaceStyle::glow:
-        list_.glow(r, radius, 22.0f, theme_.focus.with_alpha(0.55f));
+        halo(r.inset(-5.0f), radius + 4.0f, 20.0f, theme_.focus.with_alpha(0.5f));
         stroke(r.inset(-5.0f), radius + 4.0f, 2.0f, theme_.focus);
         break;
     case SurfaceStyle::soft:
@@ -470,7 +487,7 @@ void Painter::focus_ring(const gfx::Rect &r, float radius, float amount)
         // Opaque rings get a little light around them; translucent ones
         // (the web's "focus halo") already are that light.
         if (theme_.focus.a > 0.9f)
-            list_.glow(r, radius, 14.0f, theme_.focus.with_alpha(0.35f));
+            halo(r.inset(-reach), ring_radius, 12.0f, theme_.focus.with_alpha(0.32f));
         stroke(r.inset(-reach), ring_radius, theme_.focus_width, theme_.focus);
         break;
     default:
