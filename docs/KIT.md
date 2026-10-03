@@ -238,8 +238,9 @@ Stated plainly, so you do not look for it:
   well as around it: draw them first, then the shape on top.
 - **No rounded clipping.** Clips are rectangles; rounded images use the
   `radius` argument instead.
-- **No text shaping.** Left-to-right text in the baked glyph set only. For
-  other scripts see how ProsperoEden shapes text with HarfBuzz and system
-  fonts.
+- **No text shaping.** Left-to-right text in the baked glyph set only: a
+  character outside it draws as nothing. For other scripts see how
+  ProsperoEden shapes text with HarfBuzz and system fonts, and what
+  ProsperoRadio needed to adopt it ([ADOPTING.md](ADOPTING.md)).
 - **No image decoder.** Upload RGBA pixels; decode files with a library of
   your choice (stb_image is a single header).

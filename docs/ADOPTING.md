@@ -109,6 +109,43 @@ the shell, the tour, the tests and CI.
   (`sceSystemServiceLoadExec("exit", NULL)`), never with `exit()`.
 - Give the app a scripted, self-ending run mode for hardware tests.
 
+## What the first adoption taught
+
+ProsperoRadio (57,793 stations from a public catalogue) was the first app
+rebuilt on the kit. What it ran into, so the next one does not:
+
+- **Text from the outside world is not ASCII.** The baked fonts cover
+  printable ASCII and a few signs; station names arrive in Arabic, Cyrillic,
+  Chinese and accented Latin, and drew as blanks. The app replaced
+  `gfx/font.*` with ProsperoEden's engine (the console's fonts from
+  `/preinst/common/font`, HarfBuzz shaping, right-to-left ordering) and added
+  an upload of the atlas rows that changed each frame. Budget for this before
+  showing names you did not write. The first glyph of a new script costs one
+  frame of about 110 ms (the font file is read then): warm the scripts you
+  expect behind the loading screen.
+- **A big list needs a grid over a count.** A `CardItem` per station is tens
+  of megabytes and a long `set_items()`; use `GridView::set_count()` and draw
+  cells from pages of your own data
+  ([collections.md](components/collections.md#a-grid-over-a-data-source)).
+- **Jumps in a long list**: `JumpBar` beside the grid, `set_focus_at_top()`
+  for its target, `hui::HeldStep` so held L2 / R2 keep paging. Work out where
+  each letter starts in the list's own order with one query, not per jump.
+  SQLite's `NOCASE` folds to lower case, so `[`, `_` and `@` sort before `a`:
+  bucket by the folded character, or the marks point one section off.
+- **Keep the splash until the first frame.** Renderer and font start-up took
+  about half a second of black; linking with
+  `--wrap=sceSystemServiceHideSplashScreen` and releasing it after the first
+  present removes it.
+- **Small writes to `/data` are slow** (about 5 ms a page with SQLite). Build
+  a database in memory and write it once; never write on the frame. Save
+  settings a moment after the last change, not on every step of a slider.
+- **Toasts are enough for news the app has for the player** (a finished
+  refresh, a newer release): `ToastStack::push` with its own duration, pushed
+  once the loading screen is gone.
+- **ShadowMountPlus stages `param.json` and the home-screen art once.** After
+  changing them, replace the staged copies too, or the console keeps showing
+  and checking the old ones.
+
 ## Licence
 
 The code is GPL-3.0-or-later (see [LICENSE](../LICENSE)). The fonts and other
