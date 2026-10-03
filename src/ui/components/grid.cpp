@@ -17,11 +17,36 @@ using gfx::Rect;
 void GridView::set_items(std::vector<CardItem> items)
 {
     items_ = std::move(items);
+    virtual_count_ = -1;
     checks_.assign(items_.size(), 0.0f);
     for (std::size_t i = 0; i < items_.size(); ++i)
         checks_[i] = items_[i].selected ? 1.0f : 0.0f;
-    focus_ = std::clamp(focus_, 0, std::max(static_cast<int>(items_.size()) - 1, 0));
+    focus_ = std::clamp(focus_, 0, std::max(count() - 1, 0));
     retarget(true);
+}
+
+void GridView::set_count(int count)
+{
+    count = std::max(count, 0);
+    if (virtual_count_ == count)
+        return;
+    const bool first = virtual_count_ < 0;
+    items_.clear();
+    checks_.clear();
+    virtual_count_ = count;
+    focus_ = std::clamp(focus_, 0, std::max(count - 1, 0));
+    retarget(first);
+}
+
+const CardItem &GridView::item_at(int index) const
+{
+    return virtual_count_ >= 0 ? blank_ : items_[static_cast<std::size_t>(index)];
+}
+
+Color GridView::accent_of(int index) const
+{
+    Color lit = accent ? accent(index) : item_at(index).accent;
+    return lit.a > 0.0f ? lit : style.theme.focus;
 }
 
 void GridView::set_bounds(const Rect &bounds)
@@ -32,11 +57,21 @@ void GridView::set_bounds(const Rect &bounds)
 
 void GridView::set_focus(int index, bool snap)
 {
-    if (items_.empty())
+    if (count() == 0)
         return;
-    focus_ = std::clamp(index, 0, static_cast<int>(items_.size()) - 1);
+    focus_ = std::clamp(index, 0, count() - 1);
     column_ = focus_ % columns();
     retarget(snap);
+}
+
+void GridView::set_focus_at_top(int index)
+{
+    if (count() == 0)
+        return;
+    focus_ = std::clamp(index, 0, count() - 1);
+    column_ = focus_ % columns();
+    top_row_ = focus_ / columns(); // retarget keeps it in the range the list allows
+    retarget(true);
 }
 
 void GridView::enter()
@@ -51,7 +86,7 @@ int GridView::columns() const
 
 int GridView::rows() const
 {
-    return (static_cast<int>(items_.size()) + columns() - 1) / columns();
+    return (count() + columns() - 1) / columns();
 }
 
 GridView::Layout GridView::layout() const
@@ -110,7 +145,7 @@ Rect GridView::cell_rect(int index) const
 // the moves that go round the grid.
 int GridView::step(const Layout &at, Direction direction, bool round) const
 {
-    const int count = static_cast<int>(items_.size());
+    const int count = this->count();
     const int across = at.columns;
     const int row = focus_ / across;
     const int column = focus_ % across;
@@ -152,10 +187,10 @@ int GridView::step(const Layout &at, Direction direction, bool round) const
 
 void GridView::retarget(bool snap)
 {
-    if (items_.empty())
+    if (count() == 0)
         return;
     const Layout at = layout();
-    focus_ = std::clamp(focus_, 0, static_cast<int>(items_.size()) - 1);
+    focus_ = std::clamp(focus_, 0, count() - 1);
     const Rect target = content_rect(at, focus_);
     // The grid scrolls by whole rows, the least that brings the focused row
     // into view: no row is ever cut at the top, and whatever does not fit at
@@ -165,20 +200,20 @@ void GridView::retarget(bool snap)
     top_row_ = std::clamp(top_row_, 0, std::max(at.rows - at.full_rows, 0));
     scroll_.target = static_cast<float>(top_row_) * at.pitch;
     highlight_.target(target);
-    const CardItem &item = items_[static_cast<std::size_t>(focus_)];
-    glow_.target(item.accent.a > 0.0f ? item.accent : style.theme.focus);
+    const Color lit = accent_of(focus_);
+    glow_.target(lit);
     if (snap)
     {
         scroll_.snap(scroll_.target);
         highlight_.snap(target);
-        glow_.snap(item.accent.a > 0.0f ? item.accent : style.theme.focus);
+        glow_.snap(lit);
     }
 }
 
 Event GridView::handle(const InputFrame &input, Feedback &feedback)
 {
     exit_ = Direction::none;
-    if (items_.empty())
+    if (count() == 0)
         return Event::none;
     const Layout at = layout();
     if (input.nav != Direction::none)
@@ -211,15 +246,15 @@ Event GridView::handle(const InputFrame &input, Feedback &feedback)
     const float x = cell_rect(focus_).cx();
     if (input.is_pressed(Action::confirm))
     {
-        CardItem &item = items_[static_cast<std::size_t>(focus_)];
-        if (item.disabled)
+        if (virtual_count_ < 0 && items_[static_cast<std::size_t>(focus_)].disabled)
         {
             refused_ = Direction::none;
             return refuse(feedback, style, input, refusal_, x);
         }
         press_.trigger();
-        if (style.select_on_confirm)
+        if (virtual_count_ < 0 && style.select_on_confirm)
         {
+            CardItem &item = items_[static_cast<std::size_t>(focus_)];
             item.selected = !item.selected;
             play_cue(feedback, style, style.sounds.change, x, item.selected ? 1.06f : 0.94f);
             return Event::changed;
@@ -262,7 +297,7 @@ void GridView::update(float dt)
 
 void GridView::draw(Canvas &canvas) const
 {
-    if (items_.empty())
+    if (count() == 0)
         return;
     const Theme &theme = style.theme;
     gfx::DrawList &list = canvas.list;
@@ -295,8 +330,10 @@ void GridView::draw(Canvas &canvas) const
     {
         if (style.entrance_step <= 0.0f || style.reduced_motion)
             return tween::cubic_out(age_ / 0.2f);
-        return tween::stagger(age_, index / at.columns + index % at.columns, style.entrance_step,
-                              0.34f);
+        // Counted from the first row in view: a list entered far down (a
+        // jump of thousands of rows) arrives as quickly as one at its top.
+        const int row = std::max(index / at.columns - top_row_, 0);
+        return tween::stagger(age_, row + index % at.columns, style.entrance_step, 0.34f);
     };
 
     // A refusal nudges the focused cell and its ring along the refused axis.
@@ -307,7 +344,7 @@ void GridView::draw(Canvas &canvas) const
 
     const auto draw_cell = [&](int index, float focus)
     {
-        const CardItem &item = items_[static_cast<std::size_t>(index)];
+        const CardItem &item = item_at(index);
         const Rect r = on_screen(content_rect(at, index));
         const float arrived = entrance(index);
         const float alpha = visibility(r) * arrived;
@@ -317,7 +354,7 @@ void GridView::draw(Canvas &canvas) const
         CardState state;
         state.focus = focus;
         state.press = held ? press_.value : 0.0f;
-        state.selected = checks_[static_cast<std::size_t>(index)];
+        state.selected = virtual_count_ < 0 ? checks_[static_cast<std::size_t>(index)] : 0.0f;
         state.marks = false; // one ring glides for the whole grid
         list.push_opacity(alpha);
         list.push_transform(1.0f, 0.0f, 0.0f, held ? nudge_x : 0.0f,
@@ -348,7 +385,7 @@ void GridView::draw(Canvas &canvas) const
                                      0, std::max(at.rows - 1, 0));
     const int last_row =
         std::clamp(static_cast<int>(std::floor((scroll + bounds_.h) / at.pitch)), 0, at.rows - 1);
-    const int count = static_cast<int>(items_.size());
+    const int count = this->count();
     for (int index = first_row * at.columns; index < std::min((last_row + 1) * at.columns, count);
          ++index)
     {

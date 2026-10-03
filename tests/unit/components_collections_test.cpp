@@ -8,6 +8,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -213,6 +214,114 @@ TEST_F(ComponentsCollections, GridConfirmActivatesSelectsOrRefuses)
     EXPECT_FALSE(grid_.items()[1].selected);
     EXPECT_EQ(send(grid_, press(Action::back)), Event::cancelled);
     EXPECT_TRUE(asked(Cue::back));
+}
+
+TEST_F(ComponentsCollections, GridOverACountKeepsNothingPerCell)
+{
+    GridView grid;
+    grid.style.columns = 4;
+    int drawn = 0;
+    int highest = -1;
+    grid.content = [&](hui::ui::Canvas &, const Rect &, const CardItem &item, int index, float)
+    {
+        ++drawn;
+        highest = std::max(highest, index);
+        EXPECT_TRUE(item.title.empty());
+    };
+    grid.set_count(50000);
+    grid.set_bounds({100.0f, 100.0f, 900.0f, 400.0f});
+    EXPECT_EQ(grid.count(), 50000);
+    EXPECT_EQ(grid.rows(), 12500);
+    EXPECT_TRUE(grid.items().empty());
+
+    EXPECT_EQ(send(grid, nav(Direction::right)), Event::moved);
+    EXPECT_EQ(grid.focus(), 1);
+    EXPECT_EQ(send(grid, press(Action::confirm)), Event::activated);
+    // Selecting belongs to items: over a count, confirm only activates.
+    grid.style.select_on_confirm = true;
+    EXPECT_EQ(send(grid, press(Action::confirm)), Event::activated);
+
+    hui::ui::Canvas view = canvas();
+    grid.draw(view);
+    EXPECT_GT(drawn, 0);
+    EXPECT_LT(drawn, 40) << "only the rows in view are drawn";
+
+    // The count changes under the grid (a search narrows it): the focus stays
+    // inside, and the far end is as reachable as the start.
+    grid.set_focus(49999);
+    send(grid, idle());
+    drawn = 0;
+    highest = -1;
+    grid.draw(view);
+    EXPECT_EQ(highest, 49999);
+    grid.set_count(10);
+    EXPECT_EQ(grid.focus(), 9);
+
+    // The light around the focused cell comes from the accent callback.
+    int asked_for = -1;
+    grid.accent = [&](int index)
+    {
+        asked_for = index;
+        return hui::gfx::Color::rgb(0xff8800);
+    };
+    grid.set_focus(3);
+    EXPECT_EQ(asked_for, 3);
+
+    // set_items() takes the grid back.
+    grid.set_items(make_items(5));
+    EXPECT_EQ(grid.count(), 5);
+    EXPECT_EQ(grid.items().size(), 5U);
+}
+
+TEST_F(ComponentsCollections, GridJumpsWithTheFocusedRowAtTheTop)
+{
+    GridView grid;
+    grid.style.columns = 4;
+    grid.content = [](hui::ui::Canvas &, const Rect &, const CardItem &, int, float) {};
+    grid.set_count(4000);
+    grid.set_bounds({100.0f, 100.0f, 900.0f, 900.0f}); // several rows in view
+    const float top = grid.cell_rect(0).y;
+
+    // set_focus() scrolls the least that shows the row: it ends at the bottom.
+    grid.set_focus(2001);
+    EXPECT_GT(grid.cell_rect(2001).y, top + 1.0f);
+    // set_focus_at_top() puts that row first, with no glide.
+    grid.set_focus_at_top(2001);
+    EXPECT_EQ(grid.focus(), 2001);
+    EXPECT_NEAR(grid.cell_rect(2001).y, top, 0.5f);
+    // Near the end the list allows less: the last row stays inside the view.
+    grid.set_focus_at_top(3999);
+    const Rect last = grid.cell_rect(3999);
+    EXPECT_GE(last.y, top - 0.5f);
+    EXPECT_LE(last.y + last.h, grid.bounds().y + grid.bounds().h + 0.5f);
+}
+
+TEST_F(ComponentsCollections, GridEntranceStartsAtTheRowsInView)
+{
+    GridView grid;
+    grid.style.columns = 4;
+    grid.content = [](hui::ui::Canvas &view, const Rect &cell, const CardItem &, int, float)
+    { view.list.ring(cell.cx(), cell.cy(), 20.0f, 4.0f, hui::gfx::Color::rgb(0xffffff)); };
+    grid.set_count(40000);
+    grid.set_bounds({100.0f, 100.0f, 900.0f, 400.0f});
+    // The light the cells in view carry a moment after the entrance began.
+    const auto arrived = [&](int index)
+    {
+        grid.set_focus_at_top(index);
+        grid.enter();
+        for (int i = 0; i < 12; ++i)
+            grid.update(kFrame);
+        hui::ui::Canvas view = canvas();
+        grid.draw(view);
+        float total = 0.0f;
+        for (const hui::gfx::Instance &instance : list_.instances())
+            total += instance.color_top[3];
+        return total;
+    };
+    // A jump of thousands of rows arrives as quickly as the top of the list.
+    const float at_top = arrived(0);
+    EXPECT_GT(at_top, 0.0f);
+    EXPECT_NEAR(arrived(30000), at_top, at_top * 0.01f);
 }
 
 TEST_F(ComponentsCollections, CarouselMovesAndRefusesAtItsEnds)

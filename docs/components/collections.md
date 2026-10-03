@@ -162,6 +162,40 @@ grid.draw(canvas);
 The scroll thumb is drawn 8 px outside the right edge of the bounds, like
 `ListView`'s: leave it that room.
 
+### A grid over a data source
+
+`set_items()` keeps a `CardItem` per cell, which is right for a library of a
+few hundred titles and wrong for a catalogue of tens of thousands read from a
+database. `set_count()` gives the grid only the number of cells; it keeps
+nothing per cell and the `content` slot draws each one from your own data
+(page it in as the focus moves; the slot is called for the rows in view only).
+
+```cpp
+grid.content = [&](ui::Canvas &canvas, const gfx::Rect &cell, const ui::CardItem &,
+                   int index, float focus)
+{
+    draw_station(canvas, cell, catalogue.at(index), focus);   // your data, your card
+};
+grid.accent = [&](int index) { return catalogue.color_of(index); };
+grid.set_count(catalogue.size());      // again whenever the size changes
+
+grid.set_focus_at_top(catalogue.first_under('M'));   // a letter rail's jump
+```
+
+- `set_count()` with a new count keeps the focus and the scroll where they
+  are (clamped), so a catalogue that grows while it downloads does not jump.
+  The same count again does nothing: call it every frame if that is easier.
+- The item the slot receives is empty. `select_on_confirm` and `disabled`
+  belong to items and do nothing here: confirm reports `activated`.
+- `accent` colours the light around the focused cell; without it, or when it
+  returns a transparent colour, the theme's focus colour is used.
+- `set_focus_at_top(index)` moves the focus with its row first in the view
+  (as far as the end of the list allows), without a glide: the start of a
+  section, the target of a `JumpBar`. `set_focus()` scrolls the least that
+  shows the row, which leaves a jump target on the last row in view.
+- For L2 / R2 that keep turning pages while held, see `hui::HeldStep`
+  ([`core/held_step.hpp`](../../src/core/held_step.hpp)).
+
 ### Style (`ui::GridStyle`, on top of `ComponentStyle`)
 
 | Knob | Default | Effect |
@@ -174,7 +208,7 @@ The scroll thumb is drawn 8 px outside the right edge of the bounds, like
 | `padding` | -1 | Room kept inside the bounds so the focused cell can grow and wear its ring unclipped; negative works it out from the card and the theme |
 | `scroll_thumb` | true | A thin position marker, only when the grid overflows |
 | `edge_fade` | 0.8 | A row cut by the clip fades over this share of its height; 0 turns it off |
-| `entrance_step` | 0.035 | Seconds between cells arriving after `enter()`, as a diagonal wave; 0 for none |
+| `entrance_step` | 0.035 | Seconds between cells arriving after `enter()`, as a diagonal wave from the first row in view; 0 for none |
 | `wrap` | `none` | `GridWrap::none`, `rows` (a row and a column each wrap onto themselves) or `flow` (reading order: the end of a row continues on the next one, the last cell on the first). Going round never happens on a held direction |
 | `exits` | none | `EdgeExits{up, down, left, right}`: edges that hand the focus back instead of refusing. An exit beats the wrap on its edge |
 | `select_on_confirm` | false | Confirm toggles the item's `selected` and reports `changed` |
@@ -202,7 +236,7 @@ index and its focus amount (0..1).
 | Confirm on a disabled item | `refused` | as above |
 | Back | `cancelled` | `sounds.cancel` |
 
-Also: `set_focus(index, snap)`, `set_active(false)` to fade the ring and let
+Also: `set_focus(index, snap)`, `set_focus_at_top(index)`, `count()`, `set_active(false)` to fade the ring and let
 the focused cell settle while another component has the focus, `enter()` to
 replay the entrance, `cell_rect(index)`, `columns()`, `rows()`. Call
 `set_bounds` again after changing sizes in `style` to settle without a glide;

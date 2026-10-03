@@ -66,8 +66,20 @@ class GridView
     GridStyle style;
     Slot content; // replaces the card: draw a cell yourself (the focus ring stays)
     CardArt art;  // replaces only the artwork of the default card
+    // The colour of the light around the focused cell of a grid whose cells
+    // are not CardItems (see set_count); alpha 0 keeps the theme's focus.
+    using Accent = std::function<gfx::Color(int index)>;
+    Accent accent;
 
     void set_items(std::vector<CardItem> items);
+    // A grid over a data source: `count` cells and nothing kept per cell, so
+    // the count may be in the tens of thousands. Every cell is drawn by the
+    // `content` slot, which receives an empty item. set_items() ends it.
+    void set_count(int count);
+    int count() const
+    {
+        return virtual_count_ >= 0 ? virtual_count_ : static_cast<int>(items_.size());
+    }
     const std::vector<CardItem> &items() const
     {
         return items_;
@@ -89,6 +101,9 @@ class GridView
     }
     // Moves the focus without sound; snap skips the glide (use it on open).
     void set_focus(int index, bool snap = true);
+    // The same, with the focused row scrolled to the top of the view (as far
+    // as the end of the list allows): a jump to the start of a section.
+    void set_focus_at_top(int index);
     // An inactive grid keeps a faint ring; do not call handle() meanwhile.
     void set_active(bool active)
     {
@@ -130,7 +145,12 @@ class GridView
     int step(const Layout &at, Direction direction, bool round) const;
     void retarget(bool snap);
 
+    const CardItem &item_at(int index) const;
+    gfx::Color accent_of(int index) const;
+
     std::vector<CardItem> items_;
+    int virtual_count_ = -1; // 0 or more: set_count() is in charge
+    CardItem blank_;
     std::vector<float> checks_;
     gfx::Rect bounds_{0.0f, 0.0f, 800.0f, 500.0f};
     int focus_ = 0;
