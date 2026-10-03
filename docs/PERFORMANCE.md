@@ -67,6 +67,38 @@ recording allocates nothing once the lists have grown. Avoid building many
 to 50 ms, so a hitch (a system notification, a screenshot) costs one late
 frame and no visible jump.
 
+## Start-up
+
+Start-up is not free, and it is paid again every time an app closes its
+display and opens it again. Measured in ProsperoLight's launcher (four
+programs, four fonts, twenty sounds, 3840 x 2160) on 2026-10-02:
+
+| Step | Time after the launcher began to open |
+| --- | --- |
+| Display open (EGL, 4K surface) | 0.36 s |
+| `Renderer::init`: the four programs | 3.6 s (each about 0.5 s, whatever its size) |
+| Four fonts read and uploaded | 3.9 s |
+| Sounds, controller, the screens built | 4.0 s |
+| First frame presented | 5.8 s (the first `present` alone took 1.75 s) |
+
+The log says how long each program took (`[HUI] program batch2d built in 561
+ms`). Drawing every screen once before the first frame did not help: the
+first draw costs the same whatever it draws (1.74 s, then 2 to 4 ms for each
+further screen). The OpenGL runtime's shader cache did not shorten any of it.
+These numbers were taken with an unbuffered log on `/data`, where every line
+the runtime prints while compiling costs tens of milliseconds, so part of
+each step is log writing; how much is not yet measured.
+
+What follows from it:
+
+- **Keep the splash picture until the first frame.** The OpenGL runtime hides
+  it when the display opens, which leaves the screen black for all of the
+  above. The build links with `--wrap=sceSystemServiceHideSplashScreen`,
+  `src/runtime/runtime_shims.c` holds the request back, and
+  `sys::hide_splash_screen()` (called after the first swap) lets it through.
+- **Do not close the display for something short.** Reopening costs the whole
+  table again.
+
 ## Budget
 
 A 60 Hz frame is 16.67 ms. The app's log prints frame statistics every 600

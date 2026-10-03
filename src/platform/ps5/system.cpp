@@ -17,6 +17,8 @@ extern "C"
     int sceSystemServiceLoadExec(const char *path, const char **arguments);
 }
 
+extern "C" void hui_release_splash(void) __attribute__((weak));
+
 namespace hui::sys
 {
 
@@ -47,6 +49,10 @@ void log(const char *format, ...)
 
 bool hide_splash_screen()
 {
+    // The runtime holds earlier requests back (runtime_shims.c): this is the
+    // one that counts. An app with a runtime of its own has no such hold.
+    if (hui_release_splash)
+        hui_release_splash();
     return sceSystemServiceHideSplashScreen() == 0;
 }
 

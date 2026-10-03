@@ -210,6 +210,10 @@ for stub in "${import_stubs[@]}"; do
 done
 # The OpenGL runtime needs the process-lifetime heap in src/runtime/app_heap.c.
 wrap_options=()
+# The splash picture is hidden when the app says so (src/runtime/runtime_shims.c).
+if grep -qs '__wrap_sceSystemServiceHideSplashScreen' "$root/src/runtime/runtime_shims.c"; then
+    wrap_options+=("--wrap=sceSystemServiceHideSplashScreen")
+fi
 if [[ -f $root/src/runtime/app_heap.c ]]; then
     for symbol in malloc calloc realloc free posix_memalign malloc_usable_size; do
         wrap_options+=("--wrap=$symbol")

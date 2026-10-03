@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 # Each line of the table is: source TTF, output name, pixel size, SDF range.
+# The baker takes two more arguments, the atlas size and the glyph set: an
+# app that shows names it did not write can bake `2048 european` (accented
+# Latin and Cyrillic) instead of the `1024` basic set used here.
 # To add a typeface, drop its TTF and licence into third_party/fonts, add a
 # line here, run `make fonts`, and load the new .huifont where the others are
 # loaded (src/main.cpp and host/snapshot_main.cpp).

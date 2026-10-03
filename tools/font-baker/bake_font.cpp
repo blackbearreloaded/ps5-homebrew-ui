@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
 // usage: bake_font <font.ttf> <out.huifont> [pixel_size=56] [sdf_range=8] [atlas=1024]
+//                  [glyphs=basic|european]
 // Bakes printable ASCII plus a few UI symbols into a single-channel signed
 // distance field atlas with metrics and kerning (see src/gfx/font_format.hpp).
 
@@ -37,11 +38,24 @@ struct Baked
     int y = 0;
 };
 
-std::vector<int> codepoints()
+// european adds the letters of western and central European languages and
+// basic Cyrillic (Latin-1 Supplement, Latin Extended-A, U+0410 to U+044F, Io),
+// curly quotation marks, the euro and the trade mark sign: about 380 more
+// glyphs, which need a 2048 atlas at 56 pixels.
+std::vector<int> codepoints(bool european)
 {
     std::vector<int> result;
     for (int c = 32; c < 127; ++c)
         result.push_back(c);
+    if (european)
+    {
+        for (int c = 0x00A1; c <= 0x017F; ++c)
+            result.push_back(c);
+        for (int c = 0x0410; c <= 0x044F; ++c)
+            result.push_back(c);
+        const int more[] = {0x0401, 0x0451, 0x2018, 0x2019, 0x201C, 0x201D, 0x201E, 0x20AC, 0x2122};
+        result.insert(result.end(), std::begin(more), std::end(more));
+    }
     // Middle dot, multiplication sign, copyright, degree, en/em dash, bullet,
     // ellipsis, arrows, check mark, and (in fonts that have them) a full
     // block, a black circle and four pointing triangles. Glyphs a font lacks
@@ -49,7 +63,12 @@ std::vector<int> codepoints()
     const int extra[] = {0x00B7, 0x00D7, 0x00A9, 0x00B0, 0x2013, 0x2014, 0x2022, 0x2026,
                          0x2190, 0x2191, 0x2192, 0x2193, 0x2713, 0x2588, 0x25CF, 0x25B2,
                          0x25B6, 0x25BC, 0x25C0};
-    result.insert(result.end(), std::begin(extra), std::end(extra));
+    for (const int c : extra)
+    {
+        // The european set already has the Latin-1 ones.
+        if (std::find(result.begin(), result.end(), c) == result.end())
+            result.push_back(c);
+    }
     return result;
 }
 
@@ -65,12 +84,13 @@ int main(int argc, char **argv)
 {
     if (argc < 3)
     {
-        std::fprintf(stderr, "usage: %s font.ttf out.huifont [pixel_size] [sdf_range] [atlas]\n", argv[0]);
+        std::fprintf(stderr, "usage: %s font.ttf out.huifont [pixel_size] [sdf_range] [atlas] [basic|european]\n", argv[0]);
         return 2;
     }
     const float pixel_size = argc > 3 ? std::strtof(argv[3], nullptr) : 56.0f;
     const int range = argc > 4 ? std::atoi(argv[4]) : 8;
     const int atlas_size = argc > 5 ? std::atoi(argv[5]) : 1024;
+    const bool european = argc > 6 && std::strcmp(argv[6], "european") == 0;
 
     std::ifstream input(argv[1], std::ios::binary);
     std::vector<unsigned char> ttf((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
@@ -83,7 +103,7 @@ int main(int argc, char **argv)
     const float scale = stbtt_ScaleForMappingEmToPixels(&font, pixel_size);
 
     std::vector<Baked> glyphs;
-    for (int codepoint : codepoints())
+    for (int codepoint : codepoints(european))
     {
         if (codepoint != ' ' && stbtt_FindGlyphIndex(&font, codepoint) == 0)
         {

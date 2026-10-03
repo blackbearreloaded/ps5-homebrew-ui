@@ -146,6 +146,62 @@ rebuilt on the kit. What it ran into, so the next one does not:
   changing them, replace the staged copies too, or the console keeps showing
   and checking the old ones.
 
+## What the second adoption taught
+
+ProsperoLight (a Sunshine client) replaced its SDL and RmlUi launcher with one
+built on the kit, next to a video presenter of its own that drives AGC
+directly. All of this was seen on a console unless it says otherwise.
+
+- **Two renderers can take turns with the display.** The launcher closes its
+  display (`renderer.release()`, `display.close()`), the stream opens the
+  video output for itself, and the launcher opens again afterwards. `sceAgcInit`
+  may run once per process: the OpenGL runtime does it, so the second renderer
+  must skip its own. Every reopening pays the whole start-up again (see
+  [Start-up](PERFORMANCE.md#start-up)).
+- **A picture of a screen for someone else to show.** To keep the connecting
+  screen up while the other presenter owns the display, the launcher draws it
+  once more into a 1920 x 1080 texture attached to a framebuffer and reads it
+  with `glReadPixels`: 36 ms on the console. The stream converts it to video
+  frames and draws the progress bar on it. For that the app draws its own bar
+  (`LoadingScreenStyle::indicator = LoadingIndicator::none`), so both sides
+  can continue the same one.
+- **An elevated app has no `/app0`.** Once a title has filesystem access its
+  root is the console's: assets load from the install folder
+  (`/data/homebrew/<TITLE_ID>` or `/mnt/sandbox/<TITLE_ID>_000/app0`). Every
+  kit call takes its path from the app, so nothing in the kit changes; do not
+  hard-code `/app0` in your own code.
+- **The shader cache needs `mkstemp`.** Setting `PS5_SHADER_CACHE_DIR` made the
+  app stop at its first shader: the SDK binds `mkstemp` (and `isatty`) to
+  `libScePosixForWebKit`, which a native title does not load.
+  `src/runtime/runtime_shims.c` now defines both. With them the cache works
+  (18 of 22 shaders read back on the second launch) but start-up was not
+  measurably shorter, so the kit's app does not turn it on.
+- **Statistics lines and a slow log.** The OpenGL runtime prints about forty
+  lines of statistics to the standard streams every 10,000 draws (about every
+  nine seconds in a launcher). With the log in the title's own storage that
+  costs nothing you can see. The elevated app had moved its unbuffered log to
+  `/data`, where each write took 40 to 70 ms: the launcher froze for 1.15 s at
+  the same frame numbers on every run (`renderer.present` measured, frame 528,
+  1055, 1581). Keep the log in the sandbox, or buffer it and flush it from a
+  thread of its own (not yet verified on a console).
+- **Do not touch the standard streams' descriptors.** A build that sent
+  `stdout` into a pipe with `dup2(pipe, fileno(stdout))` wrote nothing, ended
+  at start, and the console restarted. `fileno` is a header macro that reads
+  the C library's `FILE`, and the console's library lays it out differently.
+  Use `freopen` and `setvbuf` only.
+- **Network requests belong on a thread with a stack you chose.** Console
+  threads run first-in first-out at one priority and are never time-sliced,
+  and a thread's default stack is small. The launcher's worker (TLS requests
+  to the PC) gets a 1 MiB stack, and the screen's thread a core of its own
+  while the launcher runs.
+- **Names from other people's PCs** needed more than ASCII here too, but not
+  a shaping engine: `tools/font-baker` takes a `european` glyph set (accented
+  Latin and Cyrillic) with a 2048 atlas.
+- **A crash report pays for itself.** A signal handler that writes the fault
+  address as an offset into the build's ELF, the registers and the code
+  addresses found on the stack turns "it closed" into a function name.
+  ProsperoEden and ProsperoLight each carry one; the kit's app does not yet.
+
 ## Licence
 
 The code is GPL-3.0-or-later (see [LICENSE](../LICENSE)). The fonts and other
