@@ -38,10 +38,11 @@ struct Baked
     int y = 0;
 };
 
-// european adds the letters of western and central European languages and
-// basic Cyrillic (Latin-1 Supplement, Latin Extended-A, U+0410 to U+044F, Io),
-// curly quotation marks, the euro and the trade mark sign: about 380 more
-// glyphs, which need a 2048 atlas at 56 pixels.
+// european adds the letters of western and central European languages,
+// modern Greek and basic Cyrillic (Latin-1 Supplement, Latin Extended-A,
+// U+0386 to U+03CE, U+0410 to U+044F, Io), curly quotation marks, the euro
+// and the trade mark sign: about 450 more glyphs, which need a 2048 atlas at
+// 56 pixels. A face without Greek (Montserrat) simply skips those letters.
 std::vector<int> codepoints(bool european)
 {
     std::vector<int> result;
@@ -51,6 +52,13 @@ std::vector<int> codepoints(bool european)
     {
         for (int c = 0x00A1; c <= 0x017F; ++c)
             result.push_back(c);
+        // Greek with its tonos accents and dialytika; three code points in
+        // the range are not assigned.
+        for (int c = 0x0386; c <= 0x03CE; ++c)
+        {
+            if (c != 0x0387 && c != 0x038B && c != 0x038D && c != 0x03A2)
+                result.push_back(c);
+        }
         for (int c = 0x0410; c <= 0x044F; ++c)
             result.push_back(c);
         const int more[] = {0x0401, 0x0451, 0x2018, 0x2019, 0x201C, 0x201D, 0x201E, 0x20AC, 0x2122};

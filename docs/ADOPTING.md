@@ -196,7 +196,7 @@ directly. All of this was seen on a console unless it says otherwise.
   while the launcher runs.
 - **Names from other people's PCs** needed more than ASCII here too, but not
   a shaping engine: `tools/font-baker` takes a `european` glyph set (accented
-  Latin and Cyrillic) with a 2048 atlas.
+  Latin, Greek and Cyrillic) with a 2048 atlas.
 - **A crash report pays for itself.** A signal handler that writes the fault
   address as an offset into the build's ELF, the registers and the code
   addresses found on the stack turns "it closed" into a function name.
