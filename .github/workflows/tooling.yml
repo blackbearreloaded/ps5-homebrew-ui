@@ -83,7 +83,7 @@ jobs:
           fi
           echo "TITLE_ID=$title_id" >> "$GITHUB_ENV"
           echo "CONTENT_VERSION=$content_version" >> "$GITHUB_ENV"
-          # Only a version tag publishes a release; pushes to main just build.
+          # Only a version tag publishes a release; a run started by hand just builds.
           release=false
           if [[ $GITHUB_REF_TYPE == tag ]]; then
             release=true

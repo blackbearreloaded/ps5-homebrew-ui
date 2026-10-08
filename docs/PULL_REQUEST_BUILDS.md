@@ -7,10 +7,10 @@ put on a console before merging.
 
 ## What a pull request produces
 
-| | Pull request | Push to `main`, tag |
+| | Pull request | Tag, or a run started by hand |
 | --- | --- | --- |
 | Artifact name | `ps5-homebrew-ui-PR<number>-<commit>` | `ps5-homebrew-ui-<full commit>` |
-| `<commit>` | First seven characters of the pull request's own head commit | The pushed commit, in full |
+| `<commit>` | First seven characters of the pull request's own head commit | The built commit, in full |
 | Label file in the app folder | `PR <number>, <commit>` | None |
 | `contentVersion` | Unchanged | Unchanged |
 
@@ -70,7 +70,7 @@ BUILD_LABEL="pacing test 2" make
 
 ## Names and permissions
 
-The name used for pushes and tags, `ps5-homebrew-ui-<full commit>`, appears twice in the
+The name used for tags and runs started by hand, `ps5-homebrew-ui-<full commit>`, appears twice in the
 workflow: the build job's "Name this build" step and the release job's download. A tag
 never takes the pull-request branch, so the release job finds its build under that name;
 rename both together if the name ever changes.
