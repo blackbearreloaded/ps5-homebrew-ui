@@ -220,6 +220,7 @@ To see it on a console, copy `dist/<TITLE_ID>` to `/data/homebrew/` (or
 | [ADOPTING.md](docs/ADOPTING.md) | Using the kit in your own app |
 | [PERFORMANCE.md](docs/PERFORMANCE.md) | What keeps a UI at 60 frames per second on the console, and what was measured |
 | [CONSOLE_VALIDATION.md](docs/CONSOLE_VALIDATION.md) | The self-driving tour run and the rules for console work |
+| [PULL_REQUEST_BUILDS.md](docs/PULL_REQUEST_BUILDS.md) | An installable build per pull request: its artifact name, its label file, how to get it |
 | [docs/platform/](docs/platform/) | Building, packaging, deploying, the runtime shim, troubleshooting |
 | [AGENTS.md](AGENTS.md) | For AI coding agents: where to look for what, the rules, how to add things, console facts, pitfalls (`CLAUDE.md` points to it) |
 

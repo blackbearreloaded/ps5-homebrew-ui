@@ -94,6 +94,24 @@ jobs:
           echo "release=$release" >> "$GITHUB_OUTPUT"
           echo "Release this build: $release ($content_version)"
 
+      # A pull request's build is named by its number and its own commit, on the
+      # artifact and inside the app folder (docs/PULL_REQUEST_BUILDS.md); the version
+      # in param.json stays the release's.
+      - name: Name this build
+        id: label
+        shell: bash
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
+            short=${PR_HEAD:0:7}
+            echo "artifact=${GITHUB_REPOSITORY##*/}-PR$PR_NUMBER-$short" >> "$GITHUB_OUTPUT"
+            echo "BUILD_LABEL=PR $PR_NUMBER, $short" >> "$GITHUB_ENV"
+          else
+            echo "artifact=ps5-homebrew-ui-$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          fi
+
       # Clang static analysis stays a local check (make lint, make tidy).
       - name: Lint source and metadata
         run: LINT_SKIP_TIDY=1 make lint
@@ -139,7 +157,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ps5-homebrew-ui-${{ github.sha }}
+          name: ${{ steps.label.outputs.artifact }}
           path: |
             dist/${{ env.TITLE_ID }}.ffpfsc
             dist/${{ env.TITLE_ID }}.zip
