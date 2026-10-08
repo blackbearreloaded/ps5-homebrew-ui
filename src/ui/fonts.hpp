@@ -7,6 +7,7 @@
 #include "gfx/draw_list.hpp"
 #include "gfx/font.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -81,6 +82,38 @@ inline float paragraph(gfx::DrawList &list, const FontRef &font, std::string_vie
             break;
     }
     return y;
+}
+
+// The space paragraph() will take, measured without drawing: the same wrap,
+// line cap and ellipsis. Lay out what follows a block of text, or work out
+// how much of a list fits, before drawing any of it.
+struct ParagraphMetrics
+{
+    int lines = 0;          // lines paragraph() draws
+    float height = 0.0f;    // lines * line_height: how far paragraph() moves y
+    float width = 0.0f;     // widest line as drawn, ellipsis included
+    bool truncated = false; // some of the text did not fit in max_lines
+};
+
+inline ParagraphMetrics measure_paragraph(const FontRef &font, std::string_view value, float size,
+                                          float width, float line_height, int max_lines = 99)
+{
+    ParagraphMetrics m;
+    const std::vector<std::string> lines = font.font->wrap(value, size, width);
+    for (const std::string &line : lines)
+    {
+        const bool last =
+            m.lines + 1 == max_lines && lines.size() > static_cast<std::size_t>(max_lines);
+        const float drawn =
+            last ? font.measure(font.font->fit(line + " \xE2\x80\xA6", size, width), size)
+                 : font.measure(line, size);
+        m.width = std::max(m.width, drawn);
+        if (++m.lines >= max_lines)
+            break;
+    }
+    m.height = static_cast<float>(m.lines) * line_height;
+    m.truncated = lines.size() > static_cast<std::size_t>(m.lines);
+    return m;
 }
 
 } // namespace hui::ui
