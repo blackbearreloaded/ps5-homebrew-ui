@@ -180,7 +180,10 @@ make test              # unit tests (sanitizers on) and tooling tests
 ```
 
 To see it on a console, copy `dist/<TITLE_ID>` to `/data/homebrew/` (or
-`make deploy PS5_HOST=<address>`) and start **Homebrew UI Lab**.
+`make deploy PS5_HOST=<address>`) and start **Homebrew UI Lab**. A release ZIP
+built by GitHub Actions can be checked with the GitHub CLI:
+`gh attestation verify <TITLE_ID>.zip -R blackbearreloaded/ps5-homebrew-ui`
+(releases built from now on, not earlier ones).
 
 | Button | Does |
 | --- | --- |
