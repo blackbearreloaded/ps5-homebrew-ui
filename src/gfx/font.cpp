@@ -145,27 +145,50 @@ std::string Font::fit(std::string_view text, float size, float max_width, float 
     return best;
 }
 
+bool Font::has_glyph(std::uint32_t codepoint) const
+{
+    if (find(codepoint) != nullptr)
+        return true;
+    for (const Fallback &fallback : fallbacks_)
+    {
+        if (fallback.face->find(codepoint) != nullptr)
+            return true;
+    }
+    return false;
+}
+
+Font::Resolved Font::resolve(std::uint32_t *codepoint) const
+{
+    if (const ff::Glyph *glyph = find(*codepoint))
+        return {this, glyph, 0};
+    for (const Fallback &fallback : fallbacks_)
+    {
+        if (const ff::Glyph *glyph = fallback.face->find(*codepoint))
+            return {fallback.face, glyph, fallback.texture};
+    }
+    *codepoint = '?';
+    return {this, find('?'), 0};
+}
+
 float Font::measure(std::string_view text, float size, float tracking) const
 {
-    const float scale = size / header_.pixel_size;
     float width = 0.0f;
     std::uint32_t previous = 0;
+    const Font *previous_face = nullptr;
     int glyphs = 0;
     for (std::size_t index = 0; index < text.size();)
     {
         std::uint32_t codepoint = next_codepoint(text, &index);
-        const ff::Glyph *glyph = find(codepoint);
-        if (glyph == nullptr)
-        {
-            codepoint = '?';
-            glyph = find(codepoint);
-            if (glyph == nullptr)
-                continue;
-        }
-        if (previous != 0)
-            width += kern(previous, codepoint) * scale;
-        width += glyph->advance * scale;
+        const Resolved resolved = resolve(&codepoint);
+        if (resolved.glyph == nullptr)
+            continue;
+        // Each face has metrics of its own; pairs are kerned within one face.
+        const float scale = size / resolved.face->header_.pixel_size;
+        if (previous != 0 && previous_face == resolved.face)
+            width += resolved.face->kern(previous, codepoint) * scale;
+        width += resolved.glyph->advance * scale;
         previous = codepoint;
+        previous_face = resolved.face;
         ++glyphs;
     }
     return glyphs > 1 ? width + tracking * static_cast<float>(glyphs - 1) : width;
@@ -174,31 +197,29 @@ float Font::measure(std::string_view text, float size, float tracking) const
 float Font::layout(std::string_view text, float x, float y, float size, Align align,
                    std::vector<GlyphQuad> &quads, float tracking) const
 {
-    const float scale = size / header_.pixel_size;
     const float width = measure(text, size, tracking);
     float pen = x;
     if (align == Align::center)
         pen -= width * 0.5f;
     else if (align == Align::right)
         pen -= width;
-    const float inverse_w = 1.0f / static_cast<float>(header_.atlas_width);
-    const float inverse_h = 1.0f / static_cast<float>(header_.atlas_height);
     std::uint32_t previous = 0;
+    const Font *previous_face = nullptr;
     for (std::size_t index = 0; index < text.size();)
     {
         std::uint32_t codepoint = next_codepoint(text, &index);
-        const ff::Glyph *glyph = find(codepoint);
+        const Resolved resolved = resolve(&codepoint);
+        const ff::Glyph *glyph = resolved.glyph;
         if (glyph == nullptr)
-        {
-            codepoint = '?';
-            glyph = find(codepoint);
-            if (glyph == nullptr)
-                continue;
-        }
-        if (previous != 0)
-            pen += kern(previous, codepoint) * scale;
+            continue;
+        const ff::Header &face = resolved.face->header_;
+        const float scale = size / face.pixel_size;
+        if (previous != 0 && previous_face == resolved.face)
+            pen += resolved.face->kern(previous, codepoint) * scale;
         if (glyph->w > 0 && glyph->h > 0)
         {
+            const float inverse_w = 1.0f / static_cast<float>(face.atlas_width);
+            const float inverse_h = 1.0f / static_cast<float>(face.atlas_height);
             GlyphQuad quad;
             quad.x0 = pen + glyph->offset_x * scale;
             quad.y0 = y + glyph->offset_y * scale;
@@ -208,10 +229,13 @@ float Font::layout(std::string_view text, float x, float y, float size, Align al
             quad.v0 = static_cast<float>(glyph->y) * inverse_h;
             quad.u1 = static_cast<float>(glyph->x + glyph->w) * inverse_w;
             quad.v1 = static_cast<float>(glyph->y + glyph->h) * inverse_h;
+            quad.texture = resolved.texture;
+            quad.range = resolved.face->sdf_range(size);
             quads.push_back(quad);
         }
         pen += glyph->advance * scale + tracking;
         previous = codepoint;
+        previous_face = resolved.face;
     }
     return width;
 }
@@ -234,16 +258,35 @@ std::vector<std::string> Font::wrap(std::string_view text, float size, float max
             if (word_end == std::string_view::npos)
                 word_end = paragraph.size();
             const std::string_view word = paragraph.substr(word_start, word_end - word_start);
-            const std::string candidate =
+            std::string candidate =
                 line.empty() ? std::string(word) : line + " " + std::string(word);
-            if (!line.empty() && measure(candidate, size) > max_width)
+            if (measure(candidate, size) <= max_width)
             {
-                lines.push_back(line);
-                line.assign(word);
+                line = std::move(candidate);
             }
             else
             {
-                line = candidate;
+                if (!line.empty())
+                    lines.push_back(line);
+                // The word starts a line of its own. One wider than the line
+                // gives up as many code points as fit, line after line.
+                std::size_t start = 0;
+                while (measure(word.substr(start), size) > max_width)
+                {
+                    std::size_t end = start;
+                    next_codepoint(word, &end);
+                    for (std::size_t next = end; next < word.size(); end = next)
+                    {
+                        next_codepoint(word, &next);
+                        if (measure(word.substr(start, next - start), size) > max_width)
+                            break;
+                    }
+                    if (end >= word.size())
+                        break;
+                    lines.emplace_back(word.substr(start, end - start));
+                    start = end;
+                }
+                line.assign(word.substr(start));
             }
             word_start = word_end + 1;
         }

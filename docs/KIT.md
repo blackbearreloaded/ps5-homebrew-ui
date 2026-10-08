@@ -119,6 +119,26 @@ DejaVu Sans Mono, `█ ● ▲ ▶ ▼ ◀`); a face that lacks a symbol simply 
 and curly quotes are not baked at all. Check `font->has_glyph(codepoint)` before
 relying on a symbol; draw icons from shapes instead of hunting for glyphs.
 
+Text you did not write (names, messages, answers) needs more than that.
+`tools/font-baker` bakes a `european` set (accented Latin, Greek, Cyrillic) into
+the same faces, and a font can be given **fallback faces** for everything else:
+
+```cpp
+gfx::Font cjk;                                  // baked from another typeface
+cjk.load(bytes);
+const std::uint32_t cjk_texture = renderer.batch().create_font_texture(cjk);
+regular_face.add_fallback(&cjk, cjk_texture);   // and the same for the other weights
+```
+
+A code point the font lacks is then measured and drawn from the first fallback
+that has it, with that face's own metrics, in the same call to `ui::text`: a
+sentence may mix faces freely, and every component draws it. Faces are asked in
+the order they were added; what none has is still a `?`. A fallback can be added
+at any time (when a text first needs it, for a large face), and text measured
+before must then be measured again. `wrap` breaks at spaces; a word wider than
+the line (a long address, text in a script that writes no spaces) is cut between
+code points instead of running past the edge.
+
 ## Backdrops
 
 A design sets `frame.backdrop` to choose what the full-screen shader paints

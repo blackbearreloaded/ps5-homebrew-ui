@@ -7,7 +7,9 @@
 
 #include <gtest/gtest.h>
 
+#include <initializer_list>
 #include <string>
+#include <vector>
 
 #ifndef HUI_SOURCE_DIR
 #define HUI_SOURCE_DIR "."
@@ -19,6 +21,32 @@ namespace
 using hui::gfx::Align;
 using hui::gfx::Font;
 using hui::gfx::GlyphQuad;
+
+// A face of its own for what the baked ones cannot show: one square glyph per
+// code point (given in rising order), each `advance` wide at `pixel_size`.
+std::string small_face(std::initializer_list<std::uint32_t> codepoints, float pixel_size,
+                       float advance)
+{
+    namespace ff = hui::gfx::font_format;
+    ff::Header header{};
+    header.magic = ff::kMagic;
+    header.version = ff::kVersion;
+    header.atlas_width = 8;
+    header.atlas_height = 8;
+    header.pixel_size = pixel_size;
+    header.sdf_range = 2.0f;
+    header.ascent = pixel_size * 0.8f;
+    header.descent = -pixel_size * 0.2f;
+    header.glyph_count = static_cast<std::uint32_t>(codepoints.size());
+    std::string data(reinterpret_cast<const char *>(&header), sizeof(header));
+    for (const std::uint32_t codepoint : codepoints)
+    {
+        const ff::Glyph glyph{codepoint, 0, 0, 4, 4, 0.0f, -4.0f, advance};
+        data.append(reinterpret_cast<const char *>(&glyph), sizeof(glyph));
+    }
+    data.append(64, '\x80');
+    return data;
+}
 
 const Font &inter()
 {
@@ -101,6 +129,38 @@ TEST(Font, UnknownCharactersFallBackToQuestionMark)
     EXPECT_FLOAT_EQ(font.measure("\xFF", 30), font.measure("?", 30));         // invalid byte
 }
 
+TEST(Font, AsksItsFallbacksForWhatItLacks)
+{
+    Font font = inter(); // a copy: fallbacks belong to one font
+    Font other;
+    ASSERT_TRUE(other.load(small_face({0x4e16, 0x754c}, 16.0f, 16.0f))) << other.error();
+    const std::string mixed = "A\xE4\xB8\x96"; // "A" and U+4E16
+    EXPECT_FALSE(font.has_glyph(0x4e16));
+    const float before = font.measure(mixed, 32);
+    EXPECT_FLOAT_EQ(before, font.measure("A?", 32));
+
+    font.add_fallback(&other, 7);
+    EXPECT_TRUE(font.has_glyph(0x4e16));
+    // The glyph keeps its own face's metrics: 16 wide at 16, so 32 at 32.
+    EXPECT_NEAR(font.measure(mixed, 32), font.measure("A", 32) + 32.0f, 0.01f);
+    std::vector<GlyphQuad> quads;
+    font.layout(mixed, 0.0f, 0.0f, 32.0f, Align::left, quads);
+    ASSERT_EQ(quads.size(), 2u);
+    EXPECT_EQ(quads[0].texture, 0u);
+    EXPECT_FLOAT_EQ(quads[0].range, font.sdf_range(32.0f));
+    EXPECT_EQ(quads[1].texture, 7u);
+    EXPECT_FLOAT_EQ(quads[1].range, other.sdf_range(32.0f));
+    EXPECT_NEAR(quads[1].x1 - quads[1].x0, 8.0f, 0.01f); // 4 atlas pixels at twice the size
+    // What no face has is still the font's own question mark.
+    EXPECT_FLOAT_EQ(font.measure("\xE2\x98\x83", 30), inter().measure("?", 30));
+    // A fallback is never asked for what the font has itself.
+    EXPECT_FLOAT_EQ(font.measure("Light Up", 40), inter().measure("Light Up", 40));
+
+    font.clear_fallbacks();
+    EXPECT_FALSE(font.has_glyph(0x4e16));
+    EXPECT_FLOAT_EQ(font.measure(mixed, 32), before);
+}
+
 TEST(Font, DecodesUtf8)
 {
     std::size_t index = 0;
@@ -120,6 +180,32 @@ TEST(Font, WrapsAtWordsAndNewlines)
     for (const std::string &line : lines)
         EXPECT_LE(font.measure(line, 30), 300.0f + 1e-3f) << line;
     EXPECT_EQ(lines.back(), "Next");
+}
+
+TEST(Font, BreaksAWordWiderThanTheLine)
+{
+    const Font &font = inter();
+    const std::string address = "https://example.org/a/very/long/address/without/any/space";
+    const auto lines = font.wrap("See " + address + " now", 30, 300);
+    ASSERT_GE(lines.size(), 3u);
+    EXPECT_EQ(lines.front(), "See");
+    std::string joined;
+    for (const std::string &line : lines)
+    {
+        EXPECT_LE(font.measure(line, 30), 300.0f + 1e-3f) << line;
+        for (const char c : line)
+        {
+            if (c != ' ')
+                joined += c;
+        }
+    }
+    // Nothing is lost or repeated where the word was cut.
+    EXPECT_EQ(joined, "See" + address + "now");
+    // A code point wider than the line still gets a line: the text is never dropped.
+    const auto narrow = font.wrap("Wide", 30, 1.0f);
+    ASSERT_EQ(narrow.size(), 4u);
+    EXPECT_EQ(narrow.front(), "W");
+    EXPECT_EQ(narrow.back(), "e");
 }
 
 } // namespace
