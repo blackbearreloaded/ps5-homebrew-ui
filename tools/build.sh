@@ -293,6 +293,8 @@ done
 
 printf '==> [zip] Archiving the application folder\n'
 (cd "$dist" && python3 -m zipfile -c "$title_id.zip" "$title_id")
+# Every entry stored as 0777: the console only starts an app whose files are open to all.
+python3 "$root/tools/zip-open-modes.py" "$dist/$title_id.zip"
 
 if [[ $format == ffpkg || $format == all ]]; then
     ufs2tool=$(bash "$root/tools/setup-packaging-dependencies.sh" ffpkg)

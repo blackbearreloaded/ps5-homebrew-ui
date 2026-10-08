@@ -94,8 +94,9 @@ jobs:
           echo "release=$release" >> "$GITHUB_OUTPUT"
           echo "Release this build: $release ($content_version)"
 
+      # Clang static analysis stays a local check (make lint, make tidy).
       - name: Lint source and metadata
-        run: make lint
+        run: LINT_SKIP_TIDY=1 make lint
 
       - name: Run host GoogleTest suite
         run: make test-unit
@@ -115,6 +116,22 @@ jobs:
       - name: Report compiler cache statistics
         if: always()
         run: ccache --show-stats
+
+      # The console only starts an app whose files are open to all (CE-107750-0 otherwise).
+      - name: Check every ZIP entry is stored as 0777
+        run: |
+          python3 - "dist/$TITLE_ID.zip" "$TITLE_ID" <<'PY'
+          import sys, zipfile
+          archive, title = sys.argv[1:3]
+          with zipfile.ZipFile(archive) as z:
+              assert z.testzip() is None, "damaged entry"
+              names = z.namelist()
+              assert all(n.startswith(title + "/") for n in names), "entries outside the app folder"
+              assert title + "/eboot.bin" in names, "no eboot.bin"
+              wrong = [i.filename for i in z.infolist() if (i.external_attr >> 16) & 0o777 != 0o777]
+              assert not wrong, f"entries not stored as 0777: {wrong[:3]}"
+              print(f"{archive}: {len(names)} entries, all 0777")
+          PY
 
       - name: Write release checksums
         run: cd dist && sha256sum "$TITLE_ID.ffpfsc" "$TITLE_ID.zip" > SHA256SUMS
