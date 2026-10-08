@@ -147,8 +147,9 @@ result is `/data/homebrew/<TITLE_ID>/eboot.bin` with its `sce_sys/`,
 
 Do not upload the ZIP file itself and do not extract only its contents directly
 into `/data/homebrew`. ShadowMountPlus consumes the extracted title folder, not
-the ZIP container. The extracted folder and the `.ffpfsc` release asset contain
-equivalent application content, so stage only one form for a given title ID.
+the ZIP container. Releases carry no `.ffpfsc` image; one built locally with
+`make ffpfsc` holds the same application content, so stage only one form for a
+given title ID.
 
 ## Smoke test
 

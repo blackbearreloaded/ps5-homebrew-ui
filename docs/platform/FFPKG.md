@@ -4,9 +4,10 @@ Every application or package build creates and validates
 `dist/<TITLE_ID>/`. The Make targets map to the same PowerShell
 `-OutputFormat` selections:
 
-All formats remain available for local development. Tagged GitHub Releases
-attach the complete compressed `.ffpfsc` image, a ZIP of the validated
-directory-style application, and their shared `SHA256SUMS`.
+Tagged GitHub Releases and every CI build attach a ZIP of the validated
+directory-style application and its `SHA256SUMS`, and nothing else. All formats,
+the compressed `.ffpfsc` image included, remain available for local development
+(`make ffpfsc`, `make packages`).
 
 | Make target / selection | Additional output | Packaging tool |
 | --- | --- | --- |
@@ -22,7 +23,7 @@ make ffpfsc
 make packages
 ```
 
-The release workflow uses Python's standard-library `zipfile` module to archive
+Every app build uses Python's standard-library `zipfile` module to archive
 `dist/<TITLE_ID>/` as `<TITLE_ID>.zip`. The ZIP is a distribution convenience,
 not another console filesystem format; extract it before directory deployment.
 

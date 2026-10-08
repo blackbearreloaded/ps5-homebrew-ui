@@ -52,7 +52,6 @@ jobs:
             .deps/native
             .deps/test
             .deps/pacbrew
-            .deps/MkPFS
             .deps/ps5-opengl
           key: deps-${{ runner.os }}-${{ runner.arch }}-ubuntu24-python313-${{ hashFiles('tools/setup-*-dependencies.sh', 'tools/fetch-opengl-sdk.sh') }}
 
@@ -127,8 +126,10 @@ jobs:
       - name: Verify generated runtime is unchanged
         run: cd runtime && sha256sum -c libc.prx.sha256
 
-      - name: Build compressed release image
-        run: make ffpfsc
+      # The ZIP is the one release format: in-app updates and ProsperoStore install from
+      # it. No compressed image is built or published here.
+      - name: Build the release folder and ZIP
+        run: make app
 
       - name: Report compiler cache statistics
         if: always()
@@ -151,14 +152,13 @@ jobs:
           PY
 
       - name: Write release checksums
-        run: cd dist && sha256sum "$TITLE_ID.ffpfsc" "$TITLE_ID.zip" > SHA256SUMS
+        run: cd dist && sha256sum "$TITLE_ID.zip" > SHA256SUMS
 
       - name: Upload build
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ steps.label.outputs.artifact }}
           path: |
-            dist/${{ env.TITLE_ID }}.ffpfsc
             dist/${{ env.TITLE_ID }}.zip
             dist/SHA256SUMS
           if-no-files-found: error
@@ -192,15 +192,13 @@ jobs:
           cd release
           mapfile -d '' files < <(find . -type f -print0)
           shopt -s nullglob
-          images=(PPSA*.ffpfsc)
           folder_zips=(PPSA*.zip)
-          # The artifact holds exactly these three files at its root.
-          if (( ${#files[@]} != 3 || ${#images[@]} != 1 || ${#folder_zips[@]} != 1 )) || [[ ! -f SHA256SUMS ]]; then
-            echo "Expected exactly one FFPFSC image, one app-folder ZIP, and SHA256SUMS at the artifact root." >&2
+          # The artifact holds exactly these two files at its root.
+          if (( ${#files[@]} != 2 || ${#folder_zips[@]} != 1 )) || [[ ! -f SHA256SUMS ]]; then
+            echo "Expected exactly one app-folder ZIP and SHA256SUMS at the artifact root." >&2
             exit 1
           fi
           sha256sum -c SHA256SUMS
-          echo "image=${images[0]}" >> "$GITHUB_OUTPUT"
           echo "folder_zip=${folder_zips[0]}" >> "$GITHUB_OUTPUT"
           echo "checksum=SHA256SUMS" >> "$GITHUB_OUTPUT"
 
@@ -208,19 +206,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.build.outputs.version }}
-          IMAGE: ${{ steps.package.outputs.image }}
           FOLDER_ZIP: ${{ steps.package.outputs.folder_zip }}
           CHECKSUM: ${{ steps.package.outputs.checksum }}
         shell: bash
         run: |
           set -euo pipefail
-          assets=("release/$IMAGE" "release/$FOLDER_ZIP" "release/$CHECKSUM")
-          image_name="${IMAGE##*/}"
+          assets=("release/$FOLDER_ZIP" "release/$CHECKSUM")
           folder_zip_name="${FOLDER_ZIP##*/}"
           checksum_name="${CHECKSUM##*/}"
           if gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             while IFS= read -r old_asset; do
-              if [[ $old_asset != "$image_name" && $old_asset != "$folder_zip_name" && $old_asset != "$checksum_name" ]]; then
+              if [[ $old_asset != "$folder_zip_name" && $old_asset != "$checksum_name" ]]; then
                 gh release delete-asset "$VERSION" "$old_asset" --yes --repo "$GITHUB_REPOSITORY"
               fi
             done < <(gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')

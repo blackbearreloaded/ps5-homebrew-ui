@@ -161,6 +161,14 @@ class ToolTests(unittest.TestCase):
             self.assertIn("/data/homebrew/PPSA12345.ffpkg", result.stdout)
             self.assertIn("no network request was sent", result.stdout)
 
+    def test_automation_builds_the_zip_only(self):
+        workflow = (ROOT / ".github/workflows/tooling.yml").read_text(encoding="utf-8")
+        self.assertNotIn("ffpfsc", workflow.lower())
+        self.assertNotIn("mkpfs", workflow.lower())
+        self.assertIn("run: make app", workflow)
+        self.assertIn('sha256sum "$TITLE_ID.zip" > SHA256SUMS', workflow)
+        self.assertIn('assets=("release/$FOLDER_ZIP" "release/$CHECKSUM")', workflow)
+
     def test_pull_request_builds_are_named_and_labelled(self):
         workflow = (ROOT / ".github/workflows/tooling.yml").read_text(encoding="utf-8")
         self.assertIn(
