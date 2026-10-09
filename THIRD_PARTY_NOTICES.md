@@ -17,8 +17,8 @@ ps5-homebrew-ui exists thanks to the maintainers and contributors of:
   interface typefaces, and
   [stb](https://github.com/nothings/stb) for music decoding, font baking and
   PNG writing;
-- [UFS2Tool](https://github.com/SvenGDK/UFS2Tool), LLVM/Clang, Python, zlib and
-  GoogleTest for build, packaging and validation tooling;
+- LLVM/Clang, Python, zlib and GoogleTest for build, packaging and validation
+  tooling;
 - Inigo Quilez, whose published signed-distance functions the shape shader
   follows (rounded box, triangle, star and arc).
 
@@ -120,14 +120,6 @@ release `v0.40.2`, verifies its published SHA-256, and extracts only the
 replace the pinned SDK or install files globally. PacBrew recipes and every
 linked third-party library retain their upstream licenses; applications must
 review those terms before redistribution.
-
-## Optional UFS2Tool dependency
-
-When `.ffpkg` output is requested, the platform bootstrapper fetches
-[SvenGDK/UFS2Tool](https://github.com/SvenGDK/UFS2Tool) at commit
-`b5307a60d5b4e3a68ba680e0e33cfadf05017c77` into the ignored
-`.deps/UFS2Tool` cache and builds it with the host .NET SDK. UFS2Tool is
-BSD-2-Clause software and is not distributed by this repository.
 
 ## Independently authored runtime shim
 

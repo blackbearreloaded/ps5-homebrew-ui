@@ -1,10 +1,10 @@
 # Deployment
 
-This project creates a directory-style homebrew application and optional
-filesystem images. Tagged releases also provide the complete directory as a
-ZIP archive. Its Makefile can update the directory or upload an image below
-`/data/homebrew` over FTP. It does not configure the console, start payloads,
-register titles, launch applications, or create a signed retail package.
+This project creates a directory-style homebrew application. Tagged releases
+provide the complete directory as a ZIP archive. Its Makefile can update the
+directory below `/data/homebrew` over FTP. It does not configure the console,
+start payloads, register titles, launch applications, or create a signed
+retail package.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ Build and update the title folder through the default FTP port `2121`:
 make deploy PS5_HOST=192.168.1.100
 ```
 
-The default folder deployment:
+The deployment:
 
 1. builds `dist/<TITLE_ID>/` from the current source;
 2. uploads each file beside its destination under a hidden `.upload` name;
@@ -43,16 +43,15 @@ the application before deploying and do not launch it until the command
 finishes. Files removed from the local build are not deleted remotely; clean
 the title directory with `make undeploy` when an exact reset is required.
 
-Select the UFS2 image or a non-default port with Make variables:
+Select a non-default port with a Make variable:
 
 ```bash
-make deploy PS5_HOST=192.168.1.100 FTP_PORT=2121 DEPLOY_FORMAT=ffpkg
+make deploy PS5_HOST=192.168.1.100 FTP_PORT=2121
 ```
 
-Image deployment remains useful for distribution testing. An already-mounted
-image with the same pathname may remain cached by ShadowMountPlus, so folder
-deployment is the recommended repeated development workflow. Do not keep a
-folder and an image with the same title ID in scan paths at the same time.
+The folder is the only form this project builds and deploys. Do not keep a
+folder and an image with the same title ID in scan paths at the same time: an
+image left by an older version must be deleted first.
 
 Supported variables are:
 
@@ -60,14 +59,13 @@ Supported variables are:
 | --- | --- | --- |
 | `PS5_HOST` | required | Console IPv4 address or hostname |
 | `FTP_PORT` | `2121` | FTP service port |
-| `DEPLOY_FORMAT` | `folder` | `folder` or `ffpkg` output |
 | `PS5_FTP_USER` | `anonymous` | FTP username |
 | `PS5_FTP_PASSWORD` | `codex` | FTP password |
 | `DEPLOY_DRY_RUN` | `0` | Use `1` to build and print the target without networking |
 
 For repeated local work, copy `.env.example` to the ignored `.env` file and
-set `PS5_HOST`, `FTP_PORT`, and `DEPLOY_FORMAT` there. Command-line Make values
-still override file defaults.
+set `PS5_HOST` and `FTP_PORT` there. Command-line Make values still override
+file defaults.
 
 For example, validate local packaging and the resolved destination without
 contacting a console:
@@ -86,9 +84,9 @@ make undeploy PS5_HOST=192.168.1.100
 ```
 
 The command validates `sce_sys/param.json`, recursively removes only
-`/data/homebrew/<TITLE_ID>/`, and deletes an exact same-ID `.ffpkg` image, a
-`.ffpfsc` image left by an older version, and interrupted-upload temporary
-images. It never deletes the
+`/data/homebrew/<TITLE_ID>/`, and deletes an exact same-ID `.ffpkg` or
+`.ffpfsc` image left by an older version, with the temporary file of an
+interrupted image upload. It never deletes the
 `/data/homebrew` root or another title. Preview the resolved targets without a
 network request by adding `DEPLOY_DRY_RUN=1`.
 
@@ -114,25 +112,18 @@ and avoids replacing a package while its previous title remains active.
 
 ## Manual build and stage
 
-1. Build the exact format accepted by your loader:
+1. Build the app folder:
 
    ```bash
-   make          # directory form
-   make ffpkg    # directory plus UFS2 image
+   make
    ```
 
-2. Choose one complete output supported by the loader:
-
-   - `dist/<TITLE_ID>/`: directory form;
-   - `dist/<TITLE_ID>.ffpkg`: UFS2 image.
-
-3. For directory deployment, stage the entire `dist/<TITLE_ID>/` tree. Do not
-   upload only `eboot.bin`.
-4. Wait for the loader to report that the title is ready, then launch it from
+2. Stage the entire `dist/<TITLE_ID>/` tree. Do not upload only `eboot.bin`.
+3. Wait for the loader to report that the title is ready, then launch it from
    the Games section of the home screen.
 
-Rebuild the selected format immediately before deployment so an older image
-is not mistaken for the current application.
+Rebuild immediately before staging so an older build is not mistaken for the
+current application.
 
 ## Deploy a tagged-release ZIP
 
@@ -144,10 +135,10 @@ result is `/data/homebrew/<TITLE_ID>/eboot.bin` with its `sce_sys/`,
 
 Do not upload the ZIP file itself and do not extract only its contents directly
 into `/data/homebrew`. ShadowMountPlus consumes the extracted title folder, not
-the ZIP container. Releases carry the ZIP only; if you also built an image
-locally (`make ffpkg`), or a `<TITLE_ID>.ffpfsc` from an older version is
-still on the console, stage only one form for a given title ID and delete the
-other.
+the ZIP container. Releases carry the ZIP only; if a `<TITLE_ID>.ffpkg` or
+`<TITLE_ID>.ffpfsc` image from an older version is still on the console,
+delete it: a folder and an image with the same title ID must not both be in
+scan paths.
 
 ## Smoke test
 
