@@ -1,0 +1,60 @@
+name: "Bug report"
+description: "Something in ps5-homebrew-ui does not work as it should"
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before you post**
+
+        - Do not post Sony SDK files, firmware, decrypted system files, keys or links to them.
+  - type: input
+    id: version
+    attributes:
+      label: "Version or commit"
+      description: "Release tag or commit hash"
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: "Build machine"
+      description: "Operating system and compiler, for example Ubuntu 24.04 in WSL, clang 18"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: "PS5 system software version"
+      description: "Leave empty if the problem happens on the PC only"
+    validations:
+      required: false
+  - type: textarea
+    id: what
+    attributes:
+      label: "What happened?"
+      description: "What you saw, and what you expected instead"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps or code to reproduce"
+      description: "The smallest example that shows it"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Build output or log"
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: "Checks"
+      options:
+        - label: "I searched the open and closed issues for this problem."
+          required: true
