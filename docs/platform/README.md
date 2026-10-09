@@ -13,7 +13,7 @@ packaging are the same.
 | [CONFIGURATION.md](CONFIGURATION.md) | `sce_sys/param.json`: title identity and versions |
 | [NATIVE_TOOLING.md](NATIVE_TOOLING.md) | The compiler wrapper, the ELF converter, signing |
 | [RUNTIME_SHIM.md](RUNTIME_SHIM.md) | The clean-room `libc.prx` runtime module |
-| [FFPKG.md](FFPKG.md) | Output formats: folder, `.ffpkg`, `.ffpfsc` |
+| [FFPKG.md](FFPKG.md) | Output formats: the folder and its ZIP, the local `.ffpkg` image |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | `make deploy` and `make undeploy` over FTP |
 | [PRESENTATION_ASSETS.md](PRESENTATION_ASSETS.md) | Icon, backgrounds and selection music in `sce_sys/` |
 | [PACBREW.md](PACBREW.md) | Optional prebuilt third-party libraries |

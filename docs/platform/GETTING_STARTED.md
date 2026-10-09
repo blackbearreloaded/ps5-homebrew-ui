@@ -63,10 +63,6 @@ the fetched public SDK while keeping exceptions and RTTI disabled. The build
 links a small project-owned allocation bridge rather than the complete libc++
 runtime; see [Native build tooling](NATIVE_TOOLING.md).
 
-Compressed `.ffpfsc` output uses Python 3.9 or newer with `venv` support. The
-build fetches MkPFS and installs it into an ignored virtual environment under
-`.deps/MkPFS/` when selected.
-
 Uncompressed `.ffpkg` output requires the .NET SDK 8 or newer. The build
 fetches a pinned UFS2Tool checkout, builds its command-line application under
 `.deps/UFS2Tool/`, and reuses that ignored cache. It does not require
@@ -212,8 +208,6 @@ Choose the final output with Make:
 ```bash
 make app
 make ffpkg
-make ffpfsc
-make packages
 ```
 
 The equivalent PowerShell selections are:
@@ -221,16 +215,14 @@ The equivalent PowerShell selections are:
 ```powershell
 ./build.ps1 -OutputFormat Folder
 ./build.ps1 -OutputFormat Ffpkg
-./build.ps1 -OutputFormat Ffpfsc
-./build.ps1 -OutputFormat All
 ```
 
-The optional packaging tools are fetched only on first use. See
+The optional packaging tool is fetched only on first use. See
 [Build output formats](FFPKG.md).
 
 `runtime/libc.prx` is a generated, ignored file included in the application.
 Tagged GitHub Releases publish a ZIP of the directory-style application and its
-`SHA256SUMS`; the compressed `.ffpfsc` image is a local option only
+`SHA256SUMS`; the `.ffpkg` image is a local option only
 ([Build output formats](FFPKG.md)). Extract
 the ZIP before uploading its `<TITLE_ID>/` folder to `/data/homebrew`.
 

@@ -52,6 +52,13 @@ Change `masterVersion` only when intentionally changing the compatible release
 baseline. Each tagged GitHub Release contains a ZIP of the directory-style
 application and its `SHA256SUMS`.
 
+A release is made by pushing the version tag and in no other way: the
+workflow builds, attests, and publishes the ZIP and `SHA256SUMS`, and files
+are not attached by hand. If the tag has no release yet, the workflow creates
+it; if a release exists without a ZIP (notes written in advance, or a draft),
+it adds the two files and leaves the title and notes alone; if a release
+already has a ZIP, nothing is replaced and the run ends with a warning.
+
 The loader-visible SDK and FSELF constants are internal build-format values,
 not application versions. They remain fixed to the cross-firmware-validated
 profile in `tools/build.sh`.
@@ -115,7 +122,7 @@ Deployment uses a separate set of Make variables:
 | --- | --- | --- |
 | `PS5_HOST` | required | Console IPv4 address or hostname. |
 | `FTP_PORT` | `2121` | FTP service port. |
-| `DEPLOY_FORMAT` | `folder` | `folder`, `ffpfsc`, or `ffpkg` output. |
+| `DEPLOY_FORMAT` | `folder` | `folder` or `ffpkg` output. |
 | `PS5_FTP_USER` | `anonymous` | FTP username. |
 | `PS5_FTP_PASSWORD` | `codex` | FTP password. |
 | `DEPLOY_DRY_RUN` | `0` | Build without networking when set to `1`. |

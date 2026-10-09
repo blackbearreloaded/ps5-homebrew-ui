@@ -56,7 +56,7 @@ RUNTIME_INPUTS := tools/rebuild-libc.sh tools/build-host-tools.sh tools/ninja-bu
 	$(wildcard tooling/native/runtime/*.txt)
 HOST_UNIT_TEST := build/tests/unit_tests
 
-.PHONY: all app build init doctor test test-deps test-unit test-integration libc deps opengl host-snapshots fonts pacbrew pacbrew-list assets-check format format-check tidy lint check ffpkg ffpfsc packages deploy undeploy clean distclean help
+.PHONY: all app build init doctor test test-deps test-unit test-integration libc deps opengl host-snapshots fonts pacbrew pacbrew-list assets-check format format-check tidy lint check ffpkg deploy undeploy clean distclean help
 
 all: app
 build: app
@@ -128,14 +128,6 @@ ffpkg: $(RUNTIME) opengl
 	@printf '%s\n' '==> [ffpkg] Building the app folder and UFS2 image'
 	@bash tools/build.sh Ffpkg
 
-ffpfsc: $(RUNTIME) opengl
-	@printf '%s\n' '==> [ffpfsc] Building the app folder and compressed image'
-	@bash tools/build.sh Ffpfsc
-
-packages: $(RUNTIME) opengl
-	@printf '%s\n' '==> [packages] Building the app folder and both package formats'
-	@bash tools/build.sh All
-
 deploy:
 	@printf '%s\n' '==> [deploy] Building and publishing the selected app output over FTP'
 	@bash tools/deploy.sh
@@ -202,14 +194,12 @@ help:
 	  'make lint            Run format, tidy, metadata, and shell checks' \
 	  'make check           Run lint and build the skeleton app' \
 	  'make ffpkg           Build the folder and UFS2 .ffpkg image' \
-	  'make ffpfsc          Build the folder and compressed .ffpfsc image' \
-	  'make packages        Build folder, .ffpkg, and .ffpfsc outputs' \
 	  'make deploy PS5_HOST=<address>  Build and FTP-deploy the app folder' \
 	  'make undeploy PS5_HOST=<address>  Remove this title from /data/homebrew' \
 	  'Build variables:     APP_DEFINITIONS, APP_INCLUDE_PATHS, APP_STATIC_ARCHIVES, APP_IMPORT_STUBS, APP_RUNTIME_MODULES' \
 	  'OpenGL SDK:          PS5_OPENGL_PREFIX=<sdk dir with manifest.sha256> (default: pinned release)' \
 	  'PacBrew variables:   PACBREW_PACKAGES, PACBREW_INCLUDE_PATHS, PACBREW_STATIC_ARCHIVES' \
-	  'Deploy variables:    FTP_PORT=2121, DEPLOY_FORMAT=folder|ffpfsc|ffpkg, DEPLOY_DRY_RUN=0|1' \
+	  'Deploy variables:    FTP_PORT=2121, DEPLOY_FORMAT=folder|ffpkg, DEPLOY_DRY_RUN=0|1' \
 	  'Local defaults:      Copy .env.example to the ignored .env file' \
 	  'Build speed:         BUILD_JOBS defaults to all CPUs; USE_CCACHE=0 disables ccache' \
 	  'make clean           Remove build/, dist/, and generated libc.prx' \
