@@ -1,1 +1,5 @@
+# ps5-homebrew-ui - Issue chooser.
+# Copyright (C) 2026 BlackBearReloaded
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 blank_issues_enabled: true
