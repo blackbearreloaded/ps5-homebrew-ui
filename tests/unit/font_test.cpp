@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "core/save_file.hpp"
+#include "font_loader.hpp"
 #include "gfx/font.hpp"
 
 #include <gtest/gtest.h>
@@ -50,15 +51,7 @@ std::string small_face(std::initializer_list<std::uint32_t> codepoints, float pi
 
 const Font &inter()
 {
-    static Font font = []
-    {
-        Font loaded;
-        std::string data;
-        EXPECT_TRUE(
-            hui::save::read_file(HUI_SOURCE_DIR "/assets/fonts/inter-semibold.huifont", &data));
-        EXPECT_TRUE(loaded.load(data)) << loaded.error();
-        return loaded;
-    }();
+    static Font font = hui::testing::load_font("inter-semibold");
     return font;
 }
 

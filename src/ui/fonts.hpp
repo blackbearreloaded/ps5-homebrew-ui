@@ -8,6 +8,7 @@
 #include "gfx/font.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -59,6 +60,45 @@ inline std::string upper(std::string_view value)
     return result;
 }
 
+// A paragraph as it is drawn: word-wrapped, at most max_lines lines (never
+// fewer than one), the last one ending in an ellipsis if text remains. Empty
+// text is one empty line. This is the one place that decides it, so what is
+// measured and what is drawn cannot disagree.
+struct ParagraphLines
+{
+    std::vector<std::string> lines;
+    bool truncated = false; // text remained after max_lines: the last line shows the ellipsis
+};
+
+inline ParagraphLines paragraph_lines(const FontRef &font, std::string_view value, float size,
+                                      float width, int max_lines = 99)
+{
+    ParagraphLines result;
+    result.lines = font.font->wrap(value, size, width);
+    const std::size_t cap = static_cast<std::size_t>(std::max(max_lines, 1));
+    if (result.lines.size() > cap)
+    {
+        result.lines.resize(cap);
+        result.lines.back() = font.font->fit(result.lines.back() + " \xE2\x80\xA6", size, width);
+        result.truncated = true;
+    }
+    return result;
+}
+
+// Draws lines from paragraph_lines() from the first baseline at y. Returns
+// the baseline after the last line drawn.
+inline float paragraph(gfx::DrawList &list, const FontRef &font, const ParagraphLines &lines,
+                       float x, float y, float size, float line_height, gfx::Color color,
+                       gfx::Align align = gfx::Align::left)
+{
+    for (const std::string &line : lines.lines)
+    {
+        text(list, font, line, x, y, size, color, align);
+        y += line_height;
+    }
+    return y;
+}
+
 // Draws word-wrapped text from its first baseline at y, at most max_lines
 // lines (the last one ends in an ellipsis if text remains). Returns the
 // baseline after the last line drawn.
@@ -66,54 +106,41 @@ inline float paragraph(gfx::DrawList &list, const FontRef &font, std::string_vie
                        float y, float size, float width, float line_height, gfx::Color color,
                        int max_lines = 99, gfx::Align align = gfx::Align::left)
 {
-    const std::vector<std::string> lines = font.font->wrap(value, size, width);
-    int drawn = 0;
-    for (const std::string &line : lines)
-    {
-        const bool last =
-            drawn + 1 == max_lines && lines.size() > static_cast<std::size_t>(max_lines);
-        if (last)
-            text(list, font, font.font->fit(line + " \xE2\x80\xA6", size, width), x, y, size, color,
-                 align);
-        else
-            text(list, font, line, x, y, size, color, align);
-        y += line_height;
-        if (++drawn >= max_lines)
-            break;
-    }
-    return y;
+    return paragraph(list, font, paragraph_lines(font, value, size, width, max_lines), x, y, size,
+                     line_height, color, align);
 }
 
-// The space paragraph() will take, measured without drawing: the same wrap,
-// line cap and ellipsis. Lay out what follows a block of text, or work out
-// how much of a list fits, before drawing any of it.
+// The space paragraph() will take, measured without drawing. Lay out what
+// follows a block of text, or work out how much of a list fits, before
+// drawing any of it.
 struct ParagraphMetrics
 {
     int lines = 0;          // lines paragraph() draws
     float height = 0.0f;    // lines * line_height: how far paragraph() moves y
     float width = 0.0f;     // widest line as drawn, ellipsis included
-    bool truncated = false; // some of the text did not fit in max_lines
+    bool truncated = false; // text remained after max_lines: the last line shows the ellipsis
 };
+
+// Wrapping allocates and measures every word: a screen that measures and then
+// draws the same text wraps once with paragraph_lines() and passes the result
+// to both.
+inline ParagraphMetrics measure_paragraph(const FontRef &font, const ParagraphLines &lines,
+                                          float size, float line_height)
+{
+    ParagraphMetrics m;
+    m.lines = static_cast<int>(lines.lines.size());
+    m.height = static_cast<float>(m.lines) * line_height;
+    for (const std::string &line : lines.lines)
+        m.width = std::max(m.width, font.measure(line, size));
+    m.truncated = lines.truncated;
+    return m;
+}
 
 inline ParagraphMetrics measure_paragraph(const FontRef &font, std::string_view value, float size,
                                           float width, float line_height, int max_lines = 99)
 {
-    ParagraphMetrics m;
-    const std::vector<std::string> lines = font.font->wrap(value, size, width);
-    for (const std::string &line : lines)
-    {
-        const bool last =
-            m.lines + 1 == max_lines && lines.size() > static_cast<std::size_t>(max_lines);
-        const float drawn =
-            last ? font.measure(font.font->fit(line + " \xE2\x80\xA6", size, width), size)
-                 : font.measure(line, size);
-        m.width = std::max(m.width, drawn);
-        if (++m.lines >= max_lines)
-            break;
-    }
-    m.height = static_cast<float>(m.lines) * line_height;
-    m.truncated = lines.size() > static_cast<std::size_t>(m.lines);
-    return m;
+    return measure_paragraph(font, paragraph_lines(font, value, size, width, max_lines), size,
+                             line_height);
 }
 
 } // namespace hui::ui

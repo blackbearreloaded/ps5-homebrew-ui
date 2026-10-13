@@ -94,6 +94,9 @@ ui::text(list, fonts.semibold, "SETTINGS", x, baseline, 18, color, gfx::Align::l
 ui::text(list, fonts.regular, value, right_edge, baseline, 24, color, gfx::Align::right);
 ui::paragraph(list, fonts.regular, blurb, x, first_baseline, 26, width, line_height, color, max_lines);
 ui::measure_paragraph(fonts.regular, blurb, 26, width, line_height, max_lines); // .lines .height .width .truncated; draws nothing
+const auto lines = ui::paragraph_lines(fonts.regular, blurb, 26, width, max_lines); // wrap once, then measure and draw
+ui::measure_paragraph(fonts.regular, lines, 26, line_height);
+ui::paragraph(list, fonts.regular, lines, x, first_baseline, 26, line_height, color);
 fonts.regular.measure("text", 24);            // width in virtual pixels
 fonts.regular.font->fit(text, 24, max_width); // ellipsis if too long
 fonts.regular.font->wrap(text, 24, width);    // lines

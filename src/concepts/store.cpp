@@ -353,14 +353,14 @@ class Store final : public app::Concept
             Copy copy;
             const gfx::Font &lead = *context.fonts.semibold.font;
             copy.pitch_lines =
-                std::min(2, static_cast<int>(lead.wrap(pitch(i), 30, kInfoW).size()));
+                ui::measure_paragraph(context.fonts.semibold, pitch(i), 30, kInfoW, 0.0f, 2).lines;
             // A lead line that wraps is narrowed until its two lines are
             // about even: no single word left alone on the second one.
             while (copy.pitch_lines == 2 && copy.pitch_width > 260.0f &&
                    lead.wrap(pitch(i), 30, copy.pitch_width - 20.0f).size() == 2)
                 copy.pitch_width -= 20.0f;
-            copy.blurb_lines = std::min(
-                4, static_cast<int>(context.fonts.regular.font->wrap(it.blurb, 26, kInfoW).size()));
+            copy.blurb_lines =
+                ui::measure_paragraph(context.fonts.regular, it.blurb, 26, kInfoW, 0.0f, 4).lines;
             copy_.push_back(copy);
         }
         wished_.assign(static_cast<std::size_t>(count), false);

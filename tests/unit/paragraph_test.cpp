@@ -2,19 +2,16 @@
 // Copyright (C) 2026 BlackBearReloaded
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "core/save_file.hpp"
+#include "font_loader.hpp"
 #include "gfx/draw_list.hpp"
 #include "gfx/font.hpp"
 #include "ui/fonts.hpp"
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <string>
 #include <string_view>
-
-#ifndef HUI_SOURCE_DIR
-#define HUI_SOURCE_DIR "."
-#endif
 
 namespace
 {
@@ -24,18 +21,13 @@ using hui::gfx::Font;
 using hui::ui::FontRef;
 using hui::ui::measure_paragraph;
 using hui::ui::paragraph;
+using hui::ui::paragraph_lines;
+
+constexpr std::string_view kEllipsis = "\xE2\x80\xA6";
 
 const Font &regular()
 {
-    static Font font = []
-    {
-        Font loaded;
-        std::string data;
-        EXPECT_TRUE(
-            hui::save::read_file(HUI_SOURCE_DIR "/assets/fonts/inter-regular.huifont", &data));
-        EXPECT_TRUE(loaded.load(data)) << loaded.error();
-        return loaded;
-    }();
+    static Font font = hui::testing::load_font("inter-regular");
     return font;
 }
 
@@ -98,6 +90,64 @@ TEST(Paragraph, AgreesWithWhatParagraphDraws)
             EXPECT_FLOAT_EQ(m.height, drawn_height(ref, text, 22, 380, 28, max_lines))
                 << "text \"" << text << "\" max_lines " << max_lines;
         }
+}
+
+// The metrics describe the very lines that are drawn: their count, the widest
+// of them with its ellipsis, and whether the ellipsis is there at all.
+TEST(Paragraph, MetricsDescribeTheLinesDrawn)
+{
+    const FontRef ref{&regular(), 0};
+    const std::string_view texts[] = {kLong, "Resume", "", "One\nTwo\nThree"};
+    for (std::string_view text : texts)
+        for (int max_lines : {-1, 0, 1, 2, 3, 99})
+        {
+            SCOPED_TRACE(std::string(text) + " / max_lines " + std::to_string(max_lines));
+            const auto lines = paragraph_lines(ref, text, 22, 380, max_lines);
+            const auto m = measure_paragraph(ref, text, 22, 380, 28, max_lines);
+            ASSERT_FALSE(lines.lines.empty());
+            EXPECT_LE(static_cast<int>(lines.lines.size()), std::max(max_lines, 1));
+            EXPECT_EQ(m.lines, static_cast<int>(lines.lines.size()));
+            EXPECT_EQ(m.truncated, lines.truncated);
+            EXPECT_EQ(lines.truncated, regular().wrap(text, 22, 380).size() > lines.lines.size());
+            EXPECT_EQ(lines.truncated, lines.lines.back().ends_with(kEllipsis));
+            float widest = 0.0f;
+            for (const std::string &line : lines.lines)
+            {
+                EXPECT_LE(ref.measure(line, 22), 380.0f + 1e-3f) << line;
+                widest = std::max(widest, ref.measure(line, 22));
+            }
+            EXPECT_FLOAT_EQ(m.width, widest);
+
+            // Drawing the text and drawing its lines put the same glyphs down.
+            DrawList from_text;
+            DrawList from_lines;
+            const auto white = hui::gfx::Color::rgb(0xffffff);
+            const float end =
+                paragraph(from_text, ref, text, 0, 100, 22, 380, 28, white, max_lines);
+            EXPECT_FLOAT_EQ(paragraph(from_lines, ref, lines, 0, 100, 22, 28, white), end);
+            EXPECT_EQ(from_text.instances().size(), from_lines.instances().size());
+            EXPECT_FLOAT_EQ(measure_paragraph(ref, lines, 22, 28).width, m.width);
+        }
+}
+
+// A cap below one line still shows one, and says that text was cut.
+TEST(Paragraph, ACapBelowOneLineStillMarksTheCut)
+{
+    const FontRef ref{&regular(), 0};
+    const auto lines = paragraph_lines(ref, kLong, 24, 420, 0);
+    ASSERT_EQ(lines.lines.size(), 1u);
+    EXPECT_TRUE(lines.truncated);
+    EXPECT_TRUE(lines.lines.back().ends_with(kEllipsis));
+}
+
+TEST(Paragraph, EmptyTextIsOneEmptyLine)
+{
+    const FontRef ref{&regular(), 0};
+    const auto m = measure_paragraph(ref, "", 24, 420, 30);
+    EXPECT_EQ(m.lines, 1);
+    EXPECT_FLOAT_EQ(m.height, 30.0f);
+    EXPECT_FLOAT_EQ(m.width, 0.0f);
+    EXPECT_FALSE(m.truncated);
 }
 
 } // namespace
